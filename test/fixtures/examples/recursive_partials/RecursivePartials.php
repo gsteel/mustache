@@ -11,7 +11,7 @@
 
 class RecursivePartials
 {
-    public $name  = 'George';
+    public $name = 'George';
     public $child = array(
         'name'  => 'Dan',
         'child' => array(
