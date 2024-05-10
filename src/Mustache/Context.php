@@ -17,16 +17,21 @@ class Mustache_Context
     private $stack      = array();
     private $blockStack = array();
 
+    private $buggyPropertyShadowing = false;
+
     /**
      * Mustache rendering Context constructor.
      *
-     * @param mixed $context Default rendering context (default: null)
+     * @param mixed $context                Default rendering context (default: null)
+     * @param bool  $buggyPropertyShadowing See Mustache_Engine::useBuggyPropertyShadowing (default: false)
      */
-    public function __construct($context = null)
+    public function __construct($context = null, $buggyPropertyShadowing = false)
     {
         if ($context !== null) {
             $this->stack = array($context);
         }
+
+        $this->buggyPropertyShadowing = $buggyPropertyShadowing;
     }
 
     /**
@@ -223,15 +228,24 @@ class Mustache_Context
                             return $frame->$id;
                         }
 
-                        if (property_exists($frame, $id)) {
-                            $rp = new \ReflectionProperty($frame, $id);
-                            if ($rp->isPublic()) {
-                                return $frame->$id;
+                        // Preserve backwards compatibility with a property shadowing bug in
+                        // Mustache.php <= 2.14.2
+                        // See https://github.com/bobthecow/mustache.php/pull/410
+                        if ($this->buggyPropertyShadowing) {
+                            if ($frame instanceof ArrayAccess && isset($frame[$id])) {
+                                return $frame[$id];
                             }
-                        }
+                        } else {
+                            if (property_exists($frame, $id)) {
+                                $rp = new \ReflectionProperty($frame, $id);
+                                if ($rp->isPublic()) {
+                                    return $frame->$id;
+                                }
+                            }
 
-                        if ($frame instanceof ArrayAccess && isset($frame[$id])) {
-                            return $frame[$id];
+                            if ($frame instanceof ArrayAccess && $frame->offsetExists($id)) {
+                                return $frame[$id];
+                            }
                         }
                     }
                     break;

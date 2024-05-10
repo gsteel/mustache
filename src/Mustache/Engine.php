@@ -57,6 +57,7 @@ class Mustache_Engine
     private $strictCallables = false;
     private $pragmas = array();
     private $delimiters;
+    private $buggyPropertyShadowing = false;
 
     // Services
     private $tokenizer;
@@ -218,6 +219,10 @@ class Mustache_Engine
                 $this->pragmas[$pragma] = true;
             }
         }
+
+        if (isset($options['buggy_property_shadowing'])) {
+            $this->buggyPropertyShadowing = (bool) $options['buggy_property_shadowing'];
+        }
     }
 
     /**
@@ -266,6 +271,16 @@ class Mustache_Engine
     public function getCharset()
     {
         return $this->charset;
+    }
+
+    /**
+     * Check whether to use buggy property shadowing.
+     *
+     * See https://github.com/bobthecow/mustache.php/pull/410
+     */
+    public function useBuggyPropertyShadowing()
+    {
+        return $this->buggyPropertyShadowing;
     }
 
     /**

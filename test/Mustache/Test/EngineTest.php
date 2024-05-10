@@ -376,6 +376,15 @@ class Mustache_Test_EngineTest extends Mustache_Test_FunctionalTestCase
         $tpl = $mustache->loadTemplate('[[> one ]]');
         $this->assertEquals('b', $tpl->render(array('a' => 'b')));
     }
+
+    public function testBuggyPropertyShadowing()
+    {
+        $mustache = new Mustache_Engine();
+        $this->assertFalse($mustache->useBuggyPropertyShadowing());
+
+        $mustache = new Mustache_Engine(array('buggy_property_shadowing' => true));
+        $this->assertTrue($mustache->useBuggyPropertyShadowing());
+    }
 }
 
 class MustacheStub extends Mustache_Engine
