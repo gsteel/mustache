@@ -214,6 +214,23 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
 
         $this->assertNull($context->find('name'));
     }
+
+    public function testBuggyNullPropertyValueMasking()
+    {
+        $context = new Mustache_Context(null, true);
+
+        $a = (object) array(
+            'name' => 'not null'
+        );
+        $b = (object) array(
+            'name' => null
+        );
+
+        $context->push($a);
+        $context->push($b);
+
+        $this->assertEquals($context->find('name'), 'not null');
+    }
 }
 
 class Mustache_Test_TestDummy
