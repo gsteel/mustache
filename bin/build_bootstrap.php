@@ -121,7 +121,7 @@ EOS;
         }
 
         $cache  = $cacheDir . '/' . $name . $extension;
-        $header = sprintf(self::HEADER, strftime('%Y'));
+        $header = sprintf(self::HEADER, date('Y'));
         self::writeCacheFile($cache, $header . substr(self::stripComments('<?php ' . $content), 5));
     }
 
