@@ -21,7 +21,6 @@ use Mustache\Loader\StringLoader;
 use Mustache\Parser;
 use Mustache\Template;
 use Mustache\Test\Asset\EngineStub;
-use Mustache\Tokenizer;
 use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 
@@ -106,7 +105,6 @@ class EngineTest extends FunctionalTestCase
     {
         $logger    = new NullLogger();
         $loader    = new StringLoader();
-        $tokenizer = new Tokenizer();
         $parser    = new Parser();
         $compiler  = new Compiler();
         $mustache  = new Engine();
@@ -123,10 +121,6 @@ class EngineTest extends FunctionalTestCase
         $this->assertNotSame($loader, $mustache->getPartialsLoader());
         $mustache->setPartialsLoader($loader);
         $this->assertSame($loader, $mustache->getPartialsLoader());
-
-        $this->assertNotSame($tokenizer, $mustache->getTokenizer());
-        $mustache->setTokenizer($tokenizer);
-        $this->assertSame($tokenizer, $mustache->getTokenizer());
 
         $this->assertNotSame($parser, $mustache->getParser());
         $mustache->setParser($parser);

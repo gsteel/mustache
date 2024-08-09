@@ -150,7 +150,6 @@
       <code><![CDATA[$loader]]></code>
       <code><![CDATA[$parser]]></code>
       <code><![CDATA[$partialsLoader]]></code>
-      <code><![CDATA[$tokenizer]]></code>
     </PropertyNotSetInConstructor>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->templates]]></code>

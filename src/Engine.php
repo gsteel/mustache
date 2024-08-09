@@ -73,7 +73,7 @@ class Engine
     private string|null $delimiters = null;
     private bool $buggyPropertyShadowing = false;
     // Services
-    private Tokenizer|null $tokenizer;
+    private Tokenizer $tokenizer;
     private Parser|null $parser;
     private Compiler|null $compiler;
 
@@ -156,6 +156,8 @@ class Engine
      */
     public function __construct(array $options = [])
     {
+        $this->tokenizer = new Tokenizer();
+
         if (isset($options['template_class_prefix'])) {
             if ((string) $options['template_class_prefix'] === '') {
                 throw new InvalidArgumentException('Mustache Constructor "template_class_prefix" must not be empty');
@@ -460,28 +462,6 @@ class Engine
     }
 
     /**
-     * Set the Mustache Tokenizer instance.
-     */
-    public function setTokenizer(Tokenizer $tokenizer): void
-    {
-        $this->tokenizer = $tokenizer;
-    }
-
-    /**
-     * Get the current Mustache Tokenizer instance.
-     *
-     * If no Tokenizer instance has been explicitly specified, this method will instantiate and return a new one.
-     */
-    public function getTokenizer(): Tokenizer
-    {
-        if (! isset($this->tokenizer)) {
-            $this->tokenizer = new Tokenizer();
-        }
-
-        return $this->tokenizer;
-    }
-
-    /**
      * Set the Mustache Parser instance.
      */
     public function setParser(Parser $parser): void
@@ -713,7 +693,7 @@ class Engine
      */
     private function tokenize(string $source): array
     {
-        return $this->getTokenizer()->scan($source, $this->delimiters);
+        return $this->tokenizer->scan($source, $this->delimiters);
     }
 
     /**
