@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
 
 /**
@@ -11,18 +13,18 @@ namespace Mustache;
  */
 class LambdaHelper
 {
-    private $mustache;
-    private $context;
-    private $delims;
+    private Engine $mustache;
+    private Context $context;
+    private ?string $delims;
 
     /**
      * Mustache Lambda Helper constructor.
      *
      * @param Engine $mustache Mustache engine instance
-     * @param Context $context Rendering context
-     * @param string $delims   Optional custom delimiters, in the format `{{= <% %> =}}`. (default: null)
+     * @param Context $context  Rendering context
+     * @param string|null $delims   Optional custom delimiters, in the format `{{= <% %> =}}`. (default: null)
      */
-    public function __construct(Engine $mustache, Context $context, $delims = null)
+    public function __construct(Engine $mustache, Context $context, ?string $delims = null)
     {
         $this->mustache = $mustache;
         $this->context = $context;
@@ -32,25 +34,21 @@ class LambdaHelper
     /**
      * Render a string as a Mustache template with the current rendering context.
      *
-     * @param string $string
-     *
      * @return string Rendered template
      */
-    public function render($string)
+    public function render(string $string): string
     {
         return $this->mustache
-            ->loadLambda((string)$string, $this->delims)
+            ->loadLambda((string) $string, $this->delims)
             ->renderInternal($this->context);
     }
 
     /**
      * Render a string as a Mustache template with the current rendering context.
      *
-     * @param string $string
-     *
      * @return string Rendered template
      */
-    public function __invoke($string)
+    public function __invoke(string $string): string
     {
         return $this->render($string);
     }
@@ -59,10 +57,8 @@ class LambdaHelper
      * Get a Lambda Helper with custom delimiters.
      *
      * @param string $delims Custom delimiters, in the format `{{= <% %> =}}`
-     *
-     * @return LambdaHelper
      */
-    public function withDelimiters($delims)
+    public function withDelimiters(string $delims): LambdaHelper
     {
         return new self($this->mustache, $this->context, $delims);
     }

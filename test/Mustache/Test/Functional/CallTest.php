@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
@@ -11,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 class CallTest extends TestCase
 {
-    public function testCallEatsContext()
+    public function testCallEatsContext(): void
     {
         $m = new Engine();
         $tpl = $m->loadTemplate('{{# foo }}{{ label }}: {{ name }}{{/ foo }}');

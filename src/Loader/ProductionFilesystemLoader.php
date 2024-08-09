@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Loader;
 
 use Mustache\Exception\RuntimeException;
@@ -7,16 +9,20 @@ use Mustache\Exception\UnknownTemplateException;
 use Mustache\Source;
 use Mustache\Source\FilesystemSource;
 
+use function array_key_exists;
+use function file_exists;
+
 /**
  * Mustache Template production filesystem Loader implementation.
  *
  * A production-ready FilesystemLoader, which doesn't require reading a file if it already exists in the template cache.
  *
- * {@inheritdoc}
+ * {@inheritDoc}
  */
 class ProductionFilesystemLoader extends FilesystemLoader
 {
-    private $statProps;
+    /** @var list<string> */
+    private array $statProps;
 
     /**
      * Mustache production filesystem Loader constructor.
@@ -43,11 +49,11 @@ class ProductionFilesystemLoader extends FilesystemLoader
      * process so you don't forget!
      *
      * @param string $baseDir Base directory containing Mustache template files.
-     * @param array $options  Array of Mustache\Loader options (default: array())
-     * @throws RuntimeException if $baseDir does not exist.
+     * @param array{extension?: string, stat_props?: list<string>|null} $options
      *
+     * @throws RuntimeException if $baseDir does not exist.
      */
-    public function __construct($baseDir, array $options = [])
+    public function __construct(string $baseDir, array $options = [])
     {
         parent::__construct($baseDir, $options);
 
@@ -65,17 +71,15 @@ class ProductionFilesystemLoader extends FilesystemLoader
     /**
      * Helper function for loading a Mustache file by name.
      *
-     * @param string $name
+     * @return Source Mustache Template source
      *
-     * @return Source Mustache Mustache\Template source
      * @throws UnknownTemplateException If a template file is not found.
-     *
      */
-    protected function loadFile($name)
+    protected function loadFile(string $name): Source
     {
         $fileName = $this->getFileName($name);
 
-        if (!file_exists($fileName)) {
+        if (! file_exists($fileName)) {
             throw new UnknownTemplateException($name);
         }
 

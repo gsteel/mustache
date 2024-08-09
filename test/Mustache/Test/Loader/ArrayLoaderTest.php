@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Loader;
 
 use Mustache\Exception\UnknownTemplateException;
@@ -8,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayLoaderTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $loader = new ArrayLoader([
             'foo' => 'bar',
@@ -17,7 +19,7 @@ class ArrayLoaderTest extends TestCase
         $this->assertEquals('bar', $loader->load('foo'));
     }
 
-    public function testSetAndLoadTemplates()
+    public function testSetAndLoadTemplates(): void
     {
         $loader = new ArrayLoader([
             'foo' => 'bar',
@@ -35,7 +37,7 @@ class ArrayLoaderTest extends TestCase
         $this->assertEquals('BAZ', $loader->load('baz'));
     }
 
-    public function testMissingTemplatesThrowExceptions()
+    public function testMissingTemplatesThrowExceptions(): void
     {
         $loader = new ArrayLoader();
         $this->expectException(UnknownTemplateException::class);

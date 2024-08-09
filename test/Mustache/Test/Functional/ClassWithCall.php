@@ -6,9 +6,10 @@ namespace Mustache\Test\Functional;
 
 final class ClassWithCall
 {
-    public $name;
+    public ?string $name = null;
 
-    public function __call($method, $args)
+    /** @param array<string, mixed> $args */
+    public function __call(string $method, array $args): string
     {
         return 'unknown value';
     }

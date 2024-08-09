@@ -8,12 +8,12 @@ use Mustache\Cache\AbstractCache;
 
 final class CacheStub extends AbstractCache
 {
-    public function load($key)
+    public function load(string $key): bool
     {
-        // nada
+        return false;
     }
 
-    public function cache($key, $value)
+    public function cache(string $key, string $value): void
     {
         // nada
     }

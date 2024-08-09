@@ -1,8 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
 
 use Traversable;
+
+use function call_user_func;
+use function gettype;
+use function is_callable;
+use function is_object;
+use function is_string;
 
 /**
  * Abstract Mustache Template class.
@@ -11,19 +19,11 @@ use Traversable;
  */
 abstract class Template
 {
-    /**
-     * @var Engine
-     */
-    protected $mustache;
-    /**
-     * @var bool
-     */
-    protected $strictCallables = false;
+    protected Engine $mustache;
+    protected bool $strictCallables = false;
 
     /**
      * Mustache Template constructor.
-     *
-     * @param Engine $mustache
      */
     public function __construct(Engine $mustache)
     {
@@ -37,13 +37,13 @@ abstract class Template
      *     $tpl = $m->loadTemplate('Hello, {{ name }}!');
      *     echo $tpl(array('name' => 'World')); // "Hello, World!"
      *
+     * @see Template::render
+     *
      * @param mixed $context Array or object rendering context (default: array())
      *
      * @return string Rendered template
-     * @see Template::render
-     *
      */
-    public function __invoke($context = [])
+    public function __invoke($context = []): string
     {
         return $this->render($context);
     }
@@ -55,7 +55,7 @@ abstract class Template
      *
      * @return string Rendered template
      */
-    public function render($context = [])
+    public function render($context = []): string
     {
         return $this->renderInternal(
             $this->prepareContextStack($context),
@@ -69,12 +69,11 @@ abstract class Template
      *
      * NOTE: This method is not part of the Mustache.php public API.
      *
-     * @param Context $context
      * @param string $indent (default: '')
      *
      * @return string Rendered template
      */
-    abstract public function renderInternal(Context $context, $indent = '');
+    abstract public function renderInternal(Context $context, string $indent = ''): string;
 
     /**
      * Tests whether a value should be iterated over (e.g. in a section context).
@@ -105,7 +104,7 @@ abstract class Template
      *
      * @return bool True if the value is 'iterable'
      */
-    protected function isIterable($value)
+    protected function isIterable($value): bool
     {
         switch (gettype($value)) {
             case 'object':
@@ -132,19 +131,17 @@ abstract class Template
      * Adds the Mustache HelperCollection to the stack's top context frame if helpers are present.
      *
      * @param mixed $context Optional first context frame (default: null)
-     *
-     * @return Context
      */
-    protected function prepareContextStack($context = null)
+    protected function prepareContextStack($context = null): Context
     {
         $stack = new Context(null, $this->mustache->useBuggyPropertyShadowing());
 
         $helpers = $this->mustache->getHelpers();
-        if (!$helpers->isEmpty()) {
+        if (! $helpers->isEmpty()) {
             $stack->push($helpers);
         }
 
-        if (!empty($context)) {
+        if (! empty($context)) {
             $stack->push($context);
         }
 
@@ -157,15 +154,14 @@ abstract class Template
      * Invoke the value if it is callable, otherwise return the value.
      *
      * @param mixed $value
-     * @param Context $context
      *
-     * @return string
+     * @return mixed
      */
     protected function resolveValue($value, Context $context)
     {
-        if (($this->strictCallables ? is_object($value) : !is_string($value)) && is_callable($value)) {
+        if (($this->strictCallables ? is_object($value) : ! is_string($value)) && is_callable($value)) {
             return $this->mustache
-                ->loadLambda((string)call_user_func($value))
+                ->loadLambda((string) call_user_func($value))
                 ->renderInternal($context);
         }
 

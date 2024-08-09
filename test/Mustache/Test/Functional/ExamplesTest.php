@@ -1,9 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
 use PHPUnit\Framework\TestCase;
+
+use function closedir;
+use function file_get_contents;
+use function is_dir;
+use function is_file;
+use function opendir;
+use function pathinfo;
+use function readdir;
+use function realpath;
 
 /**
  * @group examples
@@ -14,18 +25,15 @@ class ExamplesTest extends TestCase
     /**
      * Test everything in the `examples` directory.
      *
-     * @dataProvider getExamples
+     * @param array<string, string> $partials
      *
-     * @param string $context
-     * @param string $source
-     * @param array  $partials
-     * @param string $expected
+     * @dataProvider getExamples
      */
-    public function testExamples($context, $source, $partials, $expected)
+    public function testExamples(object $context, string $source, array $partials, string $expected): void
     {
-        $mustache = new Engine(array(
+        $mustache = new Engine([
             'partials' => $partials,
-        ));
+        ]);
         $this->assertEquals($expected, $mustache->loadTemplate($source)->render($context));
     }
 
@@ -38,12 +46,12 @@ class ExamplesTest extends TestCase
      * three files: one Mustache class (.php), one Mustache template (.mustache), and one output file
      * (.txt). Optionally, the directory may contain a folder full of partials.
      *
-     * @return array
+     * @return list<array{0: object, 1: string, 2: array<string, string>, 3: string}>
      */
-    public function getExamples()
+    public static function getExamples(): array
     {
-        $path     = realpath(dirname(__FILE__) . '/../../../fixtures/examples');
-        $examples = array();
+        $path     = realpath(__DIR__ . '/../../../fixtures/examples');
+        $examples = [];
 
         $handle   = opendir($path);
         while (($file = readdir($handle)) !== false) {
@@ -52,10 +60,13 @@ class ExamplesTest extends TestCase
             }
 
             $fullpath = $path . '/' . $file;
-            if (is_dir($fullpath)) {
-                $examples[$file] = $this->loadExample($fullpath);
+            if (! is_dir($fullpath)) {
+                continue;
             }
+
+            $examples[$file] = self::loadExample($fullpath);
         }
+
         closedir($handle);
 
         return $examples;
@@ -64,15 +75,13 @@ class ExamplesTest extends TestCase
     /**
      * Helper method to load an example given the full path.
      *
-     * @param string $path
-     *
-     * @return array arguments for testExamples
+     * @return array{0: object, 1: string, 2: array<string, string>, 3: string}
      */
-    private function loadExample($path)
+    private static function loadExample(string $path): array
     {
         $context  = null;
         $source   = null;
-        $partials = array();
+        $partials = [];
         $expected = null;
 
         $handle = opendir($path);
@@ -82,7 +91,7 @@ class ExamplesTest extends TestCase
 
             if (is_dir($fullpath) && $info['basename'] === 'partials') {
                 // load partials
-                $partials = $this->loadPartials($fullpath);
+                $partials = self::loadPartials($fullpath);
             } elseif (is_file($fullpath)) {
                 // load other files
                 switch ($info['extension']) {
@@ -102,21 +111,20 @@ class ExamplesTest extends TestCase
                 }
             }
         }
+
         closedir($handle);
 
-        return array($context, $source, $partials, $expected);
+        return [$context, $source, $partials, $expected];
     }
 
     /**
      * Helper method to load partials given an example directory.
      *
-     * @param string $path
-     *
-     * @return array $partials
+     * @return array<string, string> $partials
      */
-    private function loadPartials($path)
+    private static function loadPartials(string $path): array
     {
-        $partials = array();
+        $partials = [];
 
         $handle = opendir($path);
         while (($file = readdir($handle)) !== false) {
@@ -127,10 +135,13 @@ class ExamplesTest extends TestCase
             $fullpath = $path . '/' . $file;
             $info = pathinfo($fullpath);
 
-            if ($info['extension'] === 'mustache') {
-                $partials[$info['filename']] = file_get_contents($fullpath);
+            if ($info['extension'] !== 'mustache') {
+                continue;
             }
+
+            $partials[$info['filename']] = file_get_contents($fullpath);
         }
+
         closedir($handle);
 
         return $partials;

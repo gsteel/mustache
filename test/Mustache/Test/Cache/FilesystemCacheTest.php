@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Cache;
 
 use Mustache\Cache\FilesystemCache;
 use Mustache\Test\FunctionalTestCase;
 
-/**
- * @group functional
- */
+/** @group functional */
 class FilesystemCacheTest extends FunctionalTestCase
 {
-    public function testCacheGetNone()
+    public function testCacheGetNone(): void
     {
         $key = 'some key';
         $cache = new FilesystemCache(self::$tempDir);
@@ -19,7 +19,7 @@ class FilesystemCacheTest extends FunctionalTestCase
         $this->assertFalse($loaded);
     }
 
-    public function testCachePut()
+    public function testCachePut(): void
     {
         $key = 'some key';
         $value = '<?php /* some value */';

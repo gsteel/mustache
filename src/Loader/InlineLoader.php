@@ -1,10 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Loader;
 
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader;
+
+use function array_key_exists;
+use function explode;
+use function file_get_contents;
+use function is_file;
+use function preg_split;
+use function trim;
 
 /**
  * A Mustache Template loader for inline templates.
@@ -46,9 +55,10 @@ use Mustache\Loader;
  */
 class InlineLoader implements Loader
 {
-    protected $fileName;
-    protected $offset;
-    protected $templates;
+    private string $fileName;
+    private int $offset;
+    /** @var array<string, string>|null */
+    private ?array $templates;
 
     /**
      * The InlineLoader requires a filename and offset to process templates.
@@ -67,34 +77,27 @@ class InlineLoader implements Loader
      *                         This usually coincides with the `__halt_compiler`
      *                         call, and the `__COMPILER_HALT_OFFSET__`
      */
-    public function __construct($fileName, $offset)
+    public function __construct(string $fileName, int $offset)
     {
-        if (!is_file($fileName)) {
+        if (! is_file($fileName)) {
             throw new InvalidArgumentException('Mustache\Loader\InlineLoader expects a valid filename.');
         }
 
-        if (!is_int($offset) || $offset < 0) {
+        if ($offset < 0) {
             throw new InvalidArgumentException('Mustache\Loader\InlineLoader expects a valid file offset.');
         }
 
         $this->fileName = $fileName;
         $this->offset = $offset;
+        $this->templates = null;
     }
 
-    /**
-     * Load a Template by name.
-     *
-     * @param string $name
-     *
-     * @return string Mustache Mustache\Template source
-     * @throws UnknownTemplateException If a template file is not found
-     *
-     */
-    public function load($name)
+    /** @inheritDoc */
+    public function load(string $name)
     {
         $this->loadTemplates();
 
-        if (!array_key_exists($name, $this->templates)) {
+        if (! array_key_exists($name, $this->templates)) {
             throw new UnknownTemplateException($name);
         }
 
@@ -104,17 +107,21 @@ class InlineLoader implements Loader
     /**
      * Parse and load templates from the end of a source file.
      */
-    protected function loadTemplates()
+    protected function loadTemplates(): void
     {
-        if ($this->templates === null) {
-            $this->templates = [];
-            $data = file_get_contents($this->fileName, false, null, $this->offset);
-            foreach (preg_split("/^@@(?= [\w\d\.]+$)/m", $data, -1) as $chunk) {
-                if (trim($chunk)) {
-                    [$name, $content] = explode("\n", $chunk, 2);
-                    $this->templates[trim($name)] = trim($content);
-                }
+        if ($this->templates !== null) {
+            return;
+        }
+
+        $this->templates = [];
+        $data = file_get_contents($this->fileName, false, null, $this->offset);
+        foreach (preg_split('/^@@(?= [\w\d\.]+$)/m', $data, -1) as $chunk) {
+            if (! trim($chunk)) {
+                continue;
             }
+
+            [$name, $content] = explode("\n", $chunk, 2);
+            $this->templates[trim($name)] = trim($content);
         }
     }
 }

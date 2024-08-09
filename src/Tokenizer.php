@@ -1,9 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
 
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\SyntaxException;
+
+use function array_unshift;
+use function function_exists;
+use function ini_get;
+use function is_string;
+use function mb_internal_encoding;
+use function preg_match;
+use function sprintf;
+use function strlen;
+use function strpos;
+use function substr;
+use function trim;
+use function version_compare;
+
+use const PHP_VERSION;
 
 /**
  * Mustache Tokenizer class.
@@ -13,26 +30,31 @@ use Mustache\Exception\SyntaxException;
 class Tokenizer
 {
     // Finite state machine states
-    const IN_TEXT = 0;
-    const IN_TAG_TYPE = 1;
-    const IN_TAG = 2;
+    private const IN_TEXT = 0;
+    private const IN_TAG_TYPE = 1;
+    private const IN_TAG = 2;
+
     // Token types
-    const T_SECTION = '#';
-    const T_INVERTED = '^';
-    const T_END_SECTION = '/';
-    const T_COMMENT = '!';
-    const T_PARTIAL = '>';
-    const T_PARENT = '<';
-    const T_DELIM_CHANGE = '=';
-    const T_ESCAPED = '_v';
-    const T_UNESCAPED = '{';
-    const T_UNESCAPED_2 = '&';
-    const T_TEXT = '_t';
-    const T_PRAGMA = '%';
-    const T_BLOCK_VAR = '$';
-    const T_BLOCK_ARG = '$arg';
-    // Valid token types
-    private static $tagTypes = [
+    public const T_SECTION = '#';
+    public const T_INVERTED = '^';
+    public const T_END_SECTION = '/';
+    public const T_COMMENT = '!';
+    public const T_PARTIAL = '>';
+    public const T_PARENT = '<';
+    public const T_DELIM_CHANGE = '=';
+    public const T_ESCAPED = '_v';
+    public const T_UNESCAPED = '{';
+    public const T_UNESCAPED_2 = '&';
+    public const T_TEXT = '_t';
+    public const T_PRAGMA = '%';
+    public const T_BLOCK_VAR = '$';
+    public const T_BLOCK_ARG = '$arg';
+    /**
+     * Valid token types
+     *
+     * @var array<self::T_*, bool>
+     */
+    private static array $tagTypes = [
         self::T_SECTION => true,
         self::T_INVERTED => true,
         self::T_END_SECTION => true,
@@ -46,7 +68,8 @@ class Tokenizer
         self::T_PRAGMA => true,
         self::T_BLOCK_VAR => true,
     ];
-    private static $tagNames = [
+    /** @var array<self::T_*, string> */
+    private static array $tagNames = [
         self::T_SECTION => 'section',
         self::T_INVERTED => 'inverted section',
         self::T_END_SECTION => 'section end',
@@ -62,30 +85,33 @@ class Tokenizer
         self::T_BLOCK_ARG => 'block variable',
     ];
     // Token properties
-    const TYPE = 'type';
-    const NAME = 'name';
-    const DYNAMIC = 'dynamic';
-    const OTAG = 'otag';
-    const CTAG = 'ctag';
-    const LINE = 'line';
-    const INDEX = 'index';
-    const END = 'end';
-    const INDENT = 'indent';
-    const NODES = 'nodes';
-    const VALUE = 'value';
-    const FILTERS = 'filters';
-    private $state;
-    private $tagType;
-    private $buffer;
-    private $tokens;
-    private $seenTag;
-    private $line;
-    private $otag;
-    private $otagChar;
-    private $otagLen;
-    private $ctag;
-    private $ctagChar;
-    private $ctagLen;
+    public const TYPE = 'type';
+    public const NAME = 'name';
+    public const DYNAMIC = 'dynamic';
+    public const OTAG = 'otag';
+    public const CTAG = 'ctag';
+    public const LINE = 'line';
+    public const INDEX = 'index';
+    public const END = 'end';
+    public const INDENT = 'indent';
+    public const NODES = 'nodes';
+    public const VALUE = 'value';
+    public const FILTERS = 'filters';
+
+    private ?int $state;
+    private ?string $tagType = null;
+    private string $buffer = '';
+    /** @var list<array<string, mixed>> */
+    private array $tokens = [];
+    /** @var int|false */
+    private $seenTag = 0;
+    private int $line = 0;
+    private ?string $otag = null;
+    private ?string $otagChar = null;
+    private ?int $otagLen = null;
+    private ?string $ctag = null;
+    private ?string $ctagChar = null;
+    private ?int $ctagLen = null;
 
     /**
      * Scan and tokenize template source.
@@ -93,12 +119,12 @@ class Tokenizer
      * @param string $text       Mustache template source to tokenize
      * @param string $delimiters Optionally, pass initial opening and closing delimiters (default: empty string)
      *
-     * @return array Set of Mustache tokens
-     * @throws InvalidArgumentException when $delimiters string is invalid
+     * @return list<array<string, mixed>> Set of Mustache tokens
      *
-     * @throws SyntaxException when mismatched section tags are encountered
+     * @throws InvalidArgumentException when $delimiters string is invalid.
+     * @throws SyntaxException when mismatched section tags are encountered.
      */
-    public function scan($text, $delimiters = '')
+    public function scan(string $text, ?string $delimiters = ''): array
     {
         // Setting mbstring.func_overload makes things *really* slow.
         // Let's do everyone a favor and scan this string as ASCII instead.
@@ -114,12 +140,13 @@ class Tokenizer
                 mb_internal_encoding('ASCII');
             }
         }
+
         // @codeCoverageIgnoreEnd
 
         $this->reset();
 
-        if (is_string($delimiters) && $delimiters = trim($delimiters)) {
-            $this->setDelimiters($delimiters);
+        if (is_string($delimiters) && trim($delimiters)) {
+            $this->setDelimiters(trim($delimiters));
         }
 
         $len = strlen($text);
@@ -139,6 +166,7 @@ class Tokenizer
                             $this->line++;
                         }
                     }
+
                     break;
 
                 case self::IN_TAG_TYPE:
@@ -162,8 +190,10 @@ class Tokenizer
                         if ($tag !== null) {
                             $i++;
                         }
+
                         $this->state = self::IN_TAG;
                     }
+
                     $this->seenTag = $i;
                     break;
 
@@ -177,15 +207,15 @@ class Tokenizer
                             self::OTAG => $this->otag,
                             self::CTAG => $this->ctag,
                             self::LINE => $this->line,
-                            self::INDEX => ($this->tagType === self::T_END_SECTION) ? $this->seenTag - $this->otagLen : $i + $this->ctagLen,
+                            self::INDEX => $this->tagType === self::T_END_SECTION
+                                ? $this->seenTag - $this->otagLen
+                                : $i + $this->ctagLen,
                         ];
 
                         if ($this->tagType === self::T_UNESCAPED) {
                             // Clean up `{{{ tripleStache }}}` style tokens.
                             if ($this->ctag === '}}') {
-                                if (($i + 2 < $len) && $text[$i + 2] === '}') {
-                                    $i++;
-                                } else {
+                                if (($i + 2 >= $len) || $text[$i + 2] !== '}') {
                                     $msg = sprintf(
                                         'Mismatched tag delimiters: %s on line %d',
                                         $token[self::NAME],
@@ -194,11 +224,11 @@ class Tokenizer
 
                                     throw new SyntaxException($msg, $token);
                                 }
+
+                                $i++;
                             } else {
                                 $lastName = $token[self::NAME];
-                                if (substr($lastName, -1) === '}') {
-                                    $token[self::NAME] = trim(substr($lastName, 0, -1));
-                                } else {
+                                if (substr($lastName, -1) !== '}') {
                                     $msg = sprintf(
                                         'Mismatched tag delimiters: %s on line %d',
                                         $token[self::NAME],
@@ -207,6 +237,8 @@ class Tokenizer
 
                                     throw new SyntaxException($msg, $token);
                                 }
+
+                                $token[self::NAME] = trim(substr($lastName, 0, -1));
                             }
                         }
 
@@ -217,6 +249,7 @@ class Tokenizer
                     } else {
                         $this->buffer .= $char;
                     }
+
                     break;
             }
         }
@@ -232,6 +265,7 @@ class Tokenizer
         if ($encoding) {
             mb_internal_encoding($encoding);
         }
+
         // @codeCoverageIgnoreEnd
 
         return $this->tokens;
@@ -240,7 +274,7 @@ class Tokenizer
     /**
      * Helper function to reset tokenizer internal state.
      */
-    private function reset()
+    private function reset(): void
     {
         $this->state = self::IN_TEXT;
         $this->tagType = null;
@@ -261,29 +295,31 @@ class Tokenizer
     /**
      * Flush the current buffer to a token.
      */
-    private function flushBuffer()
+    private function flushBuffer(): void
     {
-        if (strlen($this->buffer) > 0) {
-            $this->tokens[] = [
-                self::TYPE => self::T_TEXT,
-                self::LINE => $this->line,
-                self::VALUE => $this->buffer,
-            ];
-            $this->buffer = '';
+        if (strlen($this->buffer) <= 0) {
+            return;
         }
+
+        $this->tokens[] = [
+            self::TYPE => self::T_TEXT,
+            self::LINE => $this->line,
+            self::VALUE => $this->buffer,
+        ];
+        $this->buffer = '';
     }
 
     /**
      * Change the current Mustache delimiters. Set new `otag` and `ctag` values.
      *
-     * @param string $text Mustache template source
-     * @param int $index   Current tokenizer index
+     * @param string $text  Mustache template source
+     * @param int $index Current tokenizer index
      *
      * @return int New index value
-     * @throws SyntaxException when delimiter string is invalid
      *
+     * @throws SyntaxException when delimiter string is invalid.
      */
-    private function changeDelimiters($text, $index)
+    private function changeDelimiters(string $text, int $index): int
     {
         $startIndex = strpos($text, '=', $index) + 1;
         $close = '=' . $this->ctag;
@@ -312,17 +348,15 @@ class Tokenizer
     /**
      * Set the current Mustache `otag` and `ctag` delimiters.
      *
-     * @param string $delimiters
-     * @throws InvalidArgumentException when delimiter string is invalid
-     *
+     * @throws InvalidArgumentException when delimiter string is invalid.
      */
-    private function setDelimiters($delimiters)
+    private function setDelimiters(string $delimiters): void
     {
-        if (!preg_match('/^\s*(\S+)\s+(\S+)\s*$/', $delimiters, $matches)) {
+        if (! preg_match('/^\s*(\S+)\s+(\S+)\s*$/', $delimiters, $matches)) {
             throw new InvalidArgumentException(sprintf('Invalid delimiters: %s', $delimiters));
         }
 
-        [$_, $otag, $ctag] = $matches;
+        [$_, $otag, $ctag] = $matches; // phpcs:ignore
 
         $this->otag = $otag;
         $this->otagChar = $otag[0];
@@ -339,12 +373,9 @@ class Tokenizer
      * Pragmas are hoisted to the front of the template, so all pragma tokens
      * will appear at the front of the token list.
      *
-     * @param string $text
-     * @param int    $index
-     *
      * @return int New index value
      */
-    private function addPragma($text, $index)
+    private function addPragma(string $text, int $index): int
     {
         $end = strpos($text, $this->ctag, $index);
         if ($end === false) {
@@ -363,7 +394,7 @@ class Tokenizer
         return $end + $this->ctagLen - 1;
     }
 
-    private function throwUnclosedTagException()
+    private function throwUnclosedTagException(): void
     {
         $name = trim($this->buffer);
         if ($name !== '') {
@@ -383,14 +414,12 @@ class Tokenizer
     }
 
     /**
-     * Get the human readable name for a tag type.
+     * Get the human-readable name for a tag type.
      *
-     * @param string $tagType One of the tokenizer T_* constants
-     *
-     * @return string
+     * @param self::T_* $tagType One of the tokenizer T_* constants
      */
-    static function getTagName($tagType)
+    public static function getTagName(string $tagType): string
     {
-        return isset(self::$tagNames[$tagType]) ? self::$tagNames[$tagType] : 'unknown';
+        return self::$tagNames[$tagType] ?? 'unknown';
     }
 }

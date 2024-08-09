@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class SectionObjects
 {
     public $start = 'It worked the first time.';

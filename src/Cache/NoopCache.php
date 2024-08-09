@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Cache;
 
-use Mustache\Logger;
+use Psr\Log\LogLevel;
 
 /**
  * Mustache Cache in-memory implementation.
@@ -14,28 +16,21 @@ class NoopCache extends AbstractCache
 {
     /**
      * Loads nothing. Move along.
-     *
-     * @param string $key
-     *
-     * @return bool
      */
-    public function load($key)
+    public function load(string $key): bool
     {
         return false;
     }
 
     /**
      * Loads the compiled Mustache Template class without caching.
-     *
-     * @param string $key
-     * @param string $value
      */
-    public function cache($key, $value)
+    public function cache(string $key, string $value): void
     {
         $this->log(
-            Logger::WARNING,
+            LogLevel::WARNING,
             'Template cache disabled, evaluating "{className}" class at runtime',
-            array('className' => $key)
+            ['className' => $key],
         );
         eval('?>' . $value);
     }

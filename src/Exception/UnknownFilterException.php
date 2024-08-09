@@ -1,22 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Exception;
 
 use Mustache\Exception;
 use Throwable;
 use UnexpectedValueException;
 
+use function sprintf;
+use function version_compare;
+
+use const PHP_VERSION;
+
 /**
  * Unknown filter exception.
  */
 class UnknownFilterException extends UnexpectedValueException implements Exception
 {
-    protected $filterName;
+    private string $filterName;
 
-    /**
-     * @param string    $filterName
-     */
-    public function __construct($filterName, Throwable $previous = null)
+    public function __construct(string $filterName, ?Throwable $previous = null)
     {
         $this->filterName = $filterName;
         $message = sprintf('Unknown filter: %s', $filterName);
@@ -27,7 +31,7 @@ class UnknownFilterException extends UnexpectedValueException implements Excepti
         }
     }
 
-    public function getFilterName()
+    public function getFilterName(): string
     {
         return $this->filterName;
     }

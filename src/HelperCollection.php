@@ -1,25 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
 
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\UnknownHelperException;
+use Traversable;
+
+use function array_key_exists;
+use function is_array;
 
 /**
  * A collection of helpers for a Mustache instance.
  */
 class HelperCollection
 {
-    private $helpers = [];
+    /** @var array<string, mixed> */
+    private array $helpers = [];
 
     /**
      * Helper Collection constructor.
      *
      * Optionally accepts an array (or Traversable) of `$name => $helper` pairs.
      *
-     * @throws InvalidArgumentException if the $helpers argument isn't an array or Traversable
+     * @param array<string, mixed>|Traversable<string, mixed> $helpers (default: null)
      *
-     * @param array|Traversable $helpers (default: null)
+     * @throws InvalidArgumentException if the $helpers argument isn't an array or Traversable.
      */
     public function __construct($helpers = null)
     {
@@ -27,7 +34,7 @@ class HelperCollection
             return;
         }
 
-        if (!is_array($helpers) && !$helpers instanceof Traversable) {
+        if (! is_array($helpers) && ! $helpers instanceof Traversable) {
             throw new InvalidArgumentException('Mustache\HelperCollection constructor expects an array of helpers');
         }
 
@@ -39,12 +46,11 @@ class HelperCollection
     /**
      * Magic mutator.
      *
-     * @param string $name
-     * @param mixed $helper
      * @see HelperCollection::add
      *
+     * @param mixed $helper
      */
-    public function __set($name, $helper)
+    public function __set(string $name, $helper): void
     {
         $this->add($name, $helper);
     }
@@ -52,10 +58,9 @@ class HelperCollection
     /**
      * Add a helper to this collection.
      *
-     * @param string $name
      * @param mixed $helper
      */
-    public function add($name, $helper)
+    public function add(string $name, $helper): void
     {
         $this->helpers[$name] = $helper;
     }
@@ -63,13 +68,11 @@ class HelperCollection
     /**
      * Magic accessor.
      *
-     * @param string $name
-     *
-     * @return mixed Helper
      * @see HelperCollection::get
      *
+     * @return mixed Helper
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->get($name);
     }
@@ -77,15 +80,13 @@ class HelperCollection
     /**
      * Get a helper by name.
      *
-     * @param string $name
-     *
      * @return mixed Helper
-     * @throws UnknownHelperException If helper does not exist
      *
+     * @throws UnknownHelperException If helper does not exist.
      */
-    public function get($name)
+    public function get(string $name)
     {
-        if (!$this->has($name)) {
+        if (! $this->has($name)) {
             throw new UnknownHelperException($name);
         }
 
@@ -95,13 +96,11 @@ class HelperCollection
     /**
      * Magic isset().
      *
-     * @param string $name
-     *
-     * @return bool True if helper is present
      * @see HelperCollection::has
      *
+     * @return bool True if helper is present
      */
-    public function __isset($name)
+    public function __isset(string $name): bool
     {
         return $this->has($name);
     }
@@ -109,11 +108,9 @@ class HelperCollection
     /**
      * Check whether a given helper is present in the collection.
      *
-     * @param string $name
-     *
      * @return bool True if helper is present
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return array_key_exists($name, $this->helpers);
     }
@@ -121,11 +118,9 @@ class HelperCollection
     /**
      * Magic unset().
      *
-     * @param string $name
      * @see HelperCollection::remove
-     *
      */
-    public function __unset($name)
+    public function __unset(string $name): void
     {
         $this->remove($name);
     }
@@ -133,13 +128,11 @@ class HelperCollection
     /**
      * Check whether a given helper is present in the collection.
      *
-     * @param string $name
-     * @throws UnknownHelperException if the requested helper is not present
-     *
+     * @throws UnknownHelperException if the requested helper is not present.
      */
-    public function remove($name)
+    public function remove(string $name): void
     {
-        if (!$this->has($name)) {
+        if (! $this->has($name)) {
             throw new UnknownHelperException($name);
         }
 
@@ -151,7 +144,7 @@ class HelperCollection
      *
      * Removes all helpers from this collection
      */
-    public function clear()
+    public function clear(): void
     {
         $this->helpers = [];
     }
@@ -161,7 +154,7 @@ class HelperCollection
      *
      * @return bool True if the collection is empty
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->helpers);
     }

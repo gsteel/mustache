@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Loader;
 
 use Mustache\Exception\UnknownTemplateException;
@@ -9,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class CascadingLoaderTest extends TestCase
 {
-    public function testLoadTemplates()
+    public function testLoadTemplates(): void
     {
         $loader = new CascadingLoader([
             new ArrayLoader(['foo' => '{{ foo }}']),
@@ -20,7 +22,7 @@ class CascadingLoaderTest extends TestCase
         $this->assertEquals('{{#bar}}BAR{{/bar}}', $loader->load('bar'));
     }
 
-    public function testMissingTemplatesThrowExceptions()
+    public function testMissingTemplatesThrowExceptions(): void
     {
         $loader = new CascadingLoader([
             new ArrayLoader(['foo' => '{{ foo }}']),

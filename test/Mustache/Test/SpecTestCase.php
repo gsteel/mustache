@@ -1,22 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test;
 
 use Mustache\Engine;
+use Mustache\Template;
 use PHPUnit\Framework\TestCase;
 
-use function dirname;
 use function file_exists;
+use function file_get_contents;
+use function json_decode;
 
 abstract class SpecTestCase extends TestCase
 {
-    protected static $mustache;
+    protected static Engine $mustache;
 
     protected function setUp(): void
     {
-        if (! file_exists(__DIR__ . '/../../../vendor/spec/specs/')) {
-            $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
+        if (file_exists(__DIR__ . '/../../../vendor/spec/specs/')) {
+            return;
         }
+
+        $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
     }
 
     public static function setUpBeforeClass(): void
@@ -24,7 +30,8 @@ abstract class SpecTestCase extends TestCase
         self::$mustache = new Engine();
     }
 
-    protected static function loadTemplate($source, $partials)
+    /** @param array<string, string> $partials */
+    protected static function loadTemplate(string $source, array $partials): Template
     {
         self::$mustache->setPartials($partials);
 
@@ -36,29 +43,28 @@ abstract class SpecTestCase extends TestCase
      *
      * Loads JSON files from the spec and converts them to PHPisms.
      *
-     * @param string $name
-     *
-     * @return array
+     * @return list<array{0: string, 1: string, 2: array<string, string>, 3: array<string, mixed>, 4: string}>
      */
-    protected function loadSpec($name)
+    protected static function loadSpec(string $name): array
     {
-        $filename = dirname(__FILE__) . '/../../../vendor/spec/specs/' . $name . '.json';
-        if (!file_exists($filename)) {
-            return array();
+        $filename = __DIR__ . '/../../../vendor/spec/specs/' . $name . '.json';
+        if (! file_exists($filename)) {
+            return [];
         }
 
-        $data = array();
+        $data = [];
         $file = file_get_contents($filename);
         $spec = json_decode($file, true);
 
         foreach ($spec['tests'] as $test) {
-            $data[] = array(
+            $data[] = [
                 $test['name'] . ': ' . $test['desc'],
                 $test['template'],
-                isset($test['partials']) ? $test['partials'] : array(),
+                $test['partials'] ??
+            [],
                 $test['data'],
                 $test['expected'],
-            );
+            ];
         }
 
         return $data;

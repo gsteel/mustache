@@ -1,35 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 class SectionsNested
 {
     public $name = 'Little Mac';
 
     public function enemies()
     {
-        return array(
-            array(
+        return [
+            [
                 'name'    => 'Von Kaiser',
-                'enemies' => array(
-                    array('name' => 'Super Macho Man'),
-                    array('name' => 'Piston Honda'),
-                    array('name' => 'Mr. Sandman'),
-                ),
-            ),
-            array(
+                'enemies' => [
+                    ['name' => 'Super Macho Man'],
+                    ['name' => 'Piston Honda'],
+                    ['name' => 'Mr. Sandman'],
+                ],
+            ],
+            [
                 'name'    => 'Mike Tyson',
-                'enemies' => array(
-                    array('name' => 'Soda Popinski'),
-                    array('name' => 'King Hippo'),
-                    array('name' => 'Great Tiger'),
-                    array('name' => 'Glass Joe'),
-                ),
-            ),
-            array(
+                'enemies' => [
+                    ['name' => 'Soda Popinski'],
+                    ['name' => 'King Hippo'],
+                    ['name' => 'Great Tiger'],
+                    ['name' => 'Glass Joe'],
+                ],
+            ],
+            [
                 'name'    => 'Don Flamenco',
-                'enemies' => array(
-                    array('name' => 'Bald Bull'),
-                ),
-            ),
-        );
+                'enemies' => [
+                    ['name' => 'Bald Bull'],
+                ],
+            ],
+        ];
     }
 }

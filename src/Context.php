@@ -1,27 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
 
 use ArrayAccess;
 use Closure;
 use Mustache\Exception\InvalidArgumentException;
+use ReflectionProperty;
+
+use function array_key_exists;
+use function array_pop;
+use function array_shift;
+use function count;
+use function end;
+use function explode;
+use function gettype;
+use function method_exists;
+use function property_exists;
+use function sprintf;
 
 /**
  * Mustache Template rendering Context.
  */
 class Context
 {
-    private $stack = [];
-    private $blockStack = [];
-    private $buggyPropertyShadowing = false;
+    /** @var list<mixed> */
+    private array $stack = [];
+    /** @var list<mixed> */
+    private array $blockStack = [];
+    private bool $buggyPropertyShadowing = false;
 
     /**
      * Mustache rendering Context constructor.
      *
-     * @param mixed $context               Default rendering context (default: null)
+     * @param mixed $context                Default rendering context (default: null)
      * @param bool $buggyPropertyShadowing See Mustache\Engine::useBuggyPropertyShadowing (default: false)
      */
-    public function __construct($context = null, $buggyPropertyShadowing = false)
+    public function __construct($context = null, bool $buggyPropertyShadowing = false)
     {
         if ($context !== null) {
             $this->stack = [$context];
@@ -35,9 +51,9 @@ class Context
      *
      * @param mixed $value Object or array to use for context
      */
-    public function push($value)
+    public function push($value): void
     {
-        array_push($this->stack, $value);
+        $this->stack[] = $value;
     }
 
     /**
@@ -45,9 +61,9 @@ class Context
      *
      * @param mixed $value Object or array to use for block context
      */
-    public function pushBlockContext($value)
+    public function pushBlockContext($value): void
     {
-        array_push($this->blockStack, $value);
+        $this->blockStack[] = $value;
     }
 
     /**
@@ -149,15 +165,15 @@ class Context
      * stack for the first value, rather than searching the whole context stack
      * and starting from there.
      *
+     * @see Context::findDot
+     *
      * @param string $id Dotted variable selector
      *
      * @return mixed Variable value, or '' if not found
-     * @throws InvalidArgumentException if given an invalid anchored dot $id
      *
-     * @see Context::findDot
-     *
+     * @throws InvalidArgumentException if given an invalid anchored dot $id.
      */
-    public function findAnchoredDot($id)
+    public function findAnchoredDot(string $id)
     {
         $chunks = explode('.', $id);
         $first = array_shift($chunks);
@@ -181,11 +197,9 @@ class Context
     /**
      * Find an argument in the block context stack.
      *
-     * @param string $id
-     *
      * @return mixed Variable value, or '' if not found
      */
-    public function findInBlock($id)
+    public function findInBlock(string $id)
     {
         foreach ($this->blockStack as $context) {
             if (array_key_exists($id, $context)) {
@@ -199,21 +213,21 @@ class Context
     /**
      * Helper function to find a variable in the Context stack.
      *
-     * @param string $id    Variable name
-     * @param array  $stack Context stack
-     *
-     * @return mixed Variable value, or '' if not found
      * @see Context::find
      *
+     * @param string $id    Variable name
+     * @param list<mixed> $stack Context stack
+     *
+     * @return mixed Variable value, or '' if not found
      */
-    private function findVariableInStack($id, array $stack)
+    private function findVariableInStack(string $id, array $stack)
     {
         for ($i = count($stack) - 1; $i >= 0; $i--) {
             $frame = &$stack[$i];
 
             switch (gettype($frame)) {
                 case 'object':
-                    if (!($frame instanceof Closure)) {
+                    if (! ($frame instanceof Closure)) {
                         // Note that is_callable() *will not work here*
                         // See https://github.com/bobthecow/mustache.php/wiki/Magic-Methods
                         if (method_exists($frame, $id)) {
@@ -233,7 +247,7 @@ class Context
                             }
                         } else {
                             if (property_exists($frame, $id)) {
-                                $rp = new \ReflectionProperty($frame, $id);
+                                $rp = new ReflectionProperty($frame, $id);
                                 if ($rp->isPublic()) {
                                     return $frame->$id;
                                 }
@@ -244,12 +258,14 @@ class Context
                             }
                         }
                     }
+
                     break;
 
                 case 'array':
                     if (array_key_exists($id, $frame)) {
                         return $frame[$id];
                     }
+
                     break;
             }
         }

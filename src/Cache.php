@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
 
-use Psr;
+use Psr\Log\LoggerInterface;
 
 /**
  * Mustache Cache interface.
@@ -15,24 +17,14 @@ interface Cache
     /**
      * Load a compiled \Mustache\Template class from cache.
      *
-     * @param string $key
-     *
      * @return bool indicates successfully class load
      */
-    public function load($key);
+    public function load(string $key): bool;
 
     /**
      * Mustache\Cache and load a compiled \Mustache\Template class.
-     *
-     * @param string $key
-     * @param string $value
      */
-    public function cache($key, $value);
+    public function cache(string $key, string $value): void;
 
-    /**
-     * Set a logger instance.
-     *
-     * @param Logger|Psr\Log\LoggerInterface $logger
-     */
-    public function setLogger($logger = null);
+    public function setLogger(?LoggerInterface $logger = null): void;
 }

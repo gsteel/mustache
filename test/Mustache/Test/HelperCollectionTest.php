@@ -1,34 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test;
 
+use Mustache\Exception\InvalidArgumentException;
 use Mustache\HelperCollection;
 use PHPUnit\Framework\TestCase;
+use Throwable;
+
+use function call_user_func_array;
 
 class HelperCollectionTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
-        $foo = array($this, 'getFoo');
+        $foo = [$this, 'getFoo'];
         $bar = 'BAR';
 
-        $helpers = new HelperCollection(array(
+        $helpers = new HelperCollection([
             'foo' => $foo,
             'bar' => $bar,
-        ));
+        ]);
 
         $this->assertSame($foo, $helpers->get('foo'));
         $this->assertSame($bar, $helpers->get('bar'));
     }
 
-    public static function getFoo()
+    public static function getFoo(): void
     {
         echo 'foo';
     }
 
-    public function testAccessorsAndMutators()
+    public function testAccessorsAndMutators(): void
     {
-        $foo = array($this, 'getFoo');
+        $foo = [$this, 'getFoo'];
         $bar = 'BAR';
 
         $helpers = new HelperCollection();
@@ -52,9 +58,9 @@ class HelperCollectionTest extends TestCase
         $this->assertTrue($helpers->has('bar'));
     }
 
-    public function testMagicMethods()
+    public function testMagicMethods(): void
     {
-        $foo = array($this, 'getFoo');
+        $foo = [$this, 'getFoo'];
         $bar = 'BAR';
 
         $helpers = new HelperCollection();
@@ -87,11 +93,18 @@ class HelperCollectionTest extends TestCase
     }
 
     /**
+     * @param mixed $helpers
+     * @param array<array-key, mixed> $actions
+     * @param class-string<Throwable>|null $exception
+     *
      * @dataProvider getInvalidHelperArguments
      */
-    public function testHelperCollectionIsntAfraidToThrowExceptions($helpers = [], $actions = [], $exception = null)
-    {
-        if ($exception) {
+    public function testHelperCollectionIsntAfraidToThrowExceptions(
+        $helpers = [],
+        array $actions = [],
+        ?string $exception = null
+    ): void {
+        if ($exception !== null) {
             $this->expectException($exception);
         } else {
             $this->expectNotToPerformAssertions();
@@ -100,22 +113,29 @@ class HelperCollectionTest extends TestCase
         $helpers = new HelperCollection($helpers);
 
         foreach ($actions as $method => $args) {
-            call_user_func_array(array($helpers, $method), $args);
+            call_user_func_array([$helpers, $method], $args);
         }
     }
 
-    public function getInvalidHelperArguments(): array
+    /**
+     * @return list<array{
+     *     0: mixed,
+     *     1: array<array-key, mixed>,
+     *     2: class-string<Throwable>|null,
+     * }>
+     */
+    public static function getInvalidHelperArguments(): array
     {
         return [
             [
                 'not helpers',
                 [],
-                'Mustache\Exception\InvalidArgumentException',
+                InvalidArgumentException::class,
             ],
             [
                 [],
                 ['get' => ['foo']],
-                'Mustache\Exception\InvalidArgumentException',
+                InvalidArgumentException::class,
             ],
             [
                 ['foo' => 'FOO'],
@@ -125,7 +145,7 @@ class HelperCollectionTest extends TestCase
             [
                 ['foo' => 'FOO'],
                 ['get' => ['bar']],
-                'Mustache\Exception\InvalidArgumentException',
+                InvalidArgumentException::class,
             ],
             [
                 ['foo' => 'FOO'],
@@ -149,12 +169,12 @@ class HelperCollectionTest extends TestCase
                     'remove' => ['foo'],
                     'get'    => ['foo'],
                 ],
-                'Mustache\Exception\InvalidArgumentException',
+                InvalidArgumentException::class,
             ],
             [
                 [],
                 ['remove' => ['foo']],
-                'Mustache\Exception\InvalidArgumentException',
+                InvalidArgumentException::class,
             ],
         ];
     }

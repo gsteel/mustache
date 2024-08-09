@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test;
 
 use Mustache\Compiler;
@@ -7,22 +9,56 @@ use Mustache\Exception\SyntaxException;
 use Mustache\Tokenizer;
 use PHPUnit\Framework\TestCase;
 
+use const ENT_COMPAT;
+use const ENT_QUOTES;
+
 class CompilerTest extends TestCase
 {
     /**
+     * @param list<array<string, mixed>> $tree
+     * @param list<string> $expected
+     *
      * @dataProvider getCompileValues
      */
-    public function testCompile($source, array $tree, $name, $customEscaper, $entityFlags, $charset, $expected)
-    {
+    public function testCompile(
+        string $source,
+        array $tree,
+        string $name,
+        bool $customEscaper,
+        int $entityFlags,
+        string $charset,
+        array $expected
+    ): void {
         $compiler = new Compiler();
 
-        $compiled = $compiler->compile($source, $tree, $name, $customEscaper, $charset, false, $entityFlags);
+        $compiled = $compiler->compile(
+            $source,
+            $tree,
+            $name,
+            $customEscaper,
+            $charset,
+            false,
+            $entityFlags,
+        );
         foreach ($expected as $contains) {
             $this->assertStringContainsString($contains, $compiled);
         }
     }
 
-    public function getCompileValues()
+    /**
+     * phpcs:disable Generic.Files.LineLength
+     *
+     * @return list<array{
+     *     0: string,
+     *     1: list<array<string, mixed>>,
+     *     2: string,
+     *     3: bool,
+     *     4: int,
+     *     5: string,
+     *     6: list<string>,
+     * }>
+     */
+    public static function getCompileValues(): array
     {
         return [
             [
@@ -38,11 +74,19 @@ class CompilerTest extends TestCase
                 ],
             ],
 
-            ['', [$this->createTextToken('TEXT')], 'Monkey', false, ENT_COMPAT, 'UTF-8', [
-                "\nclass Monkey extends \Mustache\Template",
-                '$buffer .= $indent . \'TEXT\';',
-                'return $buffer;',
-            ]],
+            [
+                '',
+                [self::createTextToken('TEXT')],
+                'Monkey',
+                false,
+                ENT_COMPAT,
+                'UTF-8',
+                [
+                    "\nclass Monkey extends \Mustache\Template",
+                    '$buffer .= $indent . \'TEXT\';',
+                    'return $buffer;',
+                ],
+            ],
 
             [
                 '',
@@ -107,7 +151,7 @@ class CompilerTest extends TestCase
             [
                 '',
                 [
-                    $this->createTextToken("foo\n"),
+                    self::createTextToken("foo\n"),
                     [
                         Tokenizer::TYPE => Tokenizer::T_ESCAPED,
                         Tokenizer::NAME => 'name',
@@ -116,7 +160,7 @@ class CompilerTest extends TestCase
                         Tokenizer::TYPE => Tokenizer::T_ESCAPED,
                         Tokenizer::NAME => '.',
                     ],
-                    $this->createTextToken("'bar'"),
+                    self::createTextToken("'bar'"),
                 ],
                 'Monkey',
                 false,
@@ -135,17 +179,15 @@ class CompilerTest extends TestCase
         ];
     }
 
-    public function testCompilerThrowsSyntaxException()
+    public function testCompilerThrowsSyntaxException(): void
     {
         $compiler = new Compiler();
         $this->expectException(SyntaxException::class);
         $compiler->compile('', [[Tokenizer::TYPE => 'invalid']], 'SomeClass');
     }
 
-    /**
-     * @param string $value
-     */
-    private function createTextToken($value)
+    /** @return array<string, mixed> */
+    private static function createTextToken(string $value): array
     {
         return [
             Tokenizer::TYPE  => Tokenizer::T_TEXT,

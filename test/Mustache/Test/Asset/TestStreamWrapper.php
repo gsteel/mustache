@@ -10,32 +10,26 @@ use function fgets;
 use function fopen;
 use function preg_replace;
 
+/**
+ * phpcs:ignoreFile
+ */
 final class TestStreamWrapper
 {
+    /** @var resource|false */
     private $filehandle;
 
     /**
      * Always returns false.
-     *
-     * @param string $path
-     * @param int    $flags
-     *
-     * @return array
      */
-    public function url_stat($path, $flags)
+    public function url_stat(string $path, int $flags): bool
     {
         return false;
     }
 
     /**
      * Open the file.
-     *
-     * @param string $path
-     * @param string $mode
-     *
-     * @return bool
      */
-    public function stream_open($path, $mode)
+    public function stream_open(string $path, string $mode): bool
     {
         $path = preg_replace('-^test://-', '', $path);
         $this->filehandle = fopen($path, $mode);
@@ -43,36 +37,23 @@ final class TestStreamWrapper
         return $this->filehandle !== false;
     }
 
-    /**
-     * @return array
-     */
-    public function stream_stat()
+    public function stream_stat(): array
     {
-        return array();
+        return [];
     }
 
-    /**
-     * @param int $count
-     *
-     * @return string
-     */
-    public function stream_read($count)
+    /** @return string|false */
+    public function stream_read(int $count)
     {
         return fgets($this->filehandle, $count);
     }
 
-    /**
-     * @return bool
-     */
-    public function stream_eof()
+    public function stream_eof(): bool
     {
         return feof($this->filehandle);
     }
 
-    /**
-     * @return bool
-     */
-    public function stream_close()
+    public function stream_close(): bool
     {
         return fclose($this->filehandle);
     }

@@ -1,9 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
 
-
 use Mustache\Exception\SyntaxException;
+
+use function array_map;
+use function array_pop;
+use function array_shift;
+use function count;
+use function end;
+use function explode;
+use function preg_match;
+use function preg_replace;
+use function reset;
+use function sprintf;
+use function substr;
 
 /**
  * Mustache Parser class.
@@ -12,22 +25,24 @@ use Mustache\Exception\SyntaxException;
  */
 class Parser
 {
-    private $lineNum;
-    private $lineTokens;
-    private $pragmas;
-    private $defaultPragmas = [];
-    private $pragmaFilters;
-    private $pragmaBlocks;
-    private $pragmaDynamicNames;
+    private int $lineNum = -1;
+    private int $lineTokens = 0;
+    /** @var list<Engine::PRAGMA_*> */
+    private array $pragmas;
+    /** @var list<Engine::PRAGMA_*> */
+    private array $defaultPragmas = [];
+    private bool $pragmaFilters;
+    private bool $pragmaBlocks;
+    private bool $pragmaDynamicNames;
 
     /**
      * Process an array of Mustache tokens and convert them into a parse tree.
      *
-     * @param array $tokens Set of Mustache tokens
+     * @param list<array<string, mixed>> $tokens Set of Mustache tokens
      *
-     * @return array Mustache token parse tree
+     * @return list<array<string, mixed>> Mustache token parse tree
      */
-    public function parse(array $tokens = [])
+    public function parse(array $tokens = []): array
     {
         $this->lineNum = -1;
         $this->lineTokens = 0;
@@ -44,34 +59,35 @@ class Parser
      * Enable pragmas across all templates, regardless of the presence of pragma
      * tags in the individual templates.
      *
-     * @param string[] $pragmas
      * @internal Users should set global pragmas in Mustache\Engine, not here :)
      *
+     * @param list<Engine::PRAGMA_*> $pragmas
      */
-    public function setPragmas(array $pragmas)
+    public function setPragmas(array $pragmas): void
     {
         $this->pragmas = [];
         foreach ($pragmas as $pragma) {
             $this->enablePragma($pragma);
         }
+
         $this->defaultPragmas = $this->pragmas;
     }
 
     /**
      * Helper method for recursively building a parse tree.
      *
-     * @param array &$tokens Set of Mustache tokens
-     * @param array $parent  Parent token (default: null)
+     * @param list<array<string, mixed>> &$tokens Set of Mustache tokens
+     * @param list<array<string, mixed>>|null $parent  Parent token (default: null)
      *
-     * @return array Mustache Token parse tree
-     * @throws SyntaxException when nesting errors or mismatched section tags are encountered
+     * @return list<array<string, mixed>> Mustache Token parse tree
      *
+     * @throws SyntaxException when nesting errors or mismatched section tags are encountered.
      */
-    private function buildTree(array &$tokens, array $parent = null)
+    private function buildTree(array &$tokens, ?array $parent = null): array
     {
         $nodes = [];
 
-        while (!empty($tokens)) {
+        while (! empty($tokens)) {
             $token = array_shift($tokens);
 
             if ($token[Tokenizer::LINE] === $this->lineNum) {
@@ -92,7 +108,7 @@ class Parser
 
                 if ($this->pragmaFilters && isset($token[Tokenizer::NAME])) {
                     [$name, $filters] = $this->getNameAndFilters($token[Tokenizer::NAME]);
-                    if (!empty($filters)) {
+                    if (! empty($filters)) {
                         $token[Tokenizer::NAME] = $name;
                         $token[Tokenizer::FILTERS] = $filters;
                     }
@@ -113,12 +129,13 @@ class Parser
                     break;
 
                 case Tokenizer::T_END_SECTION:
-                    if (!isset($parent)) {
+                    if (! isset($parent)) {
                         $msg = sprintf(
                             'Unexpected closing tag: /%s on line %d',
                             $token[Tokenizer::NAME],
                             $token[Tokenizer::LINE],
                         );
+
                         throw new SyntaxException($msg, $token);
                     }
 
@@ -136,6 +153,7 @@ class Parser
                             $token[Tokenizer::NAME],
                             $token[Tokenizer::LINE],
                         );
+
                         throw new SyntaxException($msg, $token);
                     }
 
@@ -148,9 +166,11 @@ class Parser
                 case Tokenizer::T_PARTIAL:
                     $this->checkIfTokenIsAllowedInParent($parent, $token);
                     //store the whitespace prefix for laters!
-                    if ($indent = $this->clearStandaloneLines($nodes, $tokens)) {
+                    $indent = $this->clearStandaloneLines($nodes, $tokens);
+                    if ($indent !== null) {
                         $token[Tokenizer::INDENT] = $indent[Tokenizer::VALUE];
                     }
+
                     $nodes[] = $token;
                     break;
 
@@ -165,6 +185,7 @@ class Parser
                         if (isset($parent) && $parent[Tokenizer::TYPE] === Tokenizer::T_PARENT) {
                             $token[Tokenizer::TYPE] = Tokenizer::T_BLOCK_ARG;
                         }
+
                         $this->clearStandaloneLines($nodes, $tokens);
                         $nodes[] = $this->buildTree($tokens, $token);
                     } else {
@@ -174,6 +195,7 @@ class Parser
                         $token[Tokenizer::NAME] = '$' . $token[Tokenizer::NAME];
                         $nodes[] = $token;
                     }
+
                     break;
 
                 case Tokenizer::T_PRAGMA:
@@ -197,6 +219,7 @@ class Parser
                 $parent[Tokenizer::NAME],
                 $parent[Tokenizer::LINE],
             );
+
             throw new SyntaxException($msg, $parent);
         }
 
@@ -208,45 +231,47 @@ class Parser
      *
      * Returns a whitespace token for indenting partials, if applicable.
      *
-     * @param array $nodes  Parsed nodes
-     * @param array $tokens Tokens to be parsed
+     * @param list<array<string, mixed>> &$nodes  Parsed nodes
+     * @param list<array<string, mixed>> &$tokens Tokens to be parsed
      *
-     * @return array|null Resulting indent token, if any
+     * @return array<string, mixed>|null Resulting indent token, if any
      */
-    private function clearStandaloneLines(array &$nodes, array &$tokens)
+    private function clearStandaloneLines(array &$nodes, array &$tokens): ?array
     {
         if ($this->lineTokens > 1) {
             // this is the third or later node on this line, so it can't be standalone
-            return;
+            return null;
         }
 
         $prev = null;
         if ($this->lineTokens === 1) {
             // this is the second node on this line, so it can't be standalone
             // unless the previous node is whitespace.
-            if ($prev = end($nodes)) {
-                if (!$this->tokenIsWhitespace($prev)) {
-                    return;
+            $prev = end($nodes);
+            if ($prev !== false) {
+                if (! $this->tokenIsWhitespace($prev)) {
+                    return null;
                 }
             }
         }
 
-        if ($next = reset($tokens)) {
+        $next = reset($tokens);
+        if ($next !== false) {
             // If we're on a new line, bail.
             if ($next[Tokenizer::LINE] !== $this->lineNum) {
-                return;
+                return null;
             }
 
             // If the next token isn't whitespace, bail.
-            if (!$this->tokenIsWhitespace($next)) {
-                return;
+            if (! $this->tokenIsWhitespace($next)) {
+                return null;
             }
 
             if (count($tokens) !== 1) {
                 // Unless it's the last token in the template, the next token
                 // must end in newline for this to be standalone.
                 if (substr($next[Tokenizer::VALUE], -1) !== "\n") {
-                    return;
+                    return null;
                 }
             }
 
@@ -258,6 +283,8 @@ class Parser
             // Return the whitespace prefix, if any
             return array_pop($nodes);
         }
+
+        return null;
     }
 
     /**
@@ -265,14 +292,14 @@ class Parser
      *
      * True if token type is T_TEXT and value is all whitespace characters.
      *
-     * @param array $token
+     * @param array<string, mixed> $token
      *
      * @return bool True if token is a whitespace token
      */
-    private function tokenIsWhitespace(array $token)
+    private function tokenIsWhitespace(array $token): bool
     {
         if ($token[Tokenizer::TYPE] === Tokenizer::T_TEXT) {
-            return preg_match('/^\s*$/', $token[Tokenizer::VALUE]);
+            return (bool) preg_match('/^\s*$/', $token[Tokenizer::VALUE]);
         }
 
         return false;
@@ -281,12 +308,12 @@ class Parser
     /**
      * Check whether a token is allowed inside a parent tag.
      *
-     * @param array|null $parent
-     * @param array $token
-     * @throws SyntaxException if an invalid token is found inside a parent tag
+     * @param array<string, mixed>|null $parent
+     * @param array<string, mixed> $token
      *
+     * @throws SyntaxException if an invalid token is found inside a parent tag.
      */
-    private function checkIfTokenIsAllowedInParent($parent, array $token)
+    private function checkIfTokenIsAllowedInParent(?array $parent, array $token): void
     {
         if (isset($parent) && $parent[Tokenizer::TYPE] === Tokenizer::T_PARENT) {
             throw new SyntaxException('Illegal content in < parent tag', $token);
@@ -296,10 +323,14 @@ class Parser
     /**
      * Parse dynamic names.
      *
-     * @throws SyntaxException when a tag does not allow *
-     * @throws SyntaxException on multiple *s, or dots or filters with *
+     * @param array<string, mixed> $token
+     *
+     * @return array{0: string, 1: bool}
+     *
+     * @throws SyntaxException when a tag does not allow *.
+     * @throws SyntaxException on multiple *s, or dots or filters with *.
      */
-    private function getDynamicName(array $token)
+    private function getDynamicName(array $token): array
     {
         $name = $token[Tokenizer::NAME];
         $isDynamic = false;
@@ -316,11 +347,11 @@ class Parser
     /**
      * Check whether the given token supports dynamic tag names.
      *
-     * @param array $token
-     * @throws SyntaxException when a tag does not allow *
+     * @param array<string, mixed> $token
      *
+     * @throws SyntaxException when a tag does not allow *.
      */
-    private function ensureTagAllowsDynamicNames(array $token)
+    private function ensureTagAllowsDynamicNames(array $token): void
     {
         switch ($token[Tokenizer::TYPE]) {
             case Tokenizer::T_PARTIAL:
@@ -341,11 +372,9 @@ class Parser
     /**
      * Split a tag name into name and filters.
      *
-     * @param string $name
-     *
-     * @return array [Tag name, Array of filters]
+     * @return array{0: string, 1: list<string>} [Tag name, Array of filters]
      */
-    private function getNameAndFilters($name)
+    private function getNameAndFilters(string $name): array
     {
         $filters = array_map('trim', explode('|', $name));
         $name = array_shift($filters);
@@ -355,10 +384,8 @@ class Parser
 
     /**
      * Enable a pragma.
-     *
-     * @param string $name
      */
-    private function enablePragma($name)
+    private function enablePragma(string $name): void
     {
         $this->pragmas[$name] = true;
 

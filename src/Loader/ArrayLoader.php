@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Loader;
 
 use Mustache\Exception\UnknownTemplateException;
@@ -22,30 +24,19 @@ use Mustache\Loader;
  */
 class ArrayLoader implements Loader, MutableLoader
 {
-    private $templates;
+    /** @var array<string, string> */
+    private array $templates;
 
-    /**
-     * ArrayLoader constructor.
-     *
-     * @param array $templates Associative array of Template source (default: [])
-     */
+    /** @param array<string, string> $templates Associative array of Template source (default: []) */
     public function __construct(array $templates = [])
     {
         $this->templates = $templates;
     }
 
-    /**
-     * Load a Template.
-     *
-     * @param string $name
-     *
-     * @return string Mustache Template source
-     * @throws UnknownTemplateException If a template file is not found
-     *
-     */
-    public function load($name)
+    /** @inheritDoc */
+    public function load(string $name)
     {
-        if (!isset($this->templates[$name])) {
+        if (! isset($this->templates[$name])) {
             throw new UnknownTemplateException($name);
         }
 
@@ -55,9 +46,9 @@ class ArrayLoader implements Loader, MutableLoader
     /**
      * Set an associative array of Template sources for this loader.
      *
-     * @param array $templates
+     * @param array<string, string> $templates
      */
-    public function setTemplates(array $templates)
+    public function setTemplates(array $templates): void
     {
         $this->templates = $templates;
     }
@@ -65,10 +56,9 @@ class ArrayLoader implements Loader, MutableLoader
     /**
      * Set a Template source by name.
      *
-     * @param string $name
-     * @param string $template Mustache Mustache\Template source
+     * @param string $template Mustache Template source
      */
-    public function setTemplate($name, $template)
+    public function setTemplate(string $name, string $template): void
     {
         $this->templates[$name] = $template;
     }

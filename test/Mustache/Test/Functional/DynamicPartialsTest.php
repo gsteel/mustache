@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
 use Mustache\Exception\SyntaxException;
+use Mustache\Loader\StringLoader;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,71 +15,69 @@ use PHPUnit\Framework\TestCase;
  */
 class DynamicPartialsTest extends TestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     protected function setUp(): void
     {
-        $this->mustache = new Engine(array(
-            'pragmas' => array(Engine::PRAGMA_DYNAMIC_NAMES),
-        ));
+        $this->mustache = new Engine([
+            'pragmas' => [Engine::PRAGMA_DYNAMIC_NAMES],
+            'loader' => new StringLoader(),
+        ]);
     }
 
-    public function getValidDynamicNamesExamples()
+    /** @return list<array{0: string}> */
+    public static function getValidDynamicNamesExamples(): array
     {
       // technically not all dynamic names, but also not invalid
-        return array(
-            array('{{>* foo }}'),
-            array('{{>* foo.bar.baz }}'),
-            array('{{=* *=}}'),
-            array('{{! *foo }}'),
-            array('{{! foo.*bar }}'),
-            array('{{% FILTERS }}{{! foo | *bar }}'),
-            array('{{% BLOCKS }}{{< *foo }}{{/ *foo }}'),
-        );
+        return [
+            ['{{>* foo }}'],
+            ['{{>* foo.bar.baz }}'],
+            ['{{=* *=}}'],
+            ['{{! *foo }}'],
+            ['{{! foo.*bar }}'],
+            ['{{% FILTERS }}{{! foo | *bar }}'],
+            ['{{% BLOCKS }}{{< *foo }}{{/ *foo }}'],
+        ];
     }
 
-    /**
-     * @dataProvider getValidDynamicNamesExamples
-     */
-    public function testLegalInheritanceExamples($template)
+    /** @dataProvider getValidDynamicNamesExamples */
+    public function testLegalInheritanceExamples(string $template): void
     {
         $this->assertSame('', $this->mustache->render($template));
     }
 
-    public function getDynamicNameParseErrors()
+    /** @return list<array{0: string}> */
+    public static function getDynamicNameParseErrors(): array
     {
-        return array(
-            array('{{# foo }}{{/ *foo }}'),
-            array('{{^ foo }}{{/ *foo }}'),
-            array('{{% BLOCKS }}{{< foo }}{{/ *foo }}'),
-            array('{{% BLOCKS }}{{$ foo }}{{/ *foo }}'),
-        );
+        return [
+            ['{{# foo }}{{/ *foo }}'],
+            ['{{^ foo }}{{/ *foo }}'],
+            ['{{% BLOCKS }}{{< foo }}{{/ *foo }}'],
+            ['{{% BLOCKS }}{{$ foo }}{{/ *foo }}'],
+        ];
     }
 
-    /**
-     * @dataProvider getDynamicNameParseErrors
-     */
-    public function testDynamicNameParseErrors($template)
+    /** @dataProvider getDynamicNameParseErrors */
+    public function testDynamicNameParseErrors(string $template): void
     {
         $this->expectException(SyntaxException::class);
         $this->expectExceptionMessage('Nesting error:');
         $this->mustache->render($template);
     }
 
-
-    public function testDynamicBlocks()
+    public function testDynamicBlocks(): void
     {
         $tpl = '{{% BLOCKS }}{{< *partial }}{{$ bar }}{{ value }}{{/ bar }}{{/ *partial }}';
 
-        $this->mustache->setPartials(array(
+        $this->mustache->setPartials([
             'foobarbaz' => '{{% BLOCKS }}{{$ foo }}foo{{/ foo }}{{$ bar }}bar{{/ bar }}{{$ baz }}baz{{/ baz }}',
             'qux' => 'qux',
-        ));
+        ]);
 
-        $result = $this->mustache->render($tpl, array(
+        $result = $this->mustache->render($tpl, [
             'partial' => 'foobarbaz',
             'value' => 'BAR',
-        ));
+        ]);
 
         $this->assertSame($result, 'fooBARbaz');
     }

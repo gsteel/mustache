@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Loader;
 
 use Mustache\Loader;
@@ -20,14 +22,8 @@ use Mustache\Loader;
  */
 class StringLoader implements Loader
 {
-    /**
-     * Load a Template by source.
-     *
-     * @param string $name Mustache Template source
-     *
-     * @return string Mustache Template source
-     */
-    public function load($name)
+    /** @inheritDoc */
+    public function load(string $name)
     {
         return $name;
     }

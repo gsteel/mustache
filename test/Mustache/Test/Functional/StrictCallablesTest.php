@@ -1,10 +1,15 @@
 <?php
 
-namespace Mustache\Test\FiveThree\Functional;
+declare(strict_types=1);
+
+namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use Mustache\LambdaHelper;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+
+use function strtoupper;
 
 /**
  * @group lambdas
@@ -13,11 +18,13 @@ use stdClass;
 class StrictCallablesTest extends TestCase
 {
     /**
+     * @param mixed $name
+     *
      * @dataProvider callables
      */
-    public function testStrictCallables($strict, $name, $section, $expected)
+    public function testStrictCallables(bool $strict, $name, callable $section, string $expected): void
     {
-        $mustache = new Engine(array('strict_callables' => $strict));
+        $mustache = new Engine(['strict_callables' => $strict]);
         $tpl      = $mustache->loadTemplate('{{# section }}{{ name }}{{/ section }}');
 
         $data = new stdClass();
@@ -27,106 +34,89 @@ class StrictCallablesTest extends TestCase
         $this->assertEquals($expected, $tpl->render($data));
     }
 
-    public function callables()
+    /** @return list<array{0: bool, 1: mixed, 2: callable, 3: string}> */
+    public static function callables(): array
     {
-        $lambda = function ($tpl, $mustache) {
+        $lambda = static function (string $tpl, LambdaHelper $mustache) {
             return strtoupper($mustache->render($tpl));
         };
 
-        return array(
+        $instance = new ClassForStrictCallables();
+
+        return [
             // Interpolation lambdas
-            array(
+            [
                 false,
-                array($this, 'instanceName'),
+                [$instance, 'instanceName'],
                 $lambda,
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
-                array(__CLASS__, 'staticName'),
+                [ClassForStrictCallables::class, 'staticName'],
                 $lambda,
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
-                function () {
+                static function () {
                     return 'Yoshi';
                 },
                 $lambda,
                 'YOSHI',
-            ),
+            ],
 
             // Section lambdas
-            array(
+            [
                 false,
                 'Yoshi',
-                array($this, 'instanceCallable'),
+                [$instance, 'instanceCallable'],
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
                 'Yoshi',
-                array(__CLASS__, 'staticCallable'),
+                [ClassForStrictCallables::class, 'staticCallable'],
                 'YOSHI',
-            ),
-            array(
+            ],
+            [
                 false,
                 'Yoshi',
                 $lambda,
                 'YOSHI',
-            ),
+            ],
 
             // Strict interpolation lambdas
-            array(
+            [
                 true,
-                function () {
+                static function () {
                     return 'Yoshi';
                 },
                 $lambda,
                 'YOSHI',
-            ),
+            ],
 
             // Strict section lambdas
-            array(
+            [
                 true,
                 'Yoshi',
-                array($this, 'instanceCallable'),
+                [$instance, 'instanceCallable'],
                 'YoshiYoshi',
-            ),
-            array(
+            ],
+            [
                 true,
                 'Yoshi',
-                array(__CLASS__, 'staticCallable'),
+                [ClassForStrictCallables::class, 'staticCallable'],
                 'YoshiYoshi',
-            ),
-            array(
+            ],
+            [
                 true,
                 'Yoshi',
-                function ($tpl, $mustache) {
+                static function (string $tpl, LambdaHelper $mustache): string {
                     return strtoupper($mustache->render($tpl));
                 },
                 'YOSHI',
-            ),
-        );
-    }
-
-    public function instanceCallable($tpl, $mustache)
-    {
-        return strtoupper($mustache->render($tpl));
-    }
-
-    public static function staticCallable($tpl, $mustache)
-    {
-        return strtoupper($mustache->render($tpl));
-    }
-
-    public function instanceName()
-    {
-        return 'Yoshi';
-    }
-
-    public static function staticName()
-    {
-        return 'Yoshi';
+            ],
+        ];
     }
 }
