@@ -11,7 +11,6 @@ use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Mustache\Cache\FilesystemCache;
 use Mustache\Cache\NoopCache;
-use Mustache\Compiler;
 use Mustache\Engine;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
@@ -104,7 +103,6 @@ class EngineTest extends FunctionalTestCase
     {
         $logger    = new NullLogger();
         $loader    = new StringLoader();
-        $compiler  = new Compiler();
         $mustache  = new Engine();
         $cache     = new FilesystemCache(self::$tempDir);
 
@@ -119,10 +117,6 @@ class EngineTest extends FunctionalTestCase
         $this->assertNotSame($loader, $mustache->getPartialsLoader());
         $mustache->setPartialsLoader($loader);
         $this->assertSame($loader, $mustache->getPartialsLoader());
-
-        $this->assertNotSame($compiler, $mustache->getCompiler());
-        $mustache->setCompiler($compiler);
-        $this->assertSame($compiler, $mustache->getCompiler());
 
         $this->assertNotSame($cache, $mustache->getCache());
         $mustache->setCache($cache);

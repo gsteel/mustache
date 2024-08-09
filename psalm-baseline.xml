@@ -143,7 +143,6 @@
     </NullableReturnStatement>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$cache]]></code>
-      <code><![CDATA[$compiler]]></code>
       <code><![CDATA[$escape]]></code>
       <code><![CDATA[$helpers]]></code>
       <code><![CDATA[$lambdaCache]]></code>

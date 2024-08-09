@@ -75,7 +75,7 @@ class Engine
     // Services
     private Tokenizer $tokenizer;
     private Parser $parser;
-    private Compiler|null $compiler;
+    private Compiler $compiler;
 
     /**
      * Mustache class constructor.
@@ -158,6 +158,7 @@ class Engine
     {
         $this->tokenizer = new Tokenizer();
         $this->parser = new Parser();
+        $this->compiler = new Compiler();
 
         if (isset($options['template_class_prefix'])) {
             if ((string) $options['template_class_prefix'] === '') {
@@ -463,28 +464,6 @@ class Engine
     }
 
     /**
-     * Set the Mustache Compiler instance.
-     */
-    public function setCompiler(Compiler $compiler): void
-    {
-        $this->compiler = $compiler;
-    }
-
-    /**
-     * Get the current Mustache Compiler instance.
-     *
-     * If no Compiler instance has been explicitly specified, this method will instantiate and return a new one.
-     */
-    public function getCompiler(): Compiler
-    {
-        if (! isset($this->compiler)) {
-            $this->compiler = new Compiler();
-        }
-
-        return $this->compiler;
-    }
-
-    /**
      * Set the Mustache Cache instance.
      */
     public function setCache(Cache $cache): void
@@ -712,10 +691,9 @@ class Engine
 
         $tree = $this->parse($source);
 
-        $compiler = $this->getCompiler();
-        $compiler->setPragmas($this->getPragmas());
+        $this->compiler->setPragmas($this->getPragmas());
 
-        return $compiler->compile(
+        return $this->compiler->compile(
             $source,
             $tree,
             $name,
