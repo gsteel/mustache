@@ -93,59 +93,25 @@
     <InvalidDocblock>
       <code><![CDATA[private function parse(string $source): array]]></code>
     </InvalidDocblock>
-    <InvalidNullableReturnType>
-      <code><![CDATA[Cache]]></code>
-    </InvalidNullableReturnType>
     <InvalidStringClass>
       <code><![CDATA[new $className($this)]]></code>
     </InvalidStringClass>
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->templates[$className]]]></code>
     </LessSpecificReturnStatement>
-    <MixedArgument>
-      <code><![CDATA[$cache]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$options['helpers']]]></code>
-      <code><![CDATA[$options['loader']]]></code>
-      <code><![CDATA[$options['logger']]]></code>
-      <code><![CDATA[$options['partials']]]></code>
-      <code><![CDATA[$options['partials_loader']]]></code>
-      <code><![CDATA[$pragma]]></code>
-    </MixedArgument>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->pragmas[$pragma]]]></code>
-      <code><![CDATA[self::$knownPragmas[$pragma]]]></code>
-    </MixedArrayOffset>
     <MixedAssignment>
-      <code><![CDATA[$cache]]></code>
       <code><![CDATA[$helper]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$pragma]]></code>
-      <code><![CDATA[$this->charset]]></code>
-      <code><![CDATA[$this->delimiters]]></code>
-      <code><![CDATA[$this->entityFlags]]></code>
-      <code><![CDATA[$this->strictCallables]]></code>
-      <code><![CDATA[$this->templateClassPrefix]]></code>
     </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$this->pragmas]]></code>
-    </MixedPropertyTypeCoercion>
     <MixedReturnStatement>
-      <code><![CDATA[$this->cache]]></code>
       <code><![CDATA[$this->helpers]]></code>
       <code><![CDATA[$this->helpers]]></code>
     </MixedReturnStatement>
     <MoreSpecificReturnType>
       <code><![CDATA[Template]]></code>
     </MoreSpecificReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->cache]]></code>
-    </NullableReturnStatement>
     <PropertyNotSetInConstructor>
-      <code><![CDATA[$cache]]></code>
       <code><![CDATA[$escape]]></code>
       <code><![CDATA[$helpers]]></code>
-      <code><![CDATA[$lambdaCache]]></code>
       <code><![CDATA[$loader]]></code>
       <code><![CDATA[$partialsLoader]]></code>
     </PropertyNotSetInConstructor>

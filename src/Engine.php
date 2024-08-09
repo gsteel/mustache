@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mustache;
 
-use Mustache\Cache\FilesystemCache;
 use Mustache\Cache\NoopCache;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
@@ -18,7 +17,6 @@ use Psr\Log\LogLevel;
 use function array_keys;
 use function class_exists;
 use function is_callable;
-use function is_string;
 use function json_encode;
 use function md5;
 use function sprintf;
@@ -34,6 +32,24 @@ use const ENT_COMPAT;
  * logic from template files. In fact, it is not even possible to embed logic in the template.
  *
  * This is very, very rad.
+ *
+ * @psalm-type Options = array{
+ *     cache?: Cache,
+ *     template_class_prefix?: non-empty-string,
+ *     cache_lambda_templates?: bool,
+ *     delimiters?: string,
+ *     loader?: Loader,
+ *     partials_loader?: Loader,
+ *     partials?: array<string, string>,
+ *     helpers?: array<string, mixed>,
+ *     escape?: callable(string): string,
+ *     entity_flags?: int,
+ *     charset?: string,
+ *     logger?: LoggerInterface,
+ *     strict_callables?: bool,
+ *     pragmas?: list<Engine::PRAGMA_*>,
+ *     buggy_property_shadowing?: bool,
+ * }
  */
 class Engine
 {
@@ -56,8 +72,8 @@ class Engine
     private array $templates = [];
     // Environment
     private string $templateClassPrefix = '__Mustache_';
-    private Cache|null $cache;
-    private Cache|null $lambdaCache;
+    private Cache $cache;
+    private Cache|null $lambdaCache = null;
     private bool $cacheLambdaTemplates = false;
     private Loader $loader;
     private Loader $partialsLoader;
@@ -89,10 +105,6 @@ class Engine
      *         // A Mustache cache instance or a cache directory string for compiled templates.
      *         // Mustache will not cache templates unless this is set.
      *         'cache' => dirname(__FILE__).'/tmp/cache/mustache',
-     *
-     *         // Override default permissions for cache files. Defaults to using the system-defined umask. It is
-     *         // *strongly* recommended that you configure your umask properly rather than overriding permissions here.
-     *         'cache_file_mode' => 0666,
      *
      *         // Optionally, enable caching for lambda section templates. This is generally not recommended, as lambda
      *         // sections are often too dynamic to benefit from caching.
@@ -150,7 +162,7 @@ class Engine
      *         'pragmas' => [Mustache\Engine::PRAGMA_FILTERS],
      *     );
      *
-     * @param array<string, mixed> $options
+     * @param Options $options
      *
      * @throws InvalidArgumentException If `escape` option is not callable.
      */
@@ -161,27 +173,19 @@ class Engine
         $this->compiler = new Compiler();
 
         if (isset($options['template_class_prefix'])) {
-            if ((string) $options['template_class_prefix'] === '') {
+            /** @psalm-suppress DocblockTypeContradiction - Defensive Check */
+            if ($options['template_class_prefix'] === '') {
                 throw new InvalidArgumentException('Mustache Constructor "template_class_prefix" must not be empty');
             }
 
             $this->templateClassPrefix = $options['template_class_prefix'];
         }
 
-        if (isset($options['cache'])) {
-            $cache = $options['cache'];
+        $this->cache = isset($options['cache']) && $options['cache'] instanceof Cache
+            ? $options['cache']
+            : new NoopCache();
 
-            if (is_string($cache)) {
-                $mode = $options['cache_file_mode'] ?? null;
-                $cache = new FilesystemCache($cache, $mode);
-            }
-
-            $this->setCache($cache);
-        }
-
-        if (isset($options['cache_lambda_templates'])) {
-            $this->cacheLambdaTemplates = (bool) $options['cache_lambda_templates'];
-        }
+        $this->cacheLambdaTemplates = $options['cache_lambda_templates'] ?? false;
 
         if (isset($options['loader'])) {
             $this->setLoader($options['loader']);
@@ -237,11 +241,7 @@ class Engine
             }
         }
 
-        if (! isset($options['buggy_property_shadowing'])) {
-            return;
-        }
-
-        $this->buggyPropertyShadowing = (bool) $options['buggy_property_shadowing'];
+        $this->buggyPropertyShadowing = $options['buggy_property_shadowing'] ?? false;
     }
 
     /**
@@ -451,8 +451,8 @@ class Engine
 
     public function setLogger(LoggerInterface|null $logger = null): void
     {
-        if ($this->getCache()->getLogger() === null) {
-            $this->getCache()->setLogger($logger);
+        if ($this->cache->getLogger() === null) {
+            $this->cache->setLogger($logger);
         }
 
         $this->logger = $logger;
@@ -464,42 +464,14 @@ class Engine
     }
 
     /**
-     * Set the Mustache Cache instance.
-     */
-    public function setCache(Cache $cache): void
-    {
-        if (isset($this->logger) && $cache->getLogger() === null) {
-            $cache->setLogger($this->getLogger());
-        }
-
-        $this->cache = $cache;
-    }
-
-    /**
-     * Get the current Mustache Cache instance.
-     *
-     * If no Cache instance has been explicitly specified, this method will instantiate and return a new one.
-     */
-    public function getCache(): Cache
-    {
-        if (! isset($this->cache)) {
-            $this->setCache(new NoopCache());
-        }
-
-        return $this->cache;
-    }
-
-    /**
      * Get the current Lambda Cache instance.
      *
      * If 'cache_lambda_templates' is enabled, this is the default cache instance. Otherwise, it is a NoopCache.
-     *
-     * @see Engine::getCache
      */
     protected function getLambdaCache(): Cache
     {
         if ($this->cacheLambdaTemplates) {
-            return $this->getCache();
+            return $this->cache;
         }
 
         if (! isset($this->lambdaCache)) {
@@ -611,17 +583,13 @@ class Engine
      * @see Engine::loadTemplate
      * @see Engine::loadPartial
      * @see Engine::loadLambda
-     *
-     * @param Cache $cache (default: null)
      */
     private function loadSource(string|Source $source, Cache|null $cache = null): Template
     {
         $className = $this->getTemplateClassName($source);
 
         if (! isset($this->templates[$className])) {
-            if ($cache === null) {
-                $cache = $this->getCache();
-            }
+            $cache ??= $this->cache;
 
             if (! class_exists($className, false)) {
                 if (! $cache->load($className)) {

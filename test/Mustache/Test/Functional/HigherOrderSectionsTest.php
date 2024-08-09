@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mustache\Test\Functional;
 
+use Mustache\Cache\FilesystemCache;
 use Mustache\Engine;
 use Mustache\Test\Functional\HigherOrderSections\Foo;
 use Mustache\Test\Functional\HigherOrderSections\Monster;
@@ -122,7 +123,11 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
     }
 
-    /** @dataProvider cacheLambdaTemplatesData */
+    /**
+     * @param non-empty-string $tplPrefix
+     *
+     * @dataProvider cacheLambdaTemplatesData
+     */
     public function testCacheLambdaTemplatesOptionWorks(
         string $dirName,
         string $tplPrefix,
@@ -130,9 +135,10 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         int $expect,
     ): void {
         $cacheDir = $this->setUpCacheDir($dirName);
+        $cache = new FilesystemCache($cacheDir);
         $mustache = new Engine([
             'template_class_prefix'  => $tplPrefix,
-            'cache'                  => $cacheDir,
+            'cache'                  => $cache,
             'cache_lambda_templates' => $enable,
         ]);
 
@@ -143,7 +149,7 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         $this->assertCount($expect, glob($cacheDir . '/*.php'));
     }
 
-    /** @return list<array{0: string, 1: string, 2: bool, 3: int}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: bool, 3: int}> */
     public static function cacheLambdaTemplatesData(): array
     {
         return [
