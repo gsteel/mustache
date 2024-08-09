@@ -74,7 +74,7 @@ class Engine
     private bool $buggyPropertyShadowing = false;
     // Services
     private Tokenizer $tokenizer;
-    private Parser|null $parser;
+    private Parser $parser;
     private Compiler|null $compiler;
 
     /**
@@ -157,6 +157,7 @@ class Engine
     public function __construct(array $options = [])
     {
         $this->tokenizer = new Tokenizer();
+        $this->parser = new Parser();
 
         if (isset($options['template_class_prefix'])) {
             if ((string) $options['template_class_prefix'] === '') {
@@ -462,28 +463,6 @@ class Engine
     }
 
     /**
-     * Set the Mustache Parser instance.
-     */
-    public function setParser(Parser $parser): void
-    {
-        $this->parser = $parser;
-    }
-
-    /**
-     * Get the current Mustache Parser instance.
-     *
-     * If no Parser instance has been explicitly specified, this method will instantiate and return a new one.
-     */
-    public function getParser(): Parser
-    {
-        if (! isset($this->parser)) {
-            $this->parser = new Parser();
-        }
-
-        return $this->parser;
-    }
-
-    /**
      * Set the Mustache Compiler instance.
      */
     public function setCompiler(Compiler $compiler): void
@@ -705,10 +684,9 @@ class Engine
      */
     private function parse(string $source): array
     {
-        $parser = $this->getParser();
-        $parser->setPragmas($this->getPragmas());
+        $this->parser->setPragmas($this->getPragmas());
 
-        return $parser->parse($this->tokenize($source));
+        return $this->parser->parse($this->tokenize($source));
     }
 
     /**

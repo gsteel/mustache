@@ -148,7 +148,6 @@
       <code><![CDATA[$helpers]]></code>
       <code><![CDATA[$lambdaCache]]></code>
       <code><![CDATA[$loader]]></code>
-      <code><![CDATA[$parser]]></code>
       <code><![CDATA[$partialsLoader]]></code>
     </PropertyNotSetInConstructor>
     <PropertyTypeCoercion>

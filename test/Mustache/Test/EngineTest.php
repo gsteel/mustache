@@ -18,7 +18,6 @@ use Mustache\Exception\RuntimeException;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\ProductionFilesystemLoader;
 use Mustache\Loader\StringLoader;
-use Mustache\Parser;
 use Mustache\Template;
 use Mustache\Test\Asset\EngineStub;
 use Psr\Log\LogLevel;
@@ -105,7 +104,6 @@ class EngineTest extends FunctionalTestCase
     {
         $logger    = new NullLogger();
         $loader    = new StringLoader();
-        $parser    = new Parser();
         $compiler  = new Compiler();
         $mustache  = new Engine();
         $cache     = new FilesystemCache(self::$tempDir);
@@ -121,10 +119,6 @@ class EngineTest extends FunctionalTestCase
         $this->assertNotSame($loader, $mustache->getPartialsLoader());
         $mustache->setPartialsLoader($loader);
         $this->assertSame($loader, $mustache->getPartialsLoader());
-
-        $this->assertNotSame($parser, $mustache->getParser());
-        $mustache->setParser($parser);
-        $this->assertSame($parser, $mustache->getParser());
 
         $this->assertNotSame($compiler, $mustache->getCompiler());
         $mustache->setCompiler($compiler);
