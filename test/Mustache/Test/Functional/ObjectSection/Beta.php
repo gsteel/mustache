@@ -25,8 +25,7 @@ final class Beta
         return array_key_exists($name, $this->data);
     }
 
-    /** @return mixed */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         return $this->data[$name];
     }

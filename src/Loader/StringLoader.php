@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Loader;
 
 use Mustache\Loader;
+use Mustache\Source;
 
 /**
  * Mustache Template string Loader implementation.
@@ -22,8 +23,7 @@ use Mustache\Loader;
  */
 class StringLoader implements Loader
 {
-    /** @inheritDoc */
-    public function load(string $name)
+    public function load(string $name): string|Source
     {
         return $name;
     }

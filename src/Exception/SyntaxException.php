@@ -12,14 +12,9 @@ use Throwable;
  */
 class SyntaxException extends LogicException implements Exception
 {
-    /** @var array<string, mixed> */
-    private array $token;
-
     /** @param array<string, mixed> $token */
-    public function __construct(string $msg, array $token, ?Throwable $previous = null)
+    public function __construct(string $msg, private array $token, Throwable|null $previous = null)
     {
-        $this->token = $token;
-
         parent::__construct($msg, 0, $previous);
     }
 

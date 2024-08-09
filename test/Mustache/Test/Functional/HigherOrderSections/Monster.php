@@ -6,6 +6,6 @@ namespace Mustache\Test\Functional\HigherOrderSections;
 
 final class Monster
 {
-    public ?string $title = null;
-    public ?string $name = null;
+    public string|null $title = null;
+    public string|null $name = null;
 }

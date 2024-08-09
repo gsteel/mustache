@@ -185,12 +185,8 @@ class EngineTest extends FunctionalTestCase
         ]);
     }
 
-    /**
-     * @param mixed $escape
-     *
-     * @dataProvider getBadEscapers
-     */
-    public function testNonCallableEscapeThrowsException($escape): void
+    /** @dataProvider getBadEscapers */
+    public function testNonCallableEscapeThrowsException(mixed $escape): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Engine(['escape' => $escape]);
@@ -267,13 +263,6 @@ class EngineTest extends FunctionalTestCase
     public static function wrapWithUnderscores(string $text): string
     {
         return '__' . $text . '__';
-    }
-
-    public function testSetHelpersThrowsExceptions(): void
-    {
-        $mustache = new Engine();
-        $this->expectException(InvalidArgumentException::class);
-        $mustache->setHelpers('monkeymonkeymonkey');
     }
 
     public function testLoadPartialCascading(): void
@@ -409,7 +398,7 @@ class EngineTest extends FunctionalTestCase
         array $helpers,
         array $data,
         string $tpl,
-        string $expect
+        string $expect,
     ): void {
         $mustache = new Engine([
             'pragmas' => $pragmas,

@@ -34,7 +34,7 @@ class MustacheInheritanceSpecTest extends SpecTestCase
         string $source,
         array $partials,
         array $data,
-        string $expected
+        string $expected,
     ): void {
         $template = self::loadTemplate($source, $partials);
         $this->assertEquals($expected, $template->render($data), $desc);

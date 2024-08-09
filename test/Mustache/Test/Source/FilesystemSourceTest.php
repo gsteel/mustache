@@ -19,7 +19,7 @@ class FilesystemSourceTest extends TestCase
             $this->expectWarning();
             $source->getKey();
             self::fail('An exception should have been thrown');
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException) {
             $this->expectNotToPerformAssertions();
         }
     }

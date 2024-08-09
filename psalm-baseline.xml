@@ -96,9 +96,6 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="src/Engine.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($helpers) &amp;&amp; ! $helpers instanceof Traversable</code>
-    </DocblockTypeContradiction>
     <InvalidArgument occurrences="1">
       <code>$tree</code>
     </InvalidArgument>
@@ -187,9 +184,6 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/HelperCollection.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($helpers) &amp;&amp; ! $helpers instanceof Traversable</code>
-    </DocblockTypeContradiction>
     <MixedAssignment occurrences="1">
       <code>$helper</code>
     </MixedAssignment>
@@ -208,9 +202,7 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Loader/InlineLoader.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>load</code>
-    </InvalidNullableReturnType>
+    <InvalidNullableReturnType occurrences="1"/>
     <NullableReturnStatement occurrences="1">
       <code>$this-&gt;templates[$name]</code>
     </NullableReturnStatement>
@@ -417,8 +409,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$className</code>
     </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="2">
-      <code>'monkeymonkeymonkey'</code>
+    <InvalidArgument occurrences="1">
       <code>testPragmasConstructorOption</code>
     </InvalidArgument>
     <InvalidReturnStatement occurrences="1"/>
@@ -588,9 +579,6 @@
     </MissingClosureReturnType>
   </file>
   <file src="test/Mustache/Test/HelperCollectionTest.php">
-    <MixedArgument occurrences="1">
-      <code>$helpers</code>
-    </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$args</code>
     </MixedAssignment>

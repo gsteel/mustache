@@ -98,20 +98,19 @@ class Tokenizer
     public const VALUE = 'value';
     public const FILTERS = 'filters';
 
-    private ?int $state;
-    private ?string $tagType = null;
+    private int|null $state;
+    private string|null $tagType = null;
     private string $buffer = '';
     /** @var list<array<string, mixed>> */
     private array $tokens = [];
-    /** @var int|false */
-    private $seenTag = 0;
+    private int|false $seenTag = 0;
     private int $line = 0;
-    private ?string $otag = null;
-    private ?string $otagChar = null;
-    private ?int $otagLen = null;
-    private ?string $ctag = null;
-    private ?string $ctagChar = null;
-    private ?int $ctagLen = null;
+    private string|null $otag = null;
+    private string|null $otagChar = null;
+    private int|null $otagLen = null;
+    private string|null $ctag = null;
+    private string|null $ctagChar = null;
+    private int|null $ctagLen = null;
 
     /**
      * Scan and tokenize template source.
@@ -124,7 +123,7 @@ class Tokenizer
      * @throws InvalidArgumentException when $delimiters string is invalid.
      * @throws SyntaxException when mismatched section tags are encountered.
      */
-    public function scan(string $text, ?string $delimiters = ''): array
+    public function scan(string $text, string|null $delimiters = ''): array
     {
         // Setting mbstring.func_overload makes things *really* slow.
         // Let's do everyone a favor and scan this string as ASCII instead.

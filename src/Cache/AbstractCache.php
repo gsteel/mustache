@@ -16,17 +16,17 @@ use Psr\Log\LoggerInterface;
  */
 abstract class AbstractCache implements Cache
 {
-    private ?LoggerInterface $logger = null;
+    private LoggerInterface|null $logger = null;
 
     /**
      * Get the current logger instance.
      */
-    public function getLogger(): ?LoggerInterface
+    public function getLogger(): LoggerInterface|null
     {
         return $this->logger;
     }
 
-    public function setLogger(?LoggerInterface $logger = null): void
+    public function setLogger(LoggerInterface|null $logger = null): void
     {
         $this->logger = $logger;
     }

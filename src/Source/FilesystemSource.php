@@ -22,21 +22,16 @@ use function stat;
  */
 class FilesystemSource implements Source
 {
-    private string $fileName;
-    /** @var list<string> */
-    private array $statProps;
     /** @var array<string, int>|false */
-    private $stat;
+    private array|false $stat;
 
     /**
      * Filesystem Source constructor.
      *
      * @param list<string> $statProps
      */
-    public function __construct(string $fileName, array $statProps)
+    public function __construct(private string $fileName, private array $statProps)
     {
-        $this->fileName = $fileName;
-        $this->statProps = $statProps;
     }
 
     /**

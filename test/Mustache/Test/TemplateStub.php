@@ -12,7 +12,7 @@ use function assert;
 
 final class TemplateStub extends Template
 {
-    public ?string $rendered = null;
+    public string|null $rendered = null;
 
     public function getMustache(): Engine
     {

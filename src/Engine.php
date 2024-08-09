@@ -14,11 +14,9 @@ use Mustache\Loader\MutableLoader;
 use Mustache\Loader\StringLoader;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Traversable;
 
 use function array_keys;
 use function class_exists;
-use function is_array;
 use function is_callable;
 use function is_string;
 use function json_encode;
@@ -58,26 +56,26 @@ class Engine
     private array $templates = [];
     // Environment
     private string $templateClassPrefix = '__Mustache_';
-    private ?Cache $cache;
-    private ?Cache $lambdaCache;
+    private Cache|null $cache;
+    private Cache|null $lambdaCache;
     private bool $cacheLambdaTemplates = false;
     private Loader $loader;
     private Loader $partialsLoader;
-    private ?HelperCollection $helpers;
+    private HelperCollection|null $helpers;
     /** @var callable */
     private $escape;
     private int $entityFlags = ENT_COMPAT;
     private string $charset = 'UTF-8';
-    private ?LoggerInterface $logger = null;
+    private LoggerInterface|null $logger = null;
     private bool $strictCallables = false;
     /** @var array<self::PRAGMA_*, bool> */
     private array $pragmas = [];
-    private ?string $delimiters = null;
+    private string|null $delimiters = null;
     private bool $buggyPropertyShadowing = false;
     // Services
-    private ?Tokenizer $tokenizer;
-    private ?Parser $parser;
-    private ?Compiler $compiler;
+    private Tokenizer|null $tokenizer;
+    private Parser|null $parser;
+    private Compiler|null $compiler;
 
     /**
      * Mustache class constructor.
@@ -254,7 +252,7 @@ class Engine
      *
      * @return string Rendered template
      */
-    public function render(string $template, $context = []): string
+    public function render(string $template, mixed $context = []): string
     {
         return $this->loadTemplate($template)->render($context);
     }
@@ -262,7 +260,7 @@ class Engine
     /**
      * Get the current Mustache escape callback.
      */
-    public function getEscape(): ?callable
+    public function getEscape(): callable|null
     {
         return $this->escape;
     }
@@ -376,16 +374,12 @@ class Engine
      * any other valid Mustache context value. They will be prepended to the context stack, so they will be available in
      * any template loaded by this Mustache instance.
      *
-     * @param array<string, mixed>|Traversable<string, mixed> $helpers
+     * @param iterable<string, mixed> $helpers
      *
      * @throws InvalidArgumentException if $helpers is not an array or Traversable.
      */
-    public function setHelpers($helpers): void
+    public function setHelpers(iterable $helpers): void
     {
-        if (! is_array($helpers) && ! $helpers instanceof Traversable) {
-            throw new InvalidArgumentException('setHelpers expects an array of helpers');
-        }
-
         $this->getHelpers()->clear();
 
         foreach ($helpers as $name => $helper) {
@@ -411,10 +405,8 @@ class Engine
      * Add a new Mustache helper.
      *
      * @see Engine::setHelpers
-     *
-     * @param mixed $helper
      */
-    public function addHelper(string $name, $helper): void
+    public function addHelper(string $name, mixed $helper): void
     {
         $this->getHelpers()->add($name, $helper);
     }
@@ -426,7 +418,7 @@ class Engine
      *
      * @return mixed Helper
      */
-    public function getHelper(string $name)
+    public function getHelper(string $name): mixed
     {
         return $this->getHelpers()->get($name);
     }
@@ -453,7 +445,7 @@ class Engine
         $this->getHelpers()->remove($name);
     }
 
-    public function setLogger(?LoggerInterface $logger = null): void
+    public function setLogger(LoggerInterface|null $logger = null): void
     {
         if ($this->getCache()->getLogger() === null) {
             $this->getCache()->setLogger($logger);
@@ -462,7 +454,7 @@ class Engine
         $this->logger = $logger;
     }
 
-    public function getLogger(): ?LoggerInterface
+    public function getLogger(): LoggerInterface|null
     {
         return $this->logger;
     }
@@ -585,11 +577,9 @@ class Engine
      * This method must be updated any time options are added which make it so
      * the same template could be parsed and compiled multiple different ways.
      *
-     * @param string|Source $source
-     *
      * @return string Mustache Template class name
      */
-    public function getTemplateClassName($source): string
+    public function getTemplateClassName(string|Source $source): string
     {
         // For the most part, adding a new option here should do the trick.
         //
@@ -635,7 +625,7 @@ class Engine
      * This is a helper method used internally by Template instances for loading partial templates. You can most likely
      * ignore it completely.
      */
-    public function loadPartial(string $name): ?Template
+    public function loadPartial(string $name): Template|null
     {
         try {
             if (isset($this->partialsLoader)) {
@@ -665,7 +655,7 @@ class Engine
      * This is a helper method used by Template instances to generate subtemplates for Lambda sections. You can most
      * likely ignore it completely.
      */
-    public function loadLambda(string $source, ?string $delims = null): Template
+    public function loadLambda(string $source, string|null $delims = null): Template
     {
         if ($delims !== null) {
             $source = $delims . "\n" . $source;
@@ -684,10 +674,9 @@ class Engine
      * @see Engine::loadPartial
      * @see Engine::loadLambda
      *
-     * @param string|Source $source
-     * @param Cache $cache  (default: null)
+     * @param Cache $cache (default: null)
      */
-    private function loadSource($source, ?Cache $cache = null): Template
+    private function loadSource(string|Source $source, Cache|null $cache = null): Template
     {
         $className = $this->getTemplateClassName($source);
 
@@ -747,11 +736,9 @@ class Engine
      *
      * @see Compiler::compile
      *
-     * @param string|Source $source
-     *
      * @return string generated Mustache template class code
      */
-    private function compile($source): string
+    private function compile(string|Source $source): string
     {
         $name = $this->getTemplateClassName($source);
 

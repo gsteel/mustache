@@ -17,11 +17,8 @@ use const PHP_VERSION;
  */
 class UnknownHelperException extends InvalidArgumentException implements Exception
 {
-    private string $helperName;
-
-    public function __construct(string $helperName, ?Throwable $previous = null)
+    public function __construct(private string $helperName, Throwable|null $previous = null)
     {
-        $this->helperName = $helperName;
         $message = sprintf('Unknown helper: %s', $helperName);
         if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
             parent::__construct($message, 0, $previous);

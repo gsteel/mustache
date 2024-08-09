@@ -6,6 +6,7 @@ namespace Mustache\Loader;
 
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader;
+use Mustache\Source;
 
 /**
  * Mustache Template array Loader implementation.
@@ -24,17 +25,12 @@ use Mustache\Loader;
  */
 class ArrayLoader implements Loader, MutableLoader
 {
-    /** @var array<string, string> */
-    private array $templates;
-
     /** @param array<string, string> $templates Associative array of Template source (default: []) */
-    public function __construct(array $templates = [])
+    public function __construct(private array $templates = [])
     {
-        $this->templates = $templates;
     }
 
-    /** @inheritDoc */
-    public function load(string $name)
+    public function load(string $name): string|Source
     {
         if (! isset($this->templates[$name])) {
             throw new UnknownTemplateException($name);

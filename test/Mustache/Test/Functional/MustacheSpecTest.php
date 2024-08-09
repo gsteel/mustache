@@ -47,7 +47,7 @@ class MustacheSpecTest extends SpecTestCase
         string $source,
         array $partials,
         array $data,
-        string $expected
+        string $expected,
     ): void {
         $template = self::loadTemplate($source, $partials);
         $this->assertEquals($expected, $template->render($data), $desc);
@@ -61,7 +61,6 @@ class MustacheSpecTest extends SpecTestCase
 
     /**
      * @param array<string, string> $partials
-     * @param mixed $data
      *
      * @group interpolation
      * @dataProvider loadInterpolationSpec
@@ -70,8 +69,8 @@ class MustacheSpecTest extends SpecTestCase
         string $desc,
         string $source,
         array $partials,
-        $data,
-        string $expected
+        mixed $data,
+        string $expected,
     ): void {
         $template = self::loadTemplate($source, $partials);
         $this->assertEquals($expected, $template->render($data), $desc);
@@ -167,7 +166,7 @@ class MustacheSpecTest extends SpecTestCase
      *
      * @return array<string, mixed>
      */
-    private function prepareLambdasSpec(array $data): ?array
+    private function prepareLambdasSpec(array $data): array|null
     {
         foreach ($data as $key => $val) {
             if (isset($val['__tag__']) && $val['__tag__'] === 'code') {

@@ -83,7 +83,7 @@ class Parser
      *
      * @throws SyntaxException when nesting errors or mismatched section tags are encountered.
      */
-    private function buildTree(array &$tokens, ?array $parent = null): array
+    private function buildTree(array &$tokens, array|null $parent = null): array
     {
         $nodes = [];
 
@@ -236,7 +236,7 @@ class Parser
      *
      * @return array<string, mixed>|null Resulting indent token, if any
      */
-    private function clearStandaloneLines(array &$nodes, array &$tokens): ?array
+    private function clearStandaloneLines(array &$nodes, array &$tokens): array|null
     {
         if ($this->lineTokens > 1) {
             // this is the third or later node on this line, so it can't be standalone
@@ -313,7 +313,7 @@ class Parser
      *
      * @throws SyntaxException if an invalid token is found inside a parent tag.
      */
-    private function checkIfTokenIsAllowedInParent(?array $parent, array $token): void
+    private function checkIfTokenIsAllowedInParent(array|null $parent, array $token): void
     {
         if (isset($parent) && $parent[Tokenizer::TYPE] === Tokenizer::T_PARENT) {
             throw new SyntaxException('Illegal content in < parent tag', $token);

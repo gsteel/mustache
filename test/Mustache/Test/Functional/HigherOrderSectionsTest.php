@@ -10,7 +10,6 @@ use Mustache\Test\Functional\HigherOrderSections\Monster;
 use Mustache\Test\FunctionalTestCase;
 
 use function file_exists;
-use function get_class;
 use function glob;
 use function mkdir;
 use function sprintf;
@@ -41,7 +40,7 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         $foo->doublewrap = [$foo, 'wrapWithBoth'];
 
         $bar = new Foo();
-        $bar->trimmer = [get_class($bar), 'staticTrim'];
+        $bar->trimmer = [$bar::class, 'staticTrim'];
 
         return [
             [$foo, '{{#doublewrap}}{{name}}{{/doublewrap}}', sprintf('<strong><em>%s</em></strong>', $foo->name)],
@@ -69,7 +68,7 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
         $data = [
             'name' => 'Bob',
-            'trim' => [get_class($foo), 'staticTrim'],
+            'trim' => [$foo::class, 'staticTrim'],
         ];
 
         $this->assertEquals($data['name'], $tpl->render($data));
@@ -128,7 +127,7 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         string $dirName,
         string $tplPrefix,
         bool $enable,
-        int $expect
+        int $expect,
     ): void {
         $cacheDir = $this->setUpCacheDir($dirName);
         $mustache = new Engine([
