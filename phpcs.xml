@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs.cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
+    <arg value="ps"/>
+
+    <file>src</file>
+    <file>test</file>
+
+    <rule ref="Doctrine" />
+
+    <!-- Aligning multiple assignments does not improve readability IMO -->
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <severity>0</severity>
+    </rule>
+    <!-- We also don't need alignment for doc-blocks either -->
+    <rule ref="Squiz.Commenting.FunctionComment.SpacingAfterParamType">
+        <severity>0</severity>
+    </rule>
+    <!--
+     Sometimes, you need to declare an array with 1 item on multiple lines because of its length.
+     I also think that, even with a single item, readability is improved this way.
+    -->
+    <rule ref="Squiz.Arrays.ArrayDeclaration.MultiLineNotAllowed">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120" />
+            <property name="absoluteLineLimit" value="120" />
+        </properties>
+    </rule>
+</ruleset>
