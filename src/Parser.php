@@ -12,6 +12,7 @@ use function array_shift;
 use function count;
 use function end;
 use function explode;
+use function is_array;
 use function preg_match;
 use function preg_replace;
 use function reset;
@@ -279,7 +280,7 @@ class Parser
             array_shift($tokens);
         }
 
-        if ($prev) {
+        if (is_array($prev)) {
             // Return the whitespace prefix, if any
             return array_pop($nodes);
         }

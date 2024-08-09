@@ -96,7 +96,7 @@ class EngineTest extends FunctionalTestCase
         $template->expects($this->once())
             ->method('render')
             ->with($data)
-            ->will($this->returnValue($output));
+            ->willReturn($output);
 
         $this->assertEquals($output, $mustache->render($source, $data));
         $this->assertEquals($source, $mustache->source);
@@ -414,7 +414,8 @@ class EngineTest extends FunctionalTestCase
      *     1: array<string, mixed>,
      *     2: array<string, mixed>,
      *     3: string,
-     *     4, string}>
+     *     4: string,
+     * }>
      */
     public static function pragmaData(): array
     {

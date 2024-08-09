@@ -338,7 +338,7 @@ class TokenizerTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function getUnclosedTags(): array
+    public static function getUnclosedTags(): array
     {
         return [
             ['{{ name'],

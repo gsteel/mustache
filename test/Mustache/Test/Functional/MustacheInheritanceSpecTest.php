@@ -41,7 +41,7 @@ class MustacheInheritanceSpecTest extends SpecTestCase
     }
 
     /** @return list<array{0: string, 1: string, 2: array<string, string>, 3: array<string, mixed>, 4: string}> */
-    public function loadInheritanceSpec(): array
+    public static function loadInheritanceSpec(): array
     {
         // return $this->loadSpec('sections');
         // return [];

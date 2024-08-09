@@ -8,7 +8,11 @@ final class ClassWithCall
 {
     public string|null $name = null;
 
-    /** @param array<string, mixed> $args */
+    /**
+     * @param array<string, mixed> $args
+     *
+     * @psalm-suppress UnusedParam
+     */
     public function __call(string $method, array $args): string
     {
         return 'unknown value';

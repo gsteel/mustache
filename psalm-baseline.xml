@@ -1,660 +1,649 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="src/Compiler.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$realChildren</code>
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$realChildren]]></code>
     </ArgumentTypeCoercion>
-    <InvalidArrayOffset occurrences="1">
-      <code>$this-&gt;pragmas[Engine::PRAGMA_ANCHORED_DOT]</code>
+    <InvalidArgument>
+      <code><![CDATA[[self::class, 'onlyBlockArgs']]]></code>
+    </InvalidArgument>
+    <InvalidArrayOffset>
+      <code><![CDATA[$this->pragmas[Engine::PRAGMA_ANCHORED_DOT]]]></code>
     </InvalidArrayOffset>
-    <InvalidPropertyAssignmentValue occurrences="3">
-      <code>$this-&gt;pragmas</code>
-      <code>$this-&gt;pragmas</code>
-      <code>$this-&gt;pragmas</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingConstructor occurrences="9">
-      <code>$blocks</code>
-      <code>$charset</code>
-      <code>$customEscape</code>
-      <code>$entityFlags</code>
-      <code>$indentNextLine</code>
-      <code>$pragmas</code>
-      <code>$sections</code>
-      <code>$source</code>
-      <code>$strictCallables</code>
+    <MissingConstructor>
+      <code><![CDATA[$blocks]]></code>
+      <code><![CDATA[$charset]]></code>
+      <code><![CDATA[$customEscape]]></code>
+      <code><![CDATA[$entityFlags]]></code>
+      <code><![CDATA[$indentNextLine]]></code>
+      <code><![CDATA[$pragmas]]></code>
+      <code><![CDATA[$sections]]></code>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$strictCallables]]></code>
     </MissingConstructor>
-    <MixedArgument occurrences="33">
-      <code>$node[Tokenizer::CTAG]</code>
-      <code>$node[Tokenizer::CTAG]</code>
-      <code>$node[Tokenizer::CTAG]</code>
-      <code>$node[Tokenizer::DYNAMIC] ?? false</code>
-      <code>$node[Tokenizer::DYNAMIC] ?? false</code>
-      <code>$node[Tokenizer::END]</code>
-      <code>$node[Tokenizer::END]</code>
-      <code>$node[Tokenizer::END]</code>
-      <code>$node[Tokenizer::FILTERS] ?? []</code>
-      <code>$node[Tokenizer::FILTERS] ?? []</code>
-      <code>$node[Tokenizer::FILTERS] ?? []</code>
-      <code>$node[Tokenizer::INDENT] ?? ''</code>
-      <code>$node[Tokenizer::INDENT] ?? ''</code>
-      <code>$node[Tokenizer::INDEX]</code>
-      <code>$node[Tokenizer::INDEX]</code>
-      <code>$node[Tokenizer::INDEX]</code>
-      <code>$node[Tokenizer::NAME]</code>
-      <code>$node[Tokenizer::NAME]</code>
-      <code>$node[Tokenizer::NAME]</code>
-      <code>$node[Tokenizer::NAME]</code>
-      <code>$node[Tokenizer::NAME]</code>
-      <code>$node[Tokenizer::NAME]</code>
-      <code>$node[Tokenizer::NAME]</code>
-      <code>$node[Tokenizer::NODES]</code>
-      <code>$node[Tokenizer::NODES]</code>
-      <code>$node[Tokenizer::NODES]</code>
-      <code>$node[Tokenizer::NODES]</code>
-      <code>$node[Tokenizer::NODES]</code>
-      <code>$node[Tokenizer::OTAG]</code>
-      <code>$node[Tokenizer::OTAG]</code>
-      <code>$node[Tokenizer::OTAG]</code>
-      <code>$node[Tokenizer::TYPE]</code>
-      <code>$node[Tokenizer::VALUE]</code>
+    <MixedArgument>
+      <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
+      <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
+      <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
+      <code><![CDATA[$node[Tokenizer::DYNAMIC] ?? false]]></code>
+      <code><![CDATA[$node[Tokenizer::DYNAMIC] ?? false]]></code>
+      <code><![CDATA[$node[Tokenizer::END]]]></code>
+      <code><![CDATA[$node[Tokenizer::END]]]></code>
+      <code><![CDATA[$node[Tokenizer::END]]]></code>
+      <code><![CDATA[$node[Tokenizer::FILTERS] ?? []]]></code>
+      <code><![CDATA[$node[Tokenizer::FILTERS] ?? []]]></code>
+      <code><![CDATA[$node[Tokenizer::FILTERS] ?? []]]></code>
+      <code><![CDATA[$node[Tokenizer::INDENT] ?? '']]></code>
+      <code><![CDATA[$node[Tokenizer::INDENT] ?? '']]></code>
+      <code><![CDATA[$node[Tokenizer::INDEX]]]></code>
+      <code><![CDATA[$node[Tokenizer::INDEX]]]></code>
+      <code><![CDATA[$node[Tokenizer::INDEX]]]></code>
+      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
+      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
+      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
+      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
+      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
+      <code><![CDATA[$node[Tokenizer::OTAG]]]></code>
+      <code><![CDATA[$node[Tokenizer::OTAG]]]></code>
+      <code><![CDATA[$node[Tokenizer::OTAG]]]></code>
+      <code><![CDATA[$node[Tokenizer::TYPE]]]></code>
+      <code><![CDATA[$node[Tokenizer::VALUE]]]></code>
     </MixedArgument>
-    <MixedArrayOffset occurrences="1">
-      <code>$this-&gt;pragmas[$node[Tokenizer::NAME]]</code>
+    <MixedArrayOffset>
+      <code><![CDATA[$this->pragmas[$node[Tokenizer::NAME]]]]></code>
     </MixedArrayOffset>
-    <RedundantConditionGivenDocblockType occurrences="2">
-      <code>$this-&gt;pragmas[Engine::PRAGMA_ANCHORED_DOT]</code>
-      <code>isset($this-&gt;pragmas[Engine::PRAGMA_ANCHORED_DOT]) &amp;&amp; $this-&gt;pragmas[Engine::PRAGMA_ANCHORED_DOT]</code>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->pragmas]]></code>
+      <code><![CDATA[$this->pragmas]]></code>
+      <code><![CDATA[$this->pragmas]]></code>
+    </PropertyTypeCoercion>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[$this->pragmas[Engine::PRAGMA_ANCHORED_DOT]]]></code>
+      <code><![CDATA[isset($this->pragmas[Engine::PRAGMA_ANCHORED_DOT]) && $this->pragmas[Engine::PRAGMA_ANCHORED_DOT]]]></code>
     </RedundantConditionGivenDocblockType>
-    <UnusedParam occurrences="9">
-      <code>$ctag</code>
-      <code>$ctag</code>
-      <code>$end</code>
-      <code>$end</code>
-      <code>$indent</code>
-      <code>$otag</code>
-      <code>$otag</code>
-      <code>$start</code>
-      <code>$start</code>
-    </UnusedParam>
   </file>
   <file src="src/Context.php">
-    <MixedArgument occurrences="1">
-      <code>$context</code>
+    <MixedArgument>
+      <code><![CDATA[$context]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="6">
-      <code>$context</code>
-      <code>$frame</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
+    <MixedAssignment>
+      <code><![CDATA[$context]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
-    <PossiblyUnusedMethod occurrences="3">
-      <code>findInBlock</code>
-      <code>popBlockContext</code>
-      <code>pushBlockContext</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[findInBlock]]></code>
+      <code><![CDATA[popBlockContext]]></code>
+      <code><![CDATA[pushBlockContext]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="src/Engine.php">
-    <InvalidArgument occurrences="1">
-      <code>$tree</code>
-    </InvalidArgument>
-    <InvalidNullableReturnType occurrences="1">
-      <code>Cache</code>
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$tree]]></code>
+    </ArgumentTypeCoercion>
+    <InvalidDocblock>
+      <code><![CDATA[private function parse(string $source): array]]></code>
+    </InvalidDocblock>
+    <InvalidNullableReturnType>
+      <code><![CDATA[Cache]]></code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>$parser-&gt;parse($this-&gt;tokenize($source))</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>list&lt;string, mixed&gt;</code>
-    </InvalidReturnType>
-    <InvalidStringClass occurrences="1">
-      <code>new $className($this)</code>
+    <InvalidStringClass>
+      <code><![CDATA[new $className($this)]]></code>
     </InvalidStringClass>
-    <LessSpecificReturnStatement occurrences="1">
-      <code>$this-&gt;templates[$className]</code>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->templates[$className]]]></code>
     </LessSpecificReturnStatement>
-    <MixedArgument occurrences="8">
-      <code>$cache</code>
-      <code>$mode</code>
-      <code>$options['helpers']</code>
-      <code>$options['loader']</code>
-      <code>$options['logger']</code>
-      <code>$options['partials']</code>
-      <code>$options['partials_loader']</code>
-      <code>$pragma</code>
+    <MixedArgument>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$mode]]></code>
+      <code><![CDATA[$options['helpers']]]></code>
+      <code><![CDATA[$options['loader']]]></code>
+      <code><![CDATA[$options['logger']]]></code>
+      <code><![CDATA[$options['partials']]]></code>
+      <code><![CDATA[$options['partials_loader']]]></code>
+      <code><![CDATA[$pragma]]></code>
     </MixedArgument>
-    <MixedArrayOffset occurrences="2">
-      <code>$this-&gt;pragmas[$pragma]</code>
-      <code>self::$knownPragmas[$pragma]</code>
+    <MixedArrayOffset>
+      <code><![CDATA[$this->pragmas[$pragma]]]></code>
+      <code><![CDATA[self::$knownPragmas[$pragma]]]></code>
     </MixedArrayOffset>
-    <MixedAssignment occurrences="9">
-      <code>$cache</code>
-      <code>$helper</code>
-      <code>$mode</code>
-      <code>$pragma</code>
-      <code>$this-&gt;charset</code>
-      <code>$this-&gt;delimiters</code>
-      <code>$this-&gt;entityFlags</code>
-      <code>$this-&gt;strictCallables</code>
-      <code>$this-&gt;templateClassPrefix</code>
+    <MixedAssignment>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$helper]]></code>
+      <code><![CDATA[$mode]]></code>
+      <code><![CDATA[$pragma]]></code>
+      <code><![CDATA[$this->charset]]></code>
+      <code><![CDATA[$this->delimiters]]></code>
+      <code><![CDATA[$this->entityFlags]]></code>
+      <code><![CDATA[$this->strictCallables]]></code>
+      <code><![CDATA[$this->templateClassPrefix]]></code>
     </MixedAssignment>
-    <MixedPropertyTypeCoercion occurrences="1">
-      <code>$this-&gt;pragmas</code>
+    <MixedPropertyTypeCoercion>
+      <code><![CDATA[$this->pragmas]]></code>
     </MixedPropertyTypeCoercion>
-    <MixedReturnStatement occurrences="2">
-      <code>$this-&gt;cache</code>
-      <code>$this-&gt;helpers</code>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->cache]]></code>
+      <code><![CDATA[$this->helpers]]></code>
+      <code><![CDATA[$this->helpers]]></code>
     </MixedReturnStatement>
-    <MoreSpecificReturnType occurrences="1">
-      <code>Template</code>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Template]]></code>
     </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$this-&gt;cache</code>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->cache]]></code>
     </NullableReturnStatement>
-    <PropertyNotSetInConstructor occurrences="9">
-      <code>$cache</code>
-      <code>$compiler</code>
-      <code>$escape</code>
-      <code>$helpers</code>
-      <code>$lambdaCache</code>
-      <code>$loader</code>
-      <code>$parser</code>
-      <code>$partialsLoader</code>
-      <code>$tokenizer</code>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$cache]]></code>
+      <code><![CDATA[$compiler]]></code>
+      <code><![CDATA[$escape]]></code>
+      <code><![CDATA[$helpers]]></code>
+      <code><![CDATA[$lambdaCache]]></code>
+      <code><![CDATA[$loader]]></code>
+      <code><![CDATA[$parser]]></code>
+      <code><![CDATA[$partialsLoader]]></code>
+      <code><![CDATA[$tokenizer]]></code>
     </PropertyNotSetInConstructor>
-    <PropertyTypeCoercion occurrences="1">
-      <code>$this-&gt;templates</code>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->templates]]></code>
     </PropertyTypeCoercion>
-    <RedundantCondition occurrences="1">
-      <code>isset($this-&gt;loader) &amp;&amp; ! $this-&gt;loader instanceof StringLoader</code>
+    <RedundantCondition>
+      <code><![CDATA[isset($this->loader) && ! $this->loader instanceof StringLoader]]></code>
     </RedundantCondition>
-    <RedundantPropertyInitializationCheck occurrences="7">
-      <code>'default'</code>
-      <code>isset($this-&gt;escape)</code>
-      <code>isset($this-&gt;loader)</code>
-      <code>isset($this-&gt;loader)</code>
-      <code>isset($this-&gt;partialsLoader)</code>
-      <code>isset($this-&gt;partialsLoader)</code>
-      <code>isset($this-&gt;partialsLoader)</code>
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA['default']]></code>
+      <code><![CDATA[isset($this->escape)]]></code>
+      <code><![CDATA[isset($this->loader)]]></code>
+      <code><![CDATA[isset($this->loader)]]></code>
+      <code><![CDATA[isset($this->partialsLoader)]]></code>
+      <code><![CDATA[isset($this->partialsLoader)]]></code>
+      <code><![CDATA[isset($this->partialsLoader)]]></code>
     </RedundantPropertyInitializationCheck>
-    <UndefinedInterfaceMethod occurrences="2">
-      <code>getLogger</code>
-      <code>getLogger</code>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$this->delimiters]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getLogger]]></code>
+      <code><![CDATA[getLogger]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/HelperCollection.php">
-    <MixedAssignment occurrences="1">
-      <code>$helper</code>
+    <MixedAssignment>
+      <code><![CDATA[$helper]]></code>
     </MixedAssignment>
   </file>
   <file src="src/LambdaHelper.php">
-    <PossiblyUnusedMethod occurrences="1">
-      <code>withDelimiters</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[withDelimiters]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast occurrences="1">
-      <code>(string) $string</code>
+    <RedundantCast>
+      <code><![CDATA[(string) $string]]></code>
     </RedundantCast>
   </file>
   <file src="src/Loader/FilesystemLoader.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$this-&gt;templates</code>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->templates]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Loader/InlineLoader.php">
-    <InvalidNullableReturnType occurrences="1"/>
-    <NullableReturnStatement occurrences="1">
-      <code>$this-&gt;templates[$name]</code>
+    <InvalidNullableReturnType>
+      <code><![CDATA[string|Source]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->templates[$name]]]></code>
     </NullableReturnStatement>
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;templates</code>
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->templates]]></code>
     </PossiblyNullArgument>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$content]]></code>
+    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/Parser.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>$parent[Tokenizer::TYPE] === Tokenizer::T_PARENT</code>
-      <code>isset($parent) &amp;&amp; $parent[Tokenizer::TYPE] === Tokenizer::T_PARENT</code>
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$token]]></code>
+      <code><![CDATA[$token]]></code>
+      <code><![CDATA[$token]]></code>
+    </ArgumentTypeCoercion>
+    <DocblockTypeContradiction>
+      <code><![CDATA[$parent[Tokenizer::TYPE] === Tokenizer::T_PARENT]]></code>
+      <code><![CDATA[isset($parent) && $parent[Tokenizer::TYPE] === Tokenizer::T_PARENT]]></code>
     </DocblockTypeContradiction>
-    <InvalidArgument occurrences="7">
-      <code>$parent[Tokenizer::LINE]</code>
-      <code>$parent[Tokenizer::LINE]</code>
-      <code>$parent[Tokenizer::NAME]</code>
-      <code>$parent[Tokenizer::NAME]</code>
-      <code>$token</code>
-      <code>$token</code>
-      <code>$token</code>
+    <InvalidArgument>
+      <code><![CDATA[$nodes]]></code>
+      <code><![CDATA[$nodes]]></code>
+      <code><![CDATA[$nodes]]></code>
+      <code><![CDATA[$nodes]]></code>
+      <code><![CDATA[$nodes]]></code>
+      <code><![CDATA[$nodes]]></code>
+      <code><![CDATA[$parent]]></code>
+      <code><![CDATA[$parent]]></code>
+      <code><![CDATA[$parent]]></code>
+      <code><![CDATA[$parent]]></code>
+      <code><![CDATA[$parent]]></code>
+      <code><![CDATA[$parent[Tokenizer::LINE]]]></code>
+      <code><![CDATA[$parent[Tokenizer::LINE]]]></code>
+      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
     </InvalidArgument>
-    <InvalidArrayOffset occurrences="9">
-      <code>$parent[Tokenizer::DYNAMIC]</code>
-      <code>$parent[Tokenizer::LINE]</code>
-      <code>$parent[Tokenizer::LINE]</code>
-      <code>$parent[Tokenizer::NAME]</code>
-      <code>$parent[Tokenizer::NAME]</code>
-      <code>$parent[Tokenizer::TYPE]</code>
-      <code>$this-&gt;pragmas[Engine::PRAGMA_BLOCKS]</code>
-      <code>$this-&gt;pragmas[Engine::PRAGMA_DYNAMIC_NAMES]</code>
-      <code>$this-&gt;pragmas[Engine::PRAGMA_FILTERS]</code>
+    <InvalidArrayOffset>
+      <code><![CDATA[$parent[Tokenizer::DYNAMIC]]]></code>
+      <code><![CDATA[$parent[Tokenizer::LINE]]]></code>
+      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$parent[Tokenizer::TYPE]]]></code>
+      <code><![CDATA[$this->pragmas[Engine::PRAGMA_BLOCKS]]]></code>
+      <code><![CDATA[$this->pragmas[Engine::PRAGMA_DYNAMIC_NAMES]]]></code>
+      <code><![CDATA[$this->pragmas[Engine::PRAGMA_FILTERS]]]></code>
     </InvalidArrayOffset>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$this-&gt;pragmas</code>
-    </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="2">
-      <code>$nodes</code>
-      <code>$parent</code>
+    <InvalidReturnStatement>
+      <code><![CDATA[$nodes]]></code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>list&lt;array&lt;string, mixed&gt;&gt;</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="11">
-      <code>$nodes</code>
-      <code>$nodes</code>
-      <code>$nodes</code>
-      <code>$nodes</code>
-      <code>$nodes</code>
-      <code>$nodes</code>
-      <code>$parent</code>
-      <code>$parent</code>
-      <code>$parent</code>
-      <code>$parent</code>
-      <code>$parent</code>
-    </InvalidScalarArgument>
-    <LessSpecificReturnStatement occurrences="1">
-      <code>[$name, $isDynamic]</code>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$parent]]></code>
+      <code><![CDATA[[$name, $isDynamic]]]></code>
     </LessSpecificReturnStatement>
-    <MissingConstructor occurrences="4">
-      <code>$pragmaBlocks</code>
-      <code>$pragmaDynamicNames</code>
-      <code>$pragmaFilters</code>
-      <code>$pragmas</code>
+    <MissingConstructor>
+      <code><![CDATA[$pragmaBlocks]]></code>
+      <code><![CDATA[$pragmaDynamicNames]]></code>
+      <code><![CDATA[$pragmaFilters]]></code>
+      <code><![CDATA[$pragmas]]></code>
     </MissingConstructor>
-    <MixedArgument occurrences="12">
-      <code>$name</code>
-      <code>$name</code>
-      <code>$next[Tokenizer::VALUE]</code>
-      <code>$token[Tokenizer::LINE]</code>
-      <code>$token[Tokenizer::LINE]</code>
-      <code>$token[Tokenizer::NAME]</code>
-      <code>$token[Tokenizer::NAME]</code>
-      <code>$token[Tokenizer::NAME]</code>
-      <code>$token[Tokenizer::NAME]</code>
-      <code>$token[Tokenizer::NAME]</code>
-      <code>$token[Tokenizer::TYPE]</code>
-      <code>$token[Tokenizer::VALUE]</code>
+    <MixedArgument>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$next[Tokenizer::VALUE]]]></code>
+      <code><![CDATA[$token[Tokenizer::LINE]]]></code>
+      <code><![CDATA[$token[Tokenizer::LINE]]]></code>
+      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
+      <code><![CDATA[$token[Tokenizer::TYPE]]]></code>
+      <code><![CDATA[$token[Tokenizer::VALUE]]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="4">
-      <code>$name</code>
-      <code>$parent[Tokenizer::END]</code>
-      <code>$this-&gt;lineNum</code>
-      <code>$token[Tokenizer::INDENT]</code>
+    <MixedAssignment>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$parent[Tokenizer::END]]]></code>
+      <code><![CDATA[$this->lineNum]]></code>
+      <code><![CDATA[$token[Tokenizer::INDENT]]]></code>
     </MixedAssignment>
-    <MixedOperand occurrences="1">
-      <code>$token[Tokenizer::NAME]</code>
+    <MixedOperand>
+      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
     </MixedOperand>
-    <MoreSpecificReturnType occurrences="1">
-      <code>array{0: string, 1: bool}</code>
+    <MoreSpecificReturnType>
+      <code><![CDATA[array{0: string, 1: bool}]]></code>
+      <code><![CDATA[list<array<string, mixed>>]]></code>
     </MoreSpecificReturnType>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->pragmas]]></code>
+    </PropertyTypeCoercion>
   </file>
   <file src="src/Source/FilesystemSource.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>stat($this-&gt;fileName)</code>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[stat($this->fileName)]]></code>
     </InvalidPropertyAssignmentValue>
-    <PossiblyUnusedReturnValue occurrences="1">
-      <code>string</code>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[string]]></code>
     </PossiblyUnusedReturnValue>
-    <PropertyNotSetInConstructor occurrences="1">
-      <code>$stat</code>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$stat]]></code>
     </PropertyNotSetInConstructor>
-    <RedundantPropertyInitializationCheck occurrences="1">
-      <code>isset($this-&gt;stat)</code>
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[isset($this->stat)]]></code>
     </RedundantPropertyInitializationCheck>
   </file>
   <file src="src/Template.php">
-    <MixedAssignment occurrences="1">
-      <code>$v</code>
+    <MixedAssignment>
+      <code><![CDATA[$v]]></code>
     </MixedAssignment>
-    <PossiblyUnusedMethod occurrences="2">
-      <code>isIterable</code>
-      <code>resolveValue</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[isIterable]]></code>
+      <code><![CDATA[resolveValue]]></code>
     </PossiblyUnusedMethod>
-    <UnusedForeachValue occurrences="1">
-      <code>$v</code>
+    <UnusedForeachValue>
+      <code><![CDATA[$v]]></code>
     </UnusedForeachValue>
   </file>
   <file src="src/Tokenizer.php">
-    <InvalidOperand occurrences="1">
-      <code>ini_get('mbstring.func_overload')</code>
-    </InvalidOperand>
-    <MissingConstructor occurrences="1">
-      <code>$state</code>
+    <MissingConstructor>
+      <code><![CDATA[$state]]></code>
     </MissingConstructor>
-    <PossiblyFalseOperand occurrences="7">
-      <code>$closeIndex</code>
-      <code>$closeIndex</code>
-      <code>$end</code>
-      <code>$end</code>
-      <code>$this-&gt;seenTag</code>
-      <code>$this-&gt;seenTag</code>
-      <code>strpos($text, '=', $index)</code>
+    <PossiblyFalseOperand>
+      <code><![CDATA[$closeIndex]]></code>
+      <code><![CDATA[$closeIndex]]></code>
+      <code><![CDATA[$end]]></code>
+      <code><![CDATA[$end]]></code>
+      <code><![CDATA[$this->seenTag]]></code>
+      <code><![CDATA[$this->seenTag]]></code>
+      <code><![CDATA[strpos($text, '=', $index)]]></code>
     </PossiblyFalseOperand>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$encoding</code>
-    </PossiblyInvalidArgument>
-    <PossiblyNullOperand occurrences="7">
-      <code>$this-&gt;ctag</code>
-      <code>$this-&gt;ctagLen</code>
-      <code>$this-&gt;ctagLen</code>
-      <code>$this-&gt;ctagLen</code>
-      <code>$this-&gt;otagLen</code>
-      <code>$this-&gt;otagLen</code>
-      <code>$this-&gt;otagLen</code>
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->ctag]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullOperand>
+      <code><![CDATA[$this->ctag]]></code>
+      <code><![CDATA[$this->ctagLen]]></code>
+      <code><![CDATA[$this->ctagLen]]></code>
+      <code><![CDATA[$this->ctagLen]]></code>
+      <code><![CDATA[$this->otagLen]]></code>
+      <code><![CDATA[$this->otagLen]]></code>
+      <code><![CDATA[$this->otagLen]]></code>
     </PossiblyNullOperand>
   </file>
   <file src="test/Mustache/Test/Asset/EngineStub.php">
-    <ParamNameMismatch occurrences="1">
-      <code>$source</code>
+    <ParamNameMismatch>
+      <code><![CDATA[$source]]></code>
     </ParamNameMismatch>
-    <PropertyNotSetInConstructor occurrences="2">
-      <code>$source</code>
-      <code>$template</code>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$source]]></code>
+      <code><![CDATA[$template]]></code>
     </PropertyNotSetInConstructor>
   </file>
   <file src="test/Mustache/Test/Asset/TestStreamWrapper.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$this-&gt;filehandle</code>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->filehandle]]></code>
     </InvalidPropertyAssignmentValue>
-    <MissingConstructor occurrences="1">
-      <code>$filehandle</code>
-    </MissingConstructor>
-    <PossiblyFalseArgument occurrences="3">
-      <code>$this-&gt;filehandle</code>
-      <code>$this-&gt;filehandle</code>
-      <code>$this-&gt;filehandle</code>
-    </PossiblyFalseArgument>
-    <PossiblyUnusedMethod occurrences="6">
-      <code>stream_close</code>
-      <code>stream_eof</code>
-      <code>stream_open</code>
-      <code>stream_read</code>
-      <code>stream_stat</code>
-      <code>url_stat</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[stream_close]]></code>
+      <code><![CDATA[stream_eof]]></code>
+      <code><![CDATA[stream_open]]></code>
+      <code><![CDATA[stream_read]]></code>
+      <code><![CDATA[stream_stat]]></code>
+      <code><![CDATA[url_stat]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/ContextTestAsset/AllTheThings.php">
-    <PossiblyUnusedMethod occurrences="1">
-      <code>foo</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[foo]]></code>
     </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty occurrences="2">
-      <code>$bar</code>
-      <code>$foo</code>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$bar]]></code>
+      <code><![CDATA[$foo]]></code>
     </PossiblyUnusedProperty>
-    <UnusedProperty occurrences="1">
-      <code>$qux</code>
+    <UnusedProperty>
+      <code><![CDATA[$qux]]></code>
     </UnusedProperty>
   </file>
   <file src="test/Mustache/Test/ContextTestAsset/ArrayAccessImplementor.php">
-    <MixedAssignment occurrences="1">
-      <code>$value</code>
+    <MixedAssignment>
+      <code><![CDATA[$value]]></code>
     </MixedAssignment>
   </file>
   <file src="test/Mustache/Test/ContextTestAsset/Dummy.php">
-    <PossiblyUnusedMethod occurrences="2">
-      <code>bar</code>
-      <code>foo</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[bar]]></code>
+      <code><![CDATA[foo]]></code>
     </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty occurrences="1">
-      <code>$name</code>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$name]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="test/Mustache/Test/EngineTest.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$className</code>
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$className]]></code>
     </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="1">
-      <code>testPragmasConstructorOption</code>
-    </InvalidArgument>
-    <InvalidReturnStatement occurrences="1"/>
-    <InvalidReturnType occurrences="1"/>
-    <PossiblyUnusedMethod occurrences="2">
-      <code>getFoo</code>
-      <code>wrapWithUnderscores</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getFoo]]></code>
+      <code><![CDATA[wrapWithUnderscores]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ClassForStrictCallables.php">
-    <PossiblyUnusedMethod occurrences="4">
-      <code>instanceCallable</code>
-      <code>instanceName</code>
-      <code>staticCallable</code>
-      <code>staticName</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[instanceCallable]]></code>
+      <code><![CDATA[instanceName]]></code>
+      <code><![CDATA[staticCallable]]></code>
+      <code><![CDATA[staticName]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ClassWithCall.php">
-    <PossiblyUnusedMethod occurrences="1">
-      <code>__call</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__call]]></code>
     </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty occurrences="1">
-      <code>$name</code>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$name]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="test/Mustache/Test/Functional/ClassWithLambda.php">
-    <PossiblyUnusedMethod occurrences="2">
-      <code>placeholder</code>
-      <code>upper</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[placeholder]]></code>
+      <code><![CDATA[upper]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ExamplesTest.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$examples</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>list&lt;array{0: object, 1: string, 2: array&lt;string, string&gt;, 3: string}&gt;</code>
-    </InvalidReturnType>
-    <InvalidStringClass occurrences="1">
-      <code>new $className()</code>
+    <InvalidStringClass>
+      <code><![CDATA[new $className()]]></code>
     </InvalidStringClass>
-    <LessSpecificReturnStatement occurrences="1">
-      <code>[$context, $source, $partials, $expected]</code>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$examples]]></code>
+      <code><![CDATA[[$context, $source, $partials, $expected]]]></code>
     </LessSpecificReturnStatement>
-    <MoreSpecificReturnType occurrences="1">
-      <code>array{0: object, 1: string, 2: array&lt;string, string&gt;, 3: string}</code>
+    <MoreSpecificReturnType>
+      <code><![CDATA[array{0: object, 1: string, 2: array<string, string>, 3: string}]]></code>
+      <code><![CDATA[list<array{0: object, 1: string, 2: array<string, string>, 3: string}>]]></code>
     </MoreSpecificReturnType>
-    <PossiblyUndefinedArrayOffset occurrences="2">
-      <code>$info['extension']</code>
-      <code>$info['extension']</code>
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$info['extension']]]></code>
+      <code><![CDATA[$info['extension']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="test/Mustache/Test/Functional/FiltersTest.php">
-    <MissingClosureParamType occurrences="6">
-      <code>$v</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
+    <MissingClosureParamType>
+      <code><![CDATA[$v]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="3">
-      <code>static function ($value) {</code>
-      <code>static function ($value) {</code>
-      <code>static function (DateTime $value) {</code>
+    <MissingClosureReturnType>
+      <code><![CDATA[static function ($value) {]]></code>
+      <code><![CDATA[static function ($value) {]]></code>
+      <code><![CDATA[static function (DateTime $value) {]]></code>
     </MissingClosureReturnType>
-    <MixedArgument occurrences="3">
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
+    <MixedArgument>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
     </MixedArgument>
   </file>
   <file src="test/Mustache/Test/Functional/HigherOrderSections/Foo.php">
-    <PossiblyUnusedMethod occurrences="2">
-      <code>staticTrim</code>
-      <code>wrapWithBoth</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[staticTrim]]></code>
+      <code><![CDATA[wrapWithBoth]]></code>
     </PossiblyUnusedMethod>
-    <PossiblyUnusedProperty occurrences="5">
-      <code>$doublewrap</code>
-      <code>$lorem</code>
-      <code>$trimmer</code>
-      <code>$wrap</code>
-      <code>$wrapper</code>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$doublewrap]]></code>
+      <code><![CDATA[$lorem]]></code>
+      <code><![CDATA[$trimmer]]></code>
+      <code><![CDATA[$wrap]]></code>
+      <code><![CDATA[$wrapper]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="test/Mustache/Test/Functional/HigherOrderSections/Monster.php">
-    <PossiblyUnusedProperty occurrences="2">
-      <code>$name</code>
-      <code>$title</code>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="test/Mustache/Test/Functional/LambdaHelperTest.php">
-    <MissingClosureParamType occurrences="6">
-      <code>$mustache</code>
-      <code>$mustache</code>
-      <code>$render</code>
-      <code>$text</code>
-      <code>$text</code>
-      <code>$text</code>
+    <MissingClosureParamType>
+      <code><![CDATA[$mustache]]></code>
+      <code><![CDATA[$mustache]]></code>
+      <code><![CDATA[$render]]></code>
+      <code><![CDATA[$text]]></code>
+      <code><![CDATA[$text]]></code>
+      <code><![CDATA[$text]]></code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="3">
-      <code>static function ($text, $mustache) {</code>
-      <code>static function ($text, $mustache) {</code>
-      <code>static function ($text, $render) {</code>
+    <MissingClosureReturnType>
+      <code><![CDATA[static function ($text, $mustache) {]]></code>
+      <code><![CDATA[static function ($text, $mustache) {]]></code>
+      <code><![CDATA[static function ($text, $render) {]]></code>
     </MissingClosureReturnType>
-    <MixedArgument occurrences="2">
-      <code>$mustache-&gt;render($text)</code>
-      <code>$render($text)</code>
+    <MixedArgument>
+      <code><![CDATA[$mustache->render($text)]]></code>
+      <code><![CDATA[$render($text)]]></code>
     </MixedArgument>
-    <MixedFunctionCall occurrences="1">
-      <code>$render($text)</code>
+    <MixedFunctionCall>
+      <code><![CDATA[$render($text)]]></code>
     </MixedFunctionCall>
-    <MixedMethodCall occurrences="2">
-      <code>render</code>
-      <code>render</code>
+    <MixedMethodCall>
+      <code><![CDATA[render]]></code>
+      <code><![CDATA[render]]></code>
     </MixedMethodCall>
-    <MixedOperand occurrences="1">
-      <code>$mustache-&gt;render($text)</code>
+    <MixedOperand>
+      <code><![CDATA[$mustache->render($text)]]></code>
     </MixedOperand>
   </file>
   <file src="test/Mustache/Test/Functional/MustacheInjectionTest.php">
-    <InvalidReturnStatement occurrences="1"/>
-    <InvalidReturnType occurrences="1">
-      <code>list&lt;array{1: string, 2: array&lt;string, mixed&gt;, 3: array&lt;string, string&gt;, 4: string}&gt;</code>
+    <InvalidReturnStatement>
+      <code><![CDATA[[
+            ['{{ a }}',   $interpolationData, [], '{{ b }}'],
+            ['{{{ a }}}', $interpolationData, [], '{{ b }}'],
+
+            ['{{# a }}{{ b }}{{/ a }}',   $sectionData, [], '{{ c }}'],
+            ['{{# a }}{{{ b }}}{{/ a }}', $sectionData, [], '{{ c }}'],
+
+            ['{{> partial }}', $interpolationData, ['partial' => '{{ a }}'],   '{{ b }}'],
+            ['{{> partial }}', $interpolationData, ['partial' => '{{{ a }}}'], '{{ b }}'],
+
+            ['{{ a }}',           $lambdaInterpolationData, [], '{{ c }}'],
+            ['{{# a }}b{{/ a }}', $lambdaSectionData,       [], '{{ c }}'],
+        ]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[list<array{1: string, 2: array<string, mixed>, 3: array<string, string>, 4: string}>]]></code>
     </InvalidReturnType>
-    <PossiblyUnusedMethod occurrences="2">
-      <code>lambdaInterpolationCallback</code>
-      <code>lambdaSectionCallback</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[lambdaInterpolationCallback]]></code>
+      <code><![CDATA[lambdaSectionCallback]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/MustacheSpecTest.php">
-    <MissingClosureParamType occurrences="1">
-      <code>$text</code>
+    <LessSpecificReturnType>
+      <code><![CDATA[array<string, mixed>]]></code>
+    </LessSpecificReturnType>
+    <MissingClosureParamType>
+      <code><![CDATA[$text]]></code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="1">
-      <code>static function ($text = null) use ($func) {</code>
+    <MissingClosureReturnType>
+      <code><![CDATA[static function ($text = null) use ($func) {]]></code>
     </MissingClosureReturnType>
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>$val</code>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$val]]></code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="2">
-      <code>$func</code>
-      <code>$val</code>
+    <MixedAssignment>
+      <code><![CDATA[$func]]></code>
+      <code><![CDATA[$val]]></code>
     </MixedAssignment>
-    <UnevaluatedCode occurrences="1">
-      <code>return null;</code>
+    <UnevaluatedCode>
+      <code><![CDATA[return null;]]></code>
     </UnevaluatedCode>
   </file>
   <file src="test/Mustache/Test/Functional/ObjectSection/Beta.php">
-    <PossiblyUnusedMethod occurrences="1">
-      <code>__get</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__get]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ObjectSection/Delta.php">
-    <PossiblyUnusedMethod occurrences="1">
-      <code>name</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[name]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ObjectSection/Gamma.php">
-    <PossiblyUnusedProperty occurrences="1">
-      <code>$bar</code>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$bar]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="test/Mustache/Test/Functional/StrictCallablesTest.php">
-    <MissingClosureReturnType occurrences="1">
-      <code>static function (string $tpl, LambdaHelper $mustache) {</code>
+    <MissingClosureReturnType>
+      <code><![CDATA[static function (string $tpl, LambdaHelper $mustache) {]]></code>
     </MissingClosureReturnType>
   </file>
   <file src="test/Mustache/Test/HelperCollectionTest.php">
-    <MixedAssignment occurrences="1">
-      <code>$args</code>
+    <MixedAssignment>
+      <code><![CDATA[$args]]></code>
     </MixedAssignment>
-    <PossiblyUnusedMethod occurrences="1">
-      <code>getFoo</code>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getFoo]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Loader/FilesystemLoaderTest.php">
-    <InvalidArgument occurrences="1">
-      <code>['extension' =&gt; null]</code>
+    <InvalidArgument>
+      <code><![CDATA[['extension' => null]]]></code>
     </InvalidArgument>
-    <UnusedFunctionCall occurrences="1">
-      <code>stream_wrapper_unregister</code>
+    <UnusedFunctionCall>
+      <code><![CDATA[stream_wrapper_unregister]]></code>
     </UnusedFunctionCall>
   </file>
   <file src="test/Mustache/Test/Loader/InlineLoaderTest.php">
-    <MixedArgument occurrences="3">
-      <code>__COMPILER_HALT_OFFSET__</code>
-      <code>__COMPILER_HALT_OFFSET__</code>
-      <code>__COMPILER_HALT_OFFSET__</code>
+    <MixedArgument>
+      <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
+      <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
+      <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
     </MixedArgument>
-    <UndefinedConstant occurrences="3">
-      <code>__COMPILER_HALT_OFFSET__</code>
-      <code>__COMPILER_HALT_OFFSET__</code>
-      <code>__COMPILER_HALT_OFFSET__</code>
+    <UndefinedConstant>
+      <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
+      <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
+      <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
     </UndefinedConstant>
   </file>
   <file src="test/Mustache/Test/Loader/ProductionFilesystemLoaderTest.php">
-    <ArgumentTypeCoercion occurrences="2">
-      <code>'Mustache\Source'</code>
-      <code>'Mustache\Source'</code>
+    <ArgumentTypeCoercion>
+      <code><![CDATA['Mustache\Source']]></code>
+      <code><![CDATA['Mustache\Source']]></code>
     </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="1">
-      <code>['extension' =&gt; null]</code>
+    <InvalidArgument>
+      <code><![CDATA[['extension' => null]]]></code>
     </InvalidArgument>
-    <PossiblyInvalidMethodCall occurrences="15">
-      <code>getKey</code>
-      <code>getKey</code>
-      <code>getKey</code>
-      <code>getKey</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
-      <code>getSource</code>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[getKey]]></code>
+      <code><![CDATA[getKey]]></code>
+      <code><![CDATA[getKey]]></code>
+      <code><![CDATA[getKey]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
+      <code><![CDATA[getSource]]></code>
     </PossiblyInvalidMethodCall>
   </file>
   <file src="test/Mustache/Test/SpecTestCase.php">
-    <LessSpecificReturnStatement occurrences="1">
-      <code>$data</code>
-    </LessSpecificReturnStatement>
-    <MixedArrayAccess occurrences="7">
-      <code>$spec['tests']</code>
-      <code>$test['data']</code>
-      <code>$test['desc']</code>
-      <code>$test['expected']</code>
-      <code>$test['name']</code>
-      <code>$test['partials']</code>
-      <code>$test['template']</code>
+    <MixedArrayAccess>
+      <code><![CDATA[$spec['tests']]]></code>
+      <code><![CDATA[$test['data']]]></code>
+      <code><![CDATA[$test['desc']]]></code>
+      <code><![CDATA[$test['expected']]]></code>
+      <code><![CDATA[$test['name']]]></code>
+      <code><![CDATA[$test['partials']]]></code>
+      <code><![CDATA[$test['template']]]></code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="2">
-      <code>$spec</code>
-      <code>$test</code>
+    <MixedAssignment>
+      <code><![CDATA[$spec]]></code>
+      <code><![CDATA[$test]]></code>
     </MixedAssignment>
-    <MixedOperand occurrences="2">
-      <code>$test['desc']</code>
-      <code>$test['name']</code>
+    <MixedOperand>
+      <code><![CDATA[$test['desc']]]></code>
+      <code><![CDATA[$test['name']]]></code>
     </MixedOperand>
-    <MoreSpecificReturnType occurrences="1">
-      <code>list&lt;array{0: string, 1: string, 2: array&lt;string, string&gt;, 3: array&lt;string, mixed&gt;, 4: string}&gt;</code>
-    </MoreSpecificReturnType>
+    <MixedReturnTypeCoercion>
+      <code><![CDATA[$data]]></code>
+      <code><![CDATA[list<array{0: string, 1: string, 2: array<string, string>, 3: array<string, mixed>, 4: string}>]]></code>
+    </MixedReturnTypeCoercion>
   </file>
 </files>

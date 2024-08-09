@@ -55,10 +55,8 @@ class ProductionFilesystemLoader extends FilesystemLoader
      */
     public function __construct(string $baseDir, array $options = [])
     {
-        parent::__construct($baseDir, $options);
-
         if (array_key_exists('stat_props', $options)) {
-            if (empty($options['stat_props'])) {
+            if ($options['stat_props'] === null) {
                 $this->statProps = [];
             } else {
                 $this->statProps = $options['stat_props'];
@@ -66,6 +64,10 @@ class ProductionFilesystemLoader extends FilesystemLoader
         } else {
             $this->statProps = ['size', 'mtime'];
         }
+
+        unset($options['stat_props']);
+
+        parent::__construct($baseDir, $options);
     }
 
     /**

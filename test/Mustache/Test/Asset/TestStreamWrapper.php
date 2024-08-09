@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mustache\Test\Asset;
 
+use function assert;
 use function fclose;
 use function feof;
 use function fgets;
@@ -16,12 +17,12 @@ use function preg_replace;
 final class TestStreamWrapper
 {
     /** @var resource|false */
-    private $filehandle;
+    private $filehandle = false;
 
     /**
      * Always returns false.
      */
-    public function url_stat(string $path, int $flags): bool
+    public function url_stat(): bool
     {
         return false;
     }
@@ -43,18 +44,27 @@ final class TestStreamWrapper
     }
 
     /** @return string|false */
-    public function stream_read(int $count)
+    public function stream_read(int $count): string|bool
     {
+        assert($this->filehandle !== false);
+
         return fgets($this->filehandle, $count);
     }
 
     public function stream_eof(): bool
     {
+        assert($this->filehandle !== false);
+
         return feof($this->filehandle);
     }
 
     public function stream_close(): bool
     {
-        return fclose($this->filehandle);
+        assert($this->filehandle !== false);
+
+        fclose($this->filehandle);
+        $this->filehandle = false;
+
+        return true;
     }
 }
