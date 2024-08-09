@@ -14,6 +14,7 @@ use Mustache\Loader\StringLoader;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
+use function array_key_exists;
 use function array_keys;
 use function class_exists;
 use function is_callable;
@@ -59,9 +60,7 @@ class Engine
     public const PRAGMA_BLOCKS = 'BLOCKS';
     public const PRAGMA_ANCHORED_DOT = 'ANCHORED-DOT';
     public const PRAGMA_DYNAMIC_NAMES = 'DYNAMIC-NAMES';
-    // Known pragmas
-    /** @var array<string, bool> */
-    private static array $knownPragmas = [
+    private const KNOWN_PRAGMAS = [
         self::PRAGMA_FILTERS => true,
         self::PRAGMA_BLOCKS => true,
         self::PRAGMA_ANCHORED_DOT => true,
@@ -231,14 +230,13 @@ class Engine
             $this->delimiters = $options['delimiters'];
         }
 
-        if (isset($options['pragmas'])) {
-            foreach ($options['pragmas'] as $pragma) {
-                if (! isset(self::$knownPragmas[$pragma])) {
-                    throw new InvalidArgumentException(sprintf('Unknown pragma: "%s".', $pragma));
-                }
-
-                $this->pragmas[$pragma] = true;
+        $pragmas = $options['pragmas'] ?? [];
+        foreach ($pragmas as $pragma) {
+            if (! array_key_exists($pragma, self::KNOWN_PRAGMAS)) {
+                throw new InvalidArgumentException(sprintf('Unknown pragma: "%s".', $pragma));
             }
+
+            $this->pragmas[$pragma] = true;
         }
 
         $this->buggyPropertyShadowing = $options['buggy_property_shadowing'] ?? false;
@@ -300,7 +298,7 @@ class Engine
      *
      * @return list<self::PRAGMA_*>
      */
-    public function getPragmas(): array
+    private function getPragmas(): array
     {
         return array_keys($this->pragmas);
     }

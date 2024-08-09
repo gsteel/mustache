@@ -66,7 +66,6 @@ class EngineTest extends FunctionalTestCase
         $this->assertTrue($mustache->hasHelper('foo'));
         $this->assertTrue($mustache->hasHelper('bar'));
         $this->assertFalse($mustache->hasHelper('baz'));
-        $this->assertEquals([Engine::PRAGMA_FILTERS], $mustache->getPragmas());
     }
 
     public static function getFoo(): string

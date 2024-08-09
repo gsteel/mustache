@@ -109,6 +109,9 @@
     <MoreSpecificReturnType>
       <code><![CDATA[Template]]></code>
     </MoreSpecificReturnType>
+    <NoValue>
+      <code><![CDATA[$pragma]]></code>
+    </NoValue>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$escape]]></code>
       <code><![CDATA[$helpers]]></code>
@@ -134,7 +137,6 @@
       <code><![CDATA[$this->delimiters]]></code>
     </RiskyTruthyFalsyComparison>
     <UndefinedInterfaceMethod>
-      <code><![CDATA[getLogger]]></code>
       <code><![CDATA[getLogger]]></code>
     </UndefinedInterfaceMethod>
   </file>
