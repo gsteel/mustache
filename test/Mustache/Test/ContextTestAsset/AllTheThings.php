@@ -41,11 +41,8 @@ final class AllTheThings implements ArrayAccess
         }
     }
 
-    /**
-     * @param array-key $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value): void
+    /** @param array-key $offset */
+    public function offsetSet($offset, mixed $value): void
     {
         // nada
     }

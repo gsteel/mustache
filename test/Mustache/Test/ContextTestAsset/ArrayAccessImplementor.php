@@ -20,11 +20,8 @@ final class ArrayAccessImplementor implements ArrayAccess
         }
     }
 
-    /**
-     * @param array-key|null $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value): void
+    /** @param array-key|null $offset */
+    public function offsetSet($offset, mixed $value): void
     {
         if ($offset === null) {
             $this->container[] = $value;
@@ -45,12 +42,8 @@ final class ArrayAccessImplementor implements ArrayAccess
         unset($this->container[$offset]);
     }
 
-    /**
-     * @param array-key $offset
-     *
-     * @return mixed
-     */
-    public function offsetGet($offset)
+    /** @param array-key $offset */
+    public function offsetGet($offset): mixed
     {
         return $this->container[$offset] ?? null;
     }

@@ -26,5 +26,5 @@ interface Cache
      */
     public function cache(string $key, string $value): void;
 
-    public function setLogger(?LoggerInterface $logger = null): void;
+    public function setLogger(LoggerInterface|null $logger = null): void;
 }

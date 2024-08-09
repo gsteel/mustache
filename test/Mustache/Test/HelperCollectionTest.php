@@ -93,16 +93,16 @@ class HelperCollectionTest extends TestCase
     }
 
     /**
-     * @param mixed $helpers
+     * @param iterable<string, mixed> $helpers
      * @param array<array-key, mixed> $actions
      * @param class-string<Throwable>|null $exception
      *
      * @dataProvider getInvalidHelperArguments
      */
     public function testHelperCollectionIsntAfraidToThrowExceptions(
-        $helpers = [],
+        iterable $helpers = [],
         array $actions = [],
-        ?string $exception = null
+        string|null $exception = null,
     ): void {
         if ($exception !== null) {
             $this->expectException($exception);
@@ -119,7 +119,7 @@ class HelperCollectionTest extends TestCase
 
     /**
      * @return list<array{
-     *     0: mixed,
+     *     0: iterable<string, mixed>,
      *     1: array<array-key, mixed>,
      *     2: class-string<Throwable>|null,
      * }>
@@ -127,11 +127,6 @@ class HelperCollectionTest extends TestCase
     public static function getInvalidHelperArguments(): array
     {
         return [
-            [
-                'not helpers',
-                [],
-                InvalidArgumentException::class,
-            ],
             [
                 [],
                 ['get' => ['foo']],

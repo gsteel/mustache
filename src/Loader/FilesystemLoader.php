@@ -90,7 +90,7 @@ class FilesystemLoader implements Loader
      *
      * @inheritDoc
      */
-    public function load(string $name)
+    public function load(string $name): string|Source
     {
         if (! isset($this->templates[$name])) {
             $this->templates[$name] = $this->loadFile($name);
@@ -106,7 +106,7 @@ class FilesystemLoader implements Loader
      *
      * @throws UnknownTemplateException If a template file is not found.
      */
-    protected function loadFile(string $name)
+    protected function loadFile(string $name): string|Source
     {
         $fileName = $this->getFileName($name);
 

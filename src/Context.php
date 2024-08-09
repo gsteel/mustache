@@ -29,7 +29,6 @@ class Context
     private array $stack = [];
     /** @var list<mixed> */
     private array $blockStack = [];
-    private bool $buggyPropertyShadowing = false;
 
     /**
      * Mustache rendering Context constructor.
@@ -37,13 +36,13 @@ class Context
      * @param mixed $context                Default rendering context (default: null)
      * @param bool $buggyPropertyShadowing See Mustache\Engine::useBuggyPropertyShadowing (default: false)
      */
-    public function __construct($context = null, bool $buggyPropertyShadowing = false)
+    public function __construct(mixed $context = null, private bool $buggyPropertyShadowing = false)
     {
-        if ($context !== null) {
-            $this->stack = [$context];
+        if ($context === null) {
+            return;
         }
 
-        $this->buggyPropertyShadowing = $buggyPropertyShadowing;
+        $this->stack = [$context];
     }
 
     /**
@@ -51,7 +50,7 @@ class Context
      *
      * @param mixed $value Object or array to use for context
      */
-    public function push($value): void
+    public function push(mixed $value): void
     {
         $this->stack[] = $value;
     }
@@ -61,7 +60,7 @@ class Context
      *
      * @param mixed $value Object or array to use for block context
      */
-    public function pushBlockContext($value): void
+    public function pushBlockContext(mixed $value): void
     {
         $this->blockStack[] = $value;
     }
@@ -71,7 +70,7 @@ class Context
      *
      * @return mixed Last Context frame (object or array)
      */
-    public function pop()
+    public function pop(): mixed
     {
         return array_pop($this->stack);
     }
@@ -81,7 +80,7 @@ class Context
      *
      * @return mixed Last block Context frame (object or array)
      */
-    public function popBlockContext()
+    public function popBlockContext(): mixed
     {
         return array_pop($this->blockStack);
     }
@@ -91,7 +90,7 @@ class Context
      *
      * @return mixed Last Context frame (object or array)
      */
-    public function last()
+    public function last(): mixed
     {
         return end($this->stack);
     }
@@ -111,7 +110,7 @@ class Context
      *
      * @return mixed Variable value, or '' if not found
      */
-    public function find(string $id)
+    public function find(string $id): mixed
     {
         return $this->findVariableInStack($id, $this->stack);
     }
@@ -141,7 +140,7 @@ class Context
      *
      * @return mixed Variable value, or '' if not found
      */
-    public function findDot(string $id)
+    public function findDot(string $id): mixed
     {
         $chunks = explode('.', $id);
         $first = array_shift($chunks);
@@ -173,7 +172,7 @@ class Context
      *
      * @throws InvalidArgumentException if given an invalid anchored dot $id.
      */
-    public function findAnchoredDot(string $id)
+    public function findAnchoredDot(string $id): mixed
     {
         $chunks = explode('.', $id);
         $first = array_shift($chunks);
@@ -199,7 +198,7 @@ class Context
      *
      * @return mixed Variable value, or '' if not found
      */
-    public function findInBlock(string $id)
+    public function findInBlock(string $id): mixed
     {
         foreach ($this->blockStack as $context) {
             if (array_key_exists($id, $context)) {
@@ -220,7 +219,7 @@ class Context
      *
      * @return mixed Variable value, or '' if not found
      */
-    private function findVariableInStack(string $id, array $stack)
+    private function findVariableInStack(string $id, array $stack): mixed
     {
         for ($i = count($stack) - 1; $i >= 0; $i--) {
             $frame = &$stack[$i];

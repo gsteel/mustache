@@ -17,11 +17,8 @@ use const PHP_VERSION;
  */
 class UnknownTemplateException extends InvalidArgumentException implements Exception
 {
-    private string $templateName;
-
-    public function __construct(string $templateName, ?Throwable $previous = null)
+    public function __construct(private string $templateName, Throwable|null $previous = null)
     {
-        $this->templateName = $templateName;
         $message = sprintf('Unknown template: %s', $templateName);
         if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
             parent::__construct($message, 0, $previous);

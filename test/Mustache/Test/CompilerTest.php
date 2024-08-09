@@ -27,7 +27,7 @@ class CompilerTest extends TestCase
         bool $customEscaper,
         int $entityFlags,
         string $charset,
-        array $expected
+        array $expected,
     ): void {
         $compiler = new Compiler();
 

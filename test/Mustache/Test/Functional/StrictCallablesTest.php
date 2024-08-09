@@ -17,12 +17,8 @@ use function strtoupper;
  */
 class StrictCallablesTest extends TestCase
 {
-    /**
-     * @param mixed $name
-     *
-     * @dataProvider callables
-     */
-    public function testStrictCallables(bool $strict, $name, callable $section, string $expected): void
+    /** @dataProvider callables */
+    public function testStrictCallables(bool $strict, mixed $name, callable $section, string $expected): void
     {
         $mustache = new Engine(['strict_callables' => $strict]);
         $tpl      = $mustache->loadTemplate('{{# section }}{{ name }}{{/ section }}');

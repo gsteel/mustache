@@ -15,7 +15,7 @@ class TokenizerTest extends TestCase
      *
      * @dataProvider getTokens
      */
-    public function testScan(string $text, ?string $delimiters, array $expected): void
+    public function testScan(string $text, string|null $delimiters, array $expected): void
     {
         $tokenizer = new Tokenizer();
         $this->assertSame($expected, $tokenizer->scan($text, $delimiters));
@@ -338,7 +338,7 @@ class TokenizerTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function getUnclosedTags(): array
+    public static function getUnclosedTags(): array
     {
         return [
             ['{{ name'],

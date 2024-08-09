@@ -11,14 +11,10 @@ final class Foo
 {
     public string $name = 'Justin';
     public string $lorem = 'Lorem ipsum dolor sit amet,';
-    /** @var mixed */
-    public $doublewrap;
-    /** @var mixed */
-    public $trimmer;
-    /** @var mixed */
-    public $wrap;
-    /** @var mixed */
-    public $wrapper;
+    public mixed $doublewrap;
+    public mixed $trimmer;
+    public mixed $wrap;
+    public mixed $wrapper;
 
     public function __construct()
     {

@@ -42,7 +42,7 @@ class FiltersTest extends TestCase
      *
      * @dataProvider singleFilterData
      */
-    public function testSingleFilter(string $tpl, array $helpers, $data, string $expect): void
+    public function testSingleFilter(string $tpl, array $helpers, array|object $data, string $expect): void
     {
         $this->mustache->setHelpers($helpers);
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));

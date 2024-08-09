@@ -8,19 +8,13 @@ use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\SyntaxException;
 
 use function array_unshift;
-use function function_exists;
-use function ini_get;
 use function is_string;
-use function mb_internal_encoding;
 use function preg_match;
 use function sprintf;
 use function strlen;
 use function strpos;
 use function substr;
 use function trim;
-use function version_compare;
-
-use const PHP_VERSION;
 
 /**
  * Mustache Tokenizer class.
@@ -98,20 +92,19 @@ class Tokenizer
     public const VALUE = 'value';
     public const FILTERS = 'filters';
 
-    private ?int $state;
-    private ?string $tagType = null;
+    private int|null $state;
+    private string|null $tagType = null;
     private string $buffer = '';
     /** @var list<array<string, mixed>> */
     private array $tokens = [];
-    /** @var int|false */
-    private $seenTag = 0;
+    private int|false $seenTag = 0;
     private int $line = 0;
-    private ?string $otag = null;
-    private ?string $otagChar = null;
-    private ?int $otagLen = null;
-    private ?string $ctag = null;
-    private ?string $ctagChar = null;
-    private ?int $ctagLen = null;
+    private string|null $otag = null;
+    private string|null $otagChar = null;
+    private int|null $otagLen = null;
+    private string|null $ctag = null;
+    private string|null $ctagChar = null;
+    private int|null $ctagLen = null;
 
     /**
      * Scan and tokenize template source.
@@ -124,25 +117,8 @@ class Tokenizer
      * @throws InvalidArgumentException when $delimiters string is invalid.
      * @throws SyntaxException when mismatched section tags are encountered.
      */
-    public function scan(string $text, ?string $delimiters = ''): array
+    public function scan(string $text, string|null $delimiters = ''): array
     {
-        // Setting mbstring.func_overload makes things *really* slow.
-        // Let's do everyone a favor and scan this string as ASCII instead.
-        //
-        // The INI directive was removed in PHP 8.0 so we don't need to check there (and can drop it
-        // when we remove support for older versions of PHP).
-        //
-        // @codeCoverageIgnoreStart
-        $encoding = null;
-        if (version_compare(PHP_VERSION, '8.0.0', '<')) {
-            if (function_exists('mb_internal_encoding') && ini_get('mbstring.func_overload') & 2) {
-                $encoding = mb_internal_encoding();
-                mb_internal_encoding('ASCII');
-            }
-        }
-
-        // @codeCoverageIgnoreEnd
-
         $this->reset();
 
         if (is_string($delimiters) && trim($delimiters)) {
@@ -259,14 +235,6 @@ class Tokenizer
         }
 
         $this->flushBuffer();
-
-        // Restore the user's encoding...
-        // @codeCoverageIgnoreStart
-        if ($encoding) {
-            mb_internal_encoding($encoding);
-        }
-
-        // @codeCoverageIgnoreEnd
 
         return $this->tokens;
     }

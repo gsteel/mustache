@@ -34,14 +34,14 @@ class MustacheInheritanceSpecTest extends SpecTestCase
         string $source,
         array $partials,
         array $data,
-        string $expected
+        string $expected,
     ): void {
         $template = self::loadTemplate($source, $partials);
         $this->assertEquals($expected, $template->render($data), $desc);
     }
 
     /** @return list<array{0: string, 1: string, 2: array<string, string>, 3: array<string, mixed>, 4: string}> */
-    public function loadInheritanceSpec(): array
+    public static function loadInheritanceSpec(): array
     {
         // return $this->loadSpec('sections');
         // return [];

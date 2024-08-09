@@ -6,10 +6,8 @@ namespace Mustache;
 
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\UnknownHelperException;
-use Traversable;
 
 use function array_key_exists;
-use function is_array;
 
 /**
  * A collection of helpers for a Mustache instance.
@@ -24,18 +22,14 @@ class HelperCollection
      *
      * Optionally accepts an array (or Traversable) of `$name => $helper` pairs.
      *
-     * @param array<string, mixed>|Traversable<string, mixed> $helpers (default: null)
+     * @param iterable<string, mixed> $helpers (default: null)
      *
      * @throws InvalidArgumentException if the $helpers argument isn't an array or Traversable.
      */
-    public function __construct($helpers = null)
+    public function __construct(iterable|null $helpers = null)
     {
         if ($helpers === null) {
             return;
-        }
-
-        if (! is_array($helpers) && ! $helpers instanceof Traversable) {
-            throw new InvalidArgumentException('Mustache\HelperCollection constructor expects an array of helpers');
         }
 
         foreach ($helpers as $name => $helper) {
@@ -47,20 +41,16 @@ class HelperCollection
      * Magic mutator.
      *
      * @see HelperCollection::add
-     *
-     * @param mixed $helper
      */
-    public function __set(string $name, $helper): void
+    public function __set(string $name, mixed $helper): void
     {
         $this->add($name, $helper);
     }
 
     /**
      * Add a helper to this collection.
-     *
-     * @param mixed $helper
      */
-    public function add(string $name, $helper): void
+    public function add(string $name, mixed $helper): void
     {
         $this->helpers[$name] = $helper;
     }
@@ -72,7 +62,7 @@ class HelperCollection
      *
      * @return mixed Helper
      */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         return $this->get($name);
     }
@@ -84,7 +74,7 @@ class HelperCollection
      *
      * @throws UnknownHelperException If helper does not exist.
      */
-    public function get(string $name)
+    public function get(string $name): mixed
     {
         if (! $this->has($name)) {
             throw new UnknownHelperException($name);

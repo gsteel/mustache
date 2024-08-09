@@ -7,6 +7,7 @@ namespace Mustache\Loader;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader;
+use Mustache\Source;
 
 use function array_key_exists;
 use function explode;
@@ -55,10 +56,8 @@ use function trim;
  */
 class InlineLoader implements Loader
 {
-    private string $fileName;
-    private int $offset;
     /** @var array<string, string>|null */
-    private ?array $templates;
+    private array|null $templates;
 
     /**
      * The InlineLoader requires a filename and offset to process templates.
@@ -77,7 +76,7 @@ class InlineLoader implements Loader
      *                         This usually coincides with the `__halt_compiler`
      *                         call, and the `__COMPILER_HALT_OFFSET__`
      */
-    public function __construct(string $fileName, int $offset)
+    public function __construct(private string $fileName, private int $offset)
     {
         if (! is_file($fileName)) {
             throw new InvalidArgumentException('Mustache\Loader\InlineLoader expects a valid filename.');
@@ -87,13 +86,10 @@ class InlineLoader implements Loader
             throw new InvalidArgumentException('Mustache\Loader\InlineLoader expects a valid file offset.');
         }
 
-        $this->fileName = $fileName;
-        $this->offset = $offset;
         $this->templates = null;
     }
 
-    /** @inheritDoc */
-    public function load(string $name)
+    public function load(string $name): string|Source
     {
         $this->loadTemplates();
 

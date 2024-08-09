@@ -31,19 +31,14 @@ use function umask;
  */
 class FilesystemCache extends AbstractCache
 {
-    private string $baseDir;
-    private ?int $fileMode;
-
     /**
      * Filesystem cache constructor.
      *
      * @param string $baseDir  Directory for compiled templates
      * @param int|null $fileMode Override default permissions for cache files. Defaults to using the system umask
      */
-    public function __construct(string $baseDir, ?int $fileMode = null)
+    public function __construct(private string $baseDir, private int|null $fileMode = null)
     {
-        $this->baseDir = $baseDir;
-        $this->fileMode = $fileMode;
     }
 
     /**

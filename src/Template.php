@@ -19,15 +19,13 @@ use function is_string;
  */
 abstract class Template
 {
-    protected Engine $mustache;
     protected bool $strictCallables = false;
 
     /**
      * Mustache Template constructor.
      */
-    public function __construct(Engine $mustache)
+    public function __construct(protected Engine $mustache)
     {
-        $this->mustache = $mustache;
     }
 
     /**
@@ -43,7 +41,7 @@ abstract class Template
      *
      * @return string Rendered template
      */
-    public function __invoke($context = []): string
+    public function __invoke(mixed $context = []): string
     {
         return $this->render($context);
     }
@@ -55,7 +53,7 @@ abstract class Template
      *
      * @return string Rendered template
      */
-    public function render($context = []): string
+    public function render(mixed $context = []): string
     {
         return $this->renderInternal(
             $this->prepareContextStack($context),
@@ -100,11 +98,9 @@ abstract class Template
      *         42       => array('name' => 'baz'),
      *     );
      *
-     * @param mixed $value
-     *
      * @return bool True if the value is 'iterable'
      */
-    protected function isIterable($value): bool
+    protected function isIterable(mixed $value): bool
     {
         switch (gettype($value)) {
             case 'object':
@@ -132,7 +128,7 @@ abstract class Template
      *
      * @param mixed $context Optional first context frame (default: null)
      */
-    protected function prepareContextStack($context = null): Context
+    protected function prepareContextStack(mixed $context = null): Context
     {
         $stack = new Context(null, $this->mustache->useBuggyPropertyShadowing());
 
@@ -152,12 +148,8 @@ abstract class Template
      * Resolve a context value.
      *
      * Invoke the value if it is callable, otherwise return the value.
-     *
-     * @param mixed $value
-     *
-     * @return mixed
      */
-    protected function resolveValue($value, Context $context)
+    protected function resolveValue(mixed $value, Context $context): mixed
     {
         if (($this->strictCallables ? is_object($value) : ! is_string($value)) && is_callable($value)) {
             return $this->mustache

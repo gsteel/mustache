@@ -13,10 +13,6 @@ namespace Mustache;
  */
 class LambdaHelper
 {
-    private Engine $mustache;
-    private Context $context;
-    private ?string $delims;
-
     /**
      * Mustache Lambda Helper constructor.
      *
@@ -24,11 +20,8 @@ class LambdaHelper
      * @param Context $context  Rendering context
      * @param string|null $delims   Optional custom delimiters, in the format `{{= <% %> =}}`. (default: null)
      */
-    public function __construct(Engine $mustache, Context $context, ?string $delims = null)
+    public function __construct(private Engine $mustache, private Context $context, private string|null $delims = null)
     {
-        $this->mustache = $mustache;
-        $this->context = $context;
-        $this->delims = $delims;
     }
 
     /**

@@ -18,11 +18,8 @@ use const PHP_VERSION;
  */
 class UnknownFilterException extends UnexpectedValueException implements Exception
 {
-    private string $filterName;
-
-    public function __construct(string $filterName, ?Throwable $previous = null)
+    public function __construct(private string $filterName, Throwable|null $previous = null)
     {
-        $this->filterName = $filterName;
         $message = sprintf('Unknown filter: %s', $filterName);
         if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
             parent::__construct($message, 0, $previous);

@@ -193,7 +193,7 @@ class Compiler
         bool $customEscape = false,
         string $charset = 'UTF-8',
         bool $strictCallables = false,
-        int $entityFlags = ENT_COMPAT
+        int $entityFlags = ENT_COMPAT,
     ): string {
         $this->pragmas = $this->defaultPragmas;
         $this->sections = [];
@@ -383,7 +383,7 @@ class Compiler
         int $end,
         string $otag,
         string $ctag,
-        int $level
+        int $level,
     ): string {
         $id = var_export($id, true);
 
@@ -417,7 +417,7 @@ class Compiler
         int $end,
         string $otag,
         string $ctag,
-        int $level
+        int $level,
     ): string {
         $key = $this->block($nodes);
         $id = var_export($id, true);
@@ -465,7 +465,7 @@ class Compiler
         int $end,
         string $otag,
         string $ctag,
-        int $level
+        int $level,
     ): string {
         $source = var_export(substr($this->source, $start, $end - $start), true);
         $callable = $this->getCallable();
@@ -683,7 +683,7 @@ class Compiler
         string $text,
         int $bonus = 0,
         bool $prependNewline = true,
-        bool $appendNewline = false
+        bool $appendNewline = false,
     ): string {
         $text = ($prependNewline ? "\n" : '') . trim($text);
         if ($prependNewline) {

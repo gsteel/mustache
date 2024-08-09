@@ -18,5 +18,5 @@ interface Loader
      *
      * @throws UnknownTemplateException If a template file is not found.
      */
-    public function load(string $name);
+    public function load(string $name): string|Source;
 }
