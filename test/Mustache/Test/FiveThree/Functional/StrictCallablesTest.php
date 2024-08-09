@@ -1,29 +1,26 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\FiveThree\Functional;
+
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @group lambdas
  * @group functional
  */
-class Mustache_Test_FiveThree_Functional_StrictCallablesTest extends PHPUnit_Framework_TestCase
+class StrictCallablesTest extends TestCase
 {
     /**
      * @dataProvider callables
      */
     public function testStrictCallables($strict, $name, $section, $expected)
     {
-        $mustache = new Mustache_Engine(array('strict_callables' => $strict));
+        $mustache = new Engine(array('strict_callables' => $strict));
         $tpl      = $mustache->loadTemplate('{{# section }}{{ name }}{{/ section }}');
 
-        $data = new StdClass();
+        $data = new stdClass();
         $data->name    = $name;
         $data->section = $section;
 

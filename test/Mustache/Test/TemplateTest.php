@@ -1,22 +1,17 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test;
 
-/**
- * @group unit
- */
-class Mustache_Test_TemplateTest extends PHPUnit_Framework_TestCase
+use Mustache\Context;
+use Mustache\Engine;
+use Mustache\Template;
+use PHPUnit\Framework\TestCase;
+
+class TemplateTest extends TestCase
 {
     public function testConstructor()
     {
-        $mustache = new Mustache_Engine();
+        $mustache = new Engine();
         $template = new Mustache_Test_TemplateStub($mustache);
         $this->assertSame($mustache, $template->getMustache());
     }
@@ -24,10 +19,10 @@ class Mustache_Test_TemplateTest extends PHPUnit_Framework_TestCase
     public function testRendering()
     {
         $rendered = '<< wheee >>';
-        $mustache = new Mustache_Engine();
+        $mustache = new Engine();
         $template = new Mustache_Test_TemplateStub($mustache);
         $template->rendered = $rendered;
-        $context  = new Mustache_Context();
+        $context  = new Context();
 
         if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
             $this->assertEquals($rendered, $template());
@@ -39,7 +34,7 @@ class Mustache_Test_TemplateTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class Mustache_Test_TemplateStub extends Mustache_Template
+class Mustache_Test_TemplateStub extends Template
 {
     public $rendered;
 
@@ -48,7 +43,7 @@ class Mustache_Test_TemplateStub extends Mustache_Template
         return $this->mustache;
     }
 
-    public function renderInternal(Mustache_Context $context, $indent = '', $escape = false)
+    public function renderInternal(Context $context, $indent = '', $escape = false)
     {
         return $this->rendered;
     }

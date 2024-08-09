@@ -1,25 +1,22 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\Functional;
+
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @group sections
  * @group functional
  */
-class Mustache_Test_Functional_ObjectSectionTest extends PHPUnit_Framework_TestCase
+class ObjectSectionTest extends TestCase
 {
     private $mustache;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->mustache = new Mustache_Engine();
+        $this->mustache = new Engine();
     }
 
     public function testBasicObject()
@@ -61,7 +58,7 @@ class Mustache_Test_Functional_Alpha
 
     public function __construct()
     {
-        $this->foo = new StdClass();
+        $this->foo = new stdClass();
         $this->foo->name = 'Foo';
         $this->foo->number = 1;
     }
@@ -73,7 +70,7 @@ class Mustache_Test_Functional_Beta
 
     public function __construct()
     {
-        $this->_data['foo'] = new StdClass();
+        $this->_data['foo'] = new stdClass();
         $this->_data['foo']->name = 'Foo';
         $this->_data['foo']->number = 1;
     }

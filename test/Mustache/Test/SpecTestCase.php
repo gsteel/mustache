@@ -1,21 +1,27 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test;
 
-abstract class Mustache_Test_SpecTestCase extends PHPUnit_Framework_TestCase
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+
+use function dirname;
+use function file_exists;
+
+abstract class SpecTestCase extends TestCase
 {
     protected static $mustache;
 
-    public static function setUpBeforeClass()
+    protected function setUp(): void
     {
-        self::$mustache = new Mustache_Engine();
+        if (! file_exists(__DIR__ . '/../../../vendor/spec/specs/')) {
+            $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
+        }
+    }
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$mustache = new Engine();
     }
 
     protected static function loadTemplate($source, $partials)

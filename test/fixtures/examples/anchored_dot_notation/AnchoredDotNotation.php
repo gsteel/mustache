@@ -1,55 +1,46 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 class AnchoredDotNotation
 {
-    public $genres = array(
-        array(
+    public $genres = [
+        [
             'name'      => 'Punk',
-            'subgenres' => array(
-                array(
+            'subgenres' => [
+                [
                     'name'      => 'Hardcore',
-                    'subgenres' => array(
-                        array(
+                    'subgenres' => [
+                        [
                             'name'      => 'First wave of black metal',
-                            'subgenres' => array(
-                                array('name' => 'Norwegian black metal'),
-                                array(
+                            'subgenres' => [
+                                ['name' => 'Norwegian black metal'],
+                                [
                                     'name'      => 'Death metal',
-                                    'subgenres' => array(
-                                        array(
+                                    'subgenres' => [
+                                        [
                                             'name'      => 'Swedish death metal',
-                                            'subgenres' => array(
-                                                array('name' => 'New wave of American metal'),
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                        array(
+                                            'subgenres' => [
+                                                ['name' => 'New wave of American metal'],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
                             'name'      => 'Thrash metal',
-                            'subgenres' => array(
-                                array('name' => 'Grindcore'),
-                                array(
+                            'subgenres' => [
+                                ['name' => 'Grindcore'],
+                                [
                                     'name'      => 'Metalcore',
-                                    'subgenres' => array(
-                                        array('name' => 'Nu metal'),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    );
+                                    'subgenres' => [
+                                        ['name' => 'Nu metal'],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
 }

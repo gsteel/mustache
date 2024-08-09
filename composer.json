@@ -13,13 +13,19 @@
         }
     ],
     "require": {
-        "php": ">=5.2.4"
+        "php": "~7.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "~3.7|~4.0|~5.0",
-        "friendsofphp/php-cs-fixer": "~1.11"
+        "phpunit/phpunit": "^8.0"
     },
     "autoload": {
-        "psr-0": { "Mustache": "src/" }
+        "psr-4": {
+            "Mustache\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mustache\\Test\\": "test/Mustache/Test"
+        }
     }
 }

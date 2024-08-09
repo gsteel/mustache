@@ -1,28 +1,21 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test;
 
-/**
- * @group unit
- */
-class Mustache_Test_AutoloaderTest extends PHPUnit_Framework_TestCase
+use Mustache\Autoloader;
+use PHPUnit\Framework\TestCase;
+
+class AutoloaderTest extends TestCase
 {
     public function testRegister()
     {
-        $loader = Mustache_Autoloader::register();
-        $this->assertTrue(spl_autoload_unregister(array($loader, 'autoload')));
+        $loader = Autoloader::register();
+        $this->assertTrue(spl_autoload_unregister([$loader, 'autoload']));
     }
 
     public function testAutoloader()
     {
-        $loader = new Mustache_Autoloader(dirname(__FILE__) . '/../../fixtures/autoloader');
+        $loader = new Autoloader(dirname(__FILE__) . '/../../fixtures/autoloader');
 
         $this->assertNull($loader->autoload('NonMustacheClass'));
         $this->assertFalse(class_exists('NonMustacheClass'));
@@ -41,8 +34,8 @@ class Mustache_Test_AutoloaderTest extends PHPUnit_Framework_TestCase
     {
         $numLoaders = count(spl_autoload_functions());
 
-        Mustache_Autoloader::register();
-        Mustache_Autoloader::register();
+        Autoloader::register();
+        Autoloader::register();
 
         $expectedNumLoaders = $numLoaders + 1;
 

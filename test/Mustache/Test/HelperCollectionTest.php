@@ -1,22 +1,18 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test;
 
-class Mustache_Test_HelperCollectionTest extends PHPUnit_Framework_TestCase
+use Mustache\HelperCollection;
+use PHPUnit\Framework\TestCase;
+
+class HelperCollectionTest extends TestCase
 {
     public function testConstructor()
     {
         $foo = array($this, 'getFoo');
         $bar = 'BAR';
 
-        $helpers = new Mustache_HelperCollection(array(
+        $helpers = new HelperCollection(array(
             'foo' => $foo,
             'bar' => $bar,
         ));
@@ -35,7 +31,7 @@ class Mustache_Test_HelperCollectionTest extends PHPUnit_Framework_TestCase
         $foo = array($this, 'getFoo');
         $bar = 'BAR';
 
-        $helpers = new Mustache_HelperCollection();
+        $helpers = new HelperCollection();
         $this->assertTrue($helpers->isEmpty());
         $this->assertFalse($helpers->has('foo'));
         $this->assertFalse($helpers->has('bar'));
@@ -61,7 +57,7 @@ class Mustache_Test_HelperCollectionTest extends PHPUnit_Framework_TestCase
         $foo = array($this, 'getFoo');
         $bar = 'BAR';
 
-        $helpers = new Mustache_HelperCollection();
+        $helpers = new HelperCollection();
         $this->assertTrue($helpers->isEmpty());
         $this->assertFalse($helpers->has('foo'));
         $this->assertFalse($helpers->has('bar'));
@@ -93,71 +89,73 @@ class Mustache_Test_HelperCollectionTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider getInvalidHelperArguments
      */
-    public function testHelperCollectionIsntAfraidToThrowExceptions($helpers = array(), $actions = array(), $exception = null)
+    public function testHelperCollectionIsntAfraidToThrowExceptions($helpers = [], $actions = [], $exception = null)
     {
         if ($exception) {
-            $this->setExpectedException($exception);
+            $this->expectException($exception);
+        } else {
+            $this->expectNotToPerformAssertions();
         }
 
-        $helpers = new Mustache_HelperCollection($helpers);
+        $helpers = new HelperCollection($helpers);
 
         foreach ($actions as $method => $args) {
             call_user_func_array(array($helpers, $method), $args);
         }
     }
 
-    public function getInvalidHelperArguments()
+    public function getInvalidHelperArguments(): array
     {
-        return array(
-            array(
+        return [
+            [
                 'not helpers',
-                array(),
-                'InvalidArgumentException',
-            ),
-            array(
-                array(),
-                array('get' => array('foo')),
-                'InvalidArgumentException',
-            ),
-            array(
-                array('foo' => 'FOO'),
-                array('get' => array('foo')),
+                [],
+                'Mustache\Exception\InvalidArgumentException',
+            ],
+            [
+                [],
+                ['get' => ['foo']],
+                'Mustache\Exception\InvalidArgumentException',
+            ],
+            [
+                ['foo' => 'FOO'],
+                ['get' => ['foo']],
                 null,
-            ),
-            array(
-                array('foo' => 'FOO'),
-                array('get' => array('bar')),
-                'InvalidArgumentException',
-            ),
-            array(
-                array('foo' => 'FOO'),
-                array(
-                    'add' => array('bar', 'BAR'),
-                    'get' => array('bar'),
-                ),
+            ],
+            [
+                ['foo' => 'FOO'],
+                ['get' => ['bar']],
+                'Mustache\Exception\InvalidArgumentException',
+            ],
+            [
+                ['foo' => 'FOO'],
+                [
+                    'add' => ['bar', 'BAR'],
+                    'get' => ['bar'],
+                ],
                 null,
-            ),
-            array(
-                array('foo' => 'FOO'),
-                array(
-                    'get'    => array('foo'),
-                    'remove' => array('foo'),
-                ),
+            ],
+            [
+                ['foo' => 'FOO'],
+                [
+                    'get'    => ['foo'],
+                    'remove' => ['foo'],
+                ],
                 null,
-            ),
-            array(
-                array('foo' => 'FOO'),
-                array(
-                    'remove' => array('foo'),
-                    'get'    => array('foo'),
-                ),
-                'InvalidArgumentException',
-            ),
-            array(
-                array(),
-                array('remove' => array('foo')),
-                'InvalidArgumentException',
-            ),
-        );
+            ],
+            [
+                ['foo' => 'FOO'],
+                [
+                    'remove' => ['foo'],
+                    'get'    => ['foo'],
+                ],
+                'Mustache\Exception\InvalidArgumentException',
+            ],
+            [
+                [],
+                ['remove' => ['foo']],
+                'Mustache\Exception\InvalidArgumentException',
+            ],
+        ];
     }
 }

@@ -1,19 +1,15 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\FiveThree\Functional;
+
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group lambdas
  * @group functional
  */
-class Mustache_Test_FiveThree_Functional_PartialLambdaIndentTest extends PHPUnit_Framework_TestCase
+class PartialLambdaIndentTest extends TestCase
 {
     public function testLambdasInsidePartialsAreIndentedProperly()
     {
@@ -35,7 +31,7 @@ EOS;
 
 EOS;
 
-        $m = new Mustache_Engine(array(
+        $m = new Engine(array(
             'partials' => array('input' => $partial),
         ));
 
@@ -65,7 +61,7 @@ EOS;
 
 EOS;
 
-        $m = new Mustache_Engine(array(
+        $m = new Engine(array(
             'partials' => array('input' => $partial),
         ));
 

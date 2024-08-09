@@ -1,42 +1,38 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test;
 
-/**
- * @group unit
- */
-class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
+use ArrayAccess;
+use Mustache\Context;
+use Mustache\Exception\InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+
+class ContextTest extends TestCase
 {
     public function testConstructor()
     {
-        $one = new Mustache_Context();
+        $one = new Context();
         $this->assertSame('', $one->find('foo'));
         $this->assertSame('', $one->find('bar'));
 
-        $two = new Mustache_Context(array(
+        $two = new Context(array(
             'foo' => 'FOO',
             'bar' => '<BAR>',
         ));
         $this->assertEquals('FOO', $two->find('foo'));
         $this->assertEquals('<BAR>', $two->find('bar'));
 
-        $obj = new StdClass();
+        $obj = new stdClass();
         $obj->name = 'NAME';
-        $three = new Mustache_Context($obj);
+        $three = new Context($obj);
         $this->assertSame($obj, $three->last());
         $this->assertEquals('NAME', $three->find('name'));
     }
 
     public function testPushPopAndLast()
     {
-        $context = new Mustache_Context();
+        $context = new Context();
         $this->assertFalse($context->last());
 
         $dummy = new Mustache_Test_TestDummy();
@@ -45,7 +41,7 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
         $this->assertSame($dummy, $context->pop());
         $this->assertFalse($context->last());
 
-        $obj = new StdClass();
+        $obj = new stdClass();
         $context->push($dummy);
         $this->assertSame($dummy, $context->last());
         $context->push($obj);
@@ -57,11 +53,11 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
 
     public function testFind()
     {
-        $context = new Mustache_Context();
+        $context = new Context();
 
         $dummy = new Mustache_Test_TestDummy();
 
-        $obj = new StdClass();
+        $obj = new stdClass();
         $obj->name = 'obj';
 
         $arr = array(
@@ -99,12 +95,12 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
 
     public function testArrayAccessFind()
     {
-        $access = new Mustache_Test_TestArrayAccess(array(
-            'a' => array('b' => array('c' => 'see')),
+        $access = new Mustache_Test_TestArrayAccess([
+            'a' => ['b' => ['c' => 'see']],
             'b' => 'bee',
-        ));
+        ]);
 
-        $context = new Mustache_Context($access);
+        $context = new Context($access);
         $this->assertEquals('bee', $context->find('b'));
         $this->assertEquals('see', $context->findDot('a.b.c'));
         $this->assertEquals(null, $context->findDot('a.b.c.d'));
@@ -112,7 +108,7 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
 
     public function testAccessorPriority()
     {
-        $context = new Mustache_Context(new Mustache_Test_AllTheThings());
+        $context = new Context(new Mustache_Test_AllTheThings());
 
         $this->assertEquals('win', $context->find('foo'), 'method beats property');
         $this->assertEquals('win', $context->find('bar'), 'property beats ArrayAccess');
@@ -122,7 +118,7 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
 
     public function testAnchoredDotNotation()
     {
-        $context = new Mustache_Context();
+        $context = new Context();
 
         $a = array(
             'name'   => 'a',
@@ -171,19 +167,17 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $context->findAnchoredDot('.child.name'));
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testAnchoredDotNotationThrowsExceptions()
     {
-        $context = new Mustache_Context();
+        $context = new Context();
         $context->push(array('a' => 1));
+        $this->expectException(InvalidArgumentException::class);
         $context->findAnchoredDot('a');
     }
 
     public function testNullArrayValueMasking()
     {
-        $context = new Mustache_Context();
+        $context = new Context();
 
         $a = array(
             'name' => 'not null'
@@ -200,7 +194,7 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
 
     public function testNullPropertyValueMasking()
     {
-        $context = new Mustache_Context();
+        $context = new Context();
 
         $a = (object) array(
             'name' => 'not null'
@@ -217,7 +211,7 @@ class Mustache_Test_ContextTest extends PHPUnit_Framework_TestCase
 
     public function testBuggyNullPropertyValueMasking()
     {
-        $context = new Mustache_Context(null, true);
+        $context = new Context(null, true);
 
         $a = (object) array(
             'name' => 'not null'

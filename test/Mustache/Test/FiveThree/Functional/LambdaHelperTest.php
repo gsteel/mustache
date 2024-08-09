@@ -1,25 +1,22 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\FiveThree\Functional;
+
+use Mustache\Engine;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @group lambdas
  * @group functional
  */
-class Mustache_Test_FiveThree_Functional_LambdaHelperTest extends PHPUnit_Framework_TestCase
+class LambdaHelperTest extends TestCase
 {
     private $mustache;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->mustache = new Mustache_Engine();
+        $this->mustache = new Engine();
     }
 
     public function testSectionLambdaHelper()
@@ -27,7 +24,7 @@ class Mustache_Test_FiveThree_Functional_LambdaHelperTest extends PHPUnit_Framew
         $one = $this->mustache->loadTemplate('{{name}}');
         $two = $this->mustache->loadTemplate('{{#lambda}}{{name}}{{/lambda}}');
 
-        $foo = new StdClass();
+        $foo = new stdClass();
         $foo->name = 'Mario';
         $foo->lambda = function ($text, $mustache) {
             return strtoupper($mustache->render($text));
@@ -41,7 +38,7 @@ class Mustache_Test_FiveThree_Functional_LambdaHelperTest extends PHPUnit_Framew
     {
         $tpl = $this->mustache->loadTemplate("{{=<% %>=}}\n<%# bang %><% value %><%/ bang %>");
 
-        $data = new StdClass();
+        $data = new stdClass();
         $data->value = 'hello world';
         $data->bang = function ($text, $mustache) {
             return $mustache->render($text) . '!';
@@ -55,7 +52,7 @@ class Mustache_Test_FiveThree_Functional_LambdaHelperTest extends PHPUnit_Framew
         $one = $this->mustache->loadTemplate('{{name}}');
         $two = $this->mustache->loadTemplate('{{#lambda}}{{name}}{{/lambda}}');
 
-        $foo = new StdClass();
+        $foo = new stdClass();
         $foo->name = 'Mario';
         $foo->lambda = function ($text, $render) {
             return strtoupper($render($text));

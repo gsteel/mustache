@@ -1,44 +1,27 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\Cache;
 
-class Mustache_Test_Cache_AbstractCacheTest extends PHPUnit_Framework_TestCase
+use Mustache\Exception\InvalidArgumentException;
+use Mustache\Logger\StreamLogger;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+
+class AbstractCacheTest extends TestCase
 {
     public function testGetSetLogger()
     {
         $cache  = new CacheStub();
-        $logger = new Mustache_Logger_StreamLogger('php://stdout');
+        $logger = new StreamLogger('php://stdout');
         $cache->setLogger($logger);
         $this->assertSame($logger, $cache->getLogger());
     }
 
-    /**
-     * @expectedException Mustache_Exception_InvalidArgumentException
-     */
     public function testSetLoggerThrowsExceptions()
     {
         $cache  = new CacheStub();
-        $logger = new StdClass();
+        $logger = new stdClass();
+        $this->expectException(InvalidArgumentException::class);
         $cache->setLogger($logger);
-    }
-}
-
-class CacheStub extends Mustache_Cache_AbstractCache
-{
-    public function load($key)
-    {
-        // nada
-    }
-
-    public function cache($key, $value)
-    {
-        // nada
     }
 }

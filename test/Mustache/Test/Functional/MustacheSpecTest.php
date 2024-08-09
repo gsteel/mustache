@@ -1,13 +1,8 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\Functional;
+
+use Mustache\Test\SpecTestCase;
 
 /**
  * A PHPUnit test case wrapping the Mustache Spec.
@@ -15,19 +10,8 @@
  * @group mustache-spec
  * @group functional
  */
-class Mustache_Test_Functional_MustacheSpecTest extends Mustache_Test_SpecTestCase
+class MustacheSpecTest extends SpecTestCase
 {
-    /**
-     * For some reason data providers can't mark tests skipped, so this test exists
-     * simply to provide a 'skipped' test if the `spec` submodule isn't initialized.
-     */
-    public function testSpecInitialized()
-    {
-        if (!file_exists(dirname(__FILE__) . '/../../../../vendor/spec/specs/')) {
-            $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
-        }
-    }
-
     /**
      * @group comments
      * @dataProvider loadCommentSpec
