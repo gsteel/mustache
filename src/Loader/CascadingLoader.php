@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Loader;
 
 use Mustache\Exception\UnknownTemplateException;
@@ -11,7 +13,8 @@ use Mustache\Loader;
  */
 class CascadingLoader implements Loader
 {
-    private $loaders;
+    /** @var list<Loader> */
+    private array $loaders;
 
     /**
      * Construct a Mustache\Loader\CascadingLoader with an array of loaders.
@@ -21,7 +24,7 @@ class CascadingLoader implements Loader
      *         new Mustache\Loader(__DIR__.'/templates')
      *     ]);
      *
-     * @param Loader[] $loaders
+     * @param list<Loader> $loaders
      */
     public function __construct(array $loaders = [])
     {
@@ -33,24 +36,14 @@ class CascadingLoader implements Loader
 
     /**
      * Add a Mustache\Loader instance.
-     *
-     * @param Loader $loader
      */
-    public function addLoader(Loader $loader)
+    public function addLoader(Loader $loader): void
     {
         $this->loaders[] = $loader;
     }
 
-    /**
-     * Load a Template by name.
-     *
-     * @param string $name
-     *
-     * @return string Mustache Template source
-     * @throws UnknownTemplateException If a template file is not found
-     *
-     */
-    public function load($name)
+    /** @inheritDoc */
+    public function load(string $name)
     {
         foreach ($this->loaders as $loader) {
             try {

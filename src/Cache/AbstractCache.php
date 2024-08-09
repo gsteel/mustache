@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Cache;
 
 use Mustache\Cache;
-use Mustache\Exception\InvalidArgumentException;
-use Mustache\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Abstract Mustache Cache class.
@@ -15,29 +16,18 @@ use Mustache\Logger;
  */
 abstract class AbstractCache implements Cache
 {
-    private $logger = null;
+    private ?LoggerInterface $logger = null;
 
     /**
      * Get the current logger instance.
-     *
-     * @return Logger|Psr\Log\LoggerInterface
      */
-    public function getLogger()
+    public function getLogger(): ?LoggerInterface
     {
         return $this->logger;
     }
 
-    /**
-     * Set a logger instance.
-     *
-     * @param Logger|Psr\Log\LoggerInterface $logger
-     */
-    public function setLogger($logger = null)
+    public function setLogger(?LoggerInterface $logger = null): void
     {
-        if ($logger !== null && !($logger instanceof Logger || is_a($logger, 'Psr\\Log\\LoggerInterface'))) {
-            throw new InvalidArgumentException('Expected an instance of Mustache\Logger or Psr\\Log\\LoggerInterface.');
-        }
-
         $this->logger = $logger;
     }
 
@@ -46,12 +36,14 @@ abstract class AbstractCache implements Cache
      *
      * @param string $level   The logging level
      * @param string $message The log message
-     * @param array  $context The log context
+     * @param array<string, mixed> $context The log context
      */
-    protected function log($level, $message, array $context = [])
+    protected function log(string $level, string $message, array $context = []): void
     {
-        if (isset($this->logger)) {
-            $this->logger->log($level, $message, $context);
+        if (! isset($this->logger)) {
+            return;
         }
+
+        $this->logger->log($level, $message, $context);
     }
 }

@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Exception;
 
 use Mustache\Exception;
 use Throwable;
+
+use function sprintf;
+use function version_compare;
+
+use const PHP_VERSION;
 
 /**
  * Unknown helper exception.
  */
 class UnknownHelperException extends InvalidArgumentException implements Exception
 {
-    protected $helperName;
+    private string $helperName;
 
-    /**
-     * @param string    $helperName
-     */
-    public function __construct($helperName, Throwable $previous = null)
+    public function __construct(string $helperName, ?Throwable $previous = null)
     {
         $this->helperName = $helperName;
         $message = sprintf('Unknown helper: %s', $helperName);
@@ -26,7 +30,7 @@ class UnknownHelperException extends InvalidArgumentException implements Excepti
         }
     }
 
-    public function getHelperName()
+    public function getHelperName(): string
     {
         return $this->helperName;
     }

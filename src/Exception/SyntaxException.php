@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Exception;
 
 use Mustache\Exception;
@@ -10,26 +12,19 @@ use Throwable;
  */
 class SyntaxException extends LogicException implements Exception
 {
-    protected $token;
+    /** @var array<string, mixed> */
+    private array $token;
 
-    /**
-     * @param string    $msg
-     * @param array     $token
-     */
-    public function __construct($msg, array $token, Throwable $previous = null)
+    /** @param array<string, mixed> $token */
+    public function __construct(string $msg, array $token, ?Throwable $previous = null)
     {
         $this->token = $token;
-        if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
-            parent::__construct($msg, 0, $previous);
-        } else {
-            parent::__construct($msg); // @codeCoverageIgnore
-        }
+
+        parent::__construct($msg, 0, $previous);
     }
 
-    /**
-     * @return array
-     */
-    public function getToken()
+    /** @return array<string, mixed> */
+    public function getToken(): array
     {
         return $this->token;
     }

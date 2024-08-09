@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache;
+
+use Mustache\Exception\RuntimeException;
 
 /**
  * Mustache template Source interface.
@@ -16,18 +20,14 @@ interface Source
      * source directory is under version control, you could use the current Git
      * rev and the file path...
      *
-     * @return string
-     * @throws RuntimeException when a source file cannot be read
-     *
+     * @throws RuntimeException when a source file cannot be read.
      */
-    public function getKey();
+    public function getKey(): string;
 
     /**
      * Get the template Source.
      *
-     * @return string
-     * @throws RuntimeException when a source file cannot be read
-     *
+     * @throws RuntimeException when a source file cannot be read.
      */
-    public function getSource();
+    public function getSource(): string;
 }

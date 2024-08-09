@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Exception;
 
 use Mustache\Exception;
 use Throwable;
+
+use function sprintf;
+use function version_compare;
+
+use const PHP_VERSION;
 
 /**
  * Unknown template exception.
  */
 class UnknownTemplateException extends InvalidArgumentException implements Exception
 {
-    protected $templateName;
+    private string $templateName;
 
-    /**
-     * @param string    $templateName
-     */
-    public function __construct($templateName, Throwable $previous = null)
+    public function __construct(string $templateName, ?Throwable $previous = null)
     {
         $this->templateName = $templateName;
         $message = sprintf('Unknown template: %s', $templateName);
@@ -26,7 +30,7 @@ class UnknownTemplateException extends InvalidArgumentException implements Excep
         }
     }
 
-    public function getTemplateName()
+    public function getTemplateName(): string
     {
         return $this->templateName;
     }

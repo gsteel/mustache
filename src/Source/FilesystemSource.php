@@ -1,9 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Source;
 
 use Mustache\Exception\RuntimeException;
 use Mustache\Source;
+
+use function file_get_contents;
+use function json_encode;
+use function sprintf;
+use function stat;
 
 /**
  * Mustache template Filesystem Source.
@@ -15,17 +22,18 @@ use Mustache\Source;
  */
 class FilesystemSource implements Source
 {
-    private $fileName;
-    private $statProps;
+    private string $fileName;
+    /** @var list<string> */
+    private array $statProps;
+    /** @var array<string, int>|false */
     private $stat;
 
     /**
      * Filesystem Source constructor.
      *
-     * @param string $fileName
-     * @param array $statProps
+     * @param list<string> $statProps
      */
-    public function __construct($fileName, array $statProps)
+    public function __construct(string $fileName, array $statProps)
     {
         $this->fileName = $fileName;
         $this->statProps = $statProps;
@@ -34,19 +42,17 @@ class FilesystemSource implements Source
     /**
      * Get the Source key (used to generate the compiled class name).
      *
-     * @return string
-     * @throws RuntimeException when a source file cannot be read
-     *
+     * @throws RuntimeException when a source file cannot be read.
      */
-    public function getKey()
+    public function getKey(): string
     {
         $chunks = [
             'fileName' => $this->fileName,
         ];
 
-        if (!empty($this->statProps)) {
-            if (!isset($this->stat)) {
-                $this->stat = @stat($this->fileName);
+        if (! empty($this->statProps)) {
+            if (! isset($this->stat)) {
+                $this->stat = stat($this->fileName);
             }
 
             if ($this->stat === false) {
@@ -63,10 +69,8 @@ class FilesystemSource implements Source
 
     /**
      * Get the template Source.
-     *
-     * @return string
      */
-    public function getSource()
+    public function getSource(): string
     {
         return file_get_contents($this->fileName);
     }

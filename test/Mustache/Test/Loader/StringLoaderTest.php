@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Loader;
 
 use Mustache\Loader\StringLoader;
@@ -7,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class StringLoaderTest extends TestCase
 {
-    public function testLoadTemplates()
+    public function testLoadTemplates(): void
     {
         $loader = new StringLoader();
 

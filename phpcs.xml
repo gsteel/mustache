@@ -14,6 +14,12 @@
 
     <rule ref="Doctrine" />
 
+    <!--
+    Exclude Examples
+    There are no namespaces here…
+    -->
+    <exclude-pattern>test/fixtures/examples/*</exclude-pattern>
+
     <!-- Aligning multiple assignments does not improve readability IMO -->
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
         <severity>0</severity>
@@ -35,5 +41,13 @@
             <property name="lineLimit" value="120" />
             <property name="absoluteLineLimit" value="120" />
         </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming">
+        <severity>0</severity>
     </rule>
 </ruleset>

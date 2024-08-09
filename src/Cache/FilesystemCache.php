@@ -1,9 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Cache;
 
 use Mustache\Exception\RuntimeException;
-use Mustache\Logger;
+use Psr\Log\LogLevel;
+
+use function basename;
+use function chmod;
+use function dirname;
+use function file_put_contents;
+use function is_dir;
+use function is_file;
+use function mkdir;
+use function rename;
+use function sprintf;
+use function tempnam;
+use function umask;
 
 /**
  * Mustache Cache filesystem implementation.
@@ -17,16 +31,16 @@ use Mustache\Logger;
  */
 class FilesystemCache extends AbstractCache
 {
-    private $baseDir;
-    private $fileMode;
+    private string $baseDir;
+    private ?int $fileMode;
 
     /**
      * Filesystem cache constructor.
      *
      * @param string $baseDir  Directory for compiled templates
-     * @param int    $fileMode Override default permissions for cache files. Defaults to using the system-defined umask
+     * @param int|null $fileMode Override default permissions for cache files. Defaults to using the system umask
      */
-    public function __construct($baseDir, $fileMode = null)
+    public function __construct(string $baseDir, ?int $fileMode = null)
     {
         $this->baseDir = $baseDir;
         $this->fileMode = $fileMode;
@@ -34,15 +48,11 @@ class FilesystemCache extends AbstractCache
 
     /**
      * Load the class from cache using `require_once`.
-     *
-     * @param string $key
-     *
-     * @return bool
      */
-    public function load($key)
+    public function load(string $key): bool
     {
         $fileName = $this->getCacheFilename($key);
-        if (!is_file($fileName)) {
+        if (! is_file($fileName)) {
             return false;
         }
 
@@ -53,18 +63,15 @@ class FilesystemCache extends AbstractCache
 
     /**
      * Mustache\Cache and load the compiled class.
-     *
-     * @param string $key
-     * @param string $value
      */
-    public function cache($key, $value)
+    public function cache(string $key, string $value): void
     {
         $fileName = $this->getCacheFilename($key);
 
         $this->log(
-            Logger::DEBUG,
+            LogLevel::DEBUG,
             'Writing to template cache: "{fileName}"',
-            array('fileName' => $fileName)
+            ['fileName' => $fileName],
         );
 
         $this->writeFile($fileName, $value);
@@ -74,12 +81,8 @@ class FilesystemCache extends AbstractCache
     /**
      * Build the cache filename.
      * Subclasses should override for custom cache directory structures.
-     *
-     * @param string $name
-     *
-     * @return string
      */
-    protected function getCacheFilename($name)
+    protected function getCacheFilename(string $name): string
     {
         return sprintf('%s/%s.php', $this->baseDir, $name);
     }
@@ -87,25 +90,21 @@ class FilesystemCache extends AbstractCache
     /**
      * Create cache directory.
      *
-     * @param string $fileName
-     *
-     * @return string
-     *@throws RuntimeException If unable to create directory
-     *
+     * @throws RuntimeException If unable to create directory.
      */
-    private function buildDirectoryForFilename($fileName)
+    private function buildDirectoryForFilename(string $fileName): string
     {
         $dirName = dirname($fileName);
-        if (!is_dir($dirName)) {
+        if (! is_dir($dirName)) {
             $this->log(
-                Logger::INFO,
+                LogLevel::INFO,
                 'Creating Mustache template cache directory: "{dirName}"',
-                array('dirName' => $dirName)
+                ['dirName' => $dirName],
             );
 
             @mkdir($dirName, 0777, true);
             // @codeCoverageIgnoreStart
-            if (!is_dir($dirName)) {
+            if (! is_dir($dirName)) {
                 throw new RuntimeException(sprintf('Failed to create cache directory "%s".', $dirName));
             }
             // @codeCoverageIgnoreEnd
@@ -117,25 +116,22 @@ class FilesystemCache extends AbstractCache
     /**
      * Write cache file.
      *
-     * @param string $fileName
-     * @param string $value
-     *@throws RuntimeException If unable to write file
-     *
+     * @throws RuntimeException If unable to write file.
      */
-    private function writeFile($fileName, $value)
+    private function writeFile(string $fileName, string $value): void
     {
         $dirName = $this->buildDirectoryForFilename($fileName);
 
         $this->log(
-            Logger::DEBUG,
+            LogLevel::DEBUG,
             'Caching compiled template to "{fileName}"',
-            array('fileName' => $fileName)
+            ['fileName' => $fileName],
         );
 
         $tempFile = tempnam($dirName, basename($fileName));
-        if (false !== @file_put_contents($tempFile, $value)) {
+        if (@file_put_contents($tempFile, $value) !== false) {
             if (@rename($tempFile, $fileName)) {
-                $mode = isset($this->fileMode) ? $this->fileMode : (0666 & ~umask());
+                $mode = $this->fileMode ?? 0666 & ~umask();
                 @chmod($fileName, $mode);
 
                 return;
@@ -143,9 +139,9 @@ class FilesystemCache extends AbstractCache
 
             // @codeCoverageIgnoreStart
             $this->log(
-                Logger::ERROR,
+                LogLevel::ERROR,
                 'Unable to rename Mustache temp cache file: "{tempName}" -> "{fileName}"',
-                array('tempName' => $tempFile, 'fileName' => $fileName)
+                ['tempName' => $tempFile, 'fileName' => $fileName],
             );
             // @codeCoverageIgnoreEnd
         }

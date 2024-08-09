@@ -1,25 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test;
 
-use ArrayAccess;
 use Mustache\Context;
 use Mustache\Exception\InvalidArgumentException;
+use Mustache\Test\ContextTestAsset\AllTheThings;
+use Mustache\Test\ContextTestAsset\ArrayAccessImplementor;
+use Mustache\Test\ContextTestAsset\Dummy;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 class ContextTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $one = new Context();
         $this->assertSame('', $one->find('foo'));
         $this->assertSame('', $one->find('bar'));
 
-        $two = new Context(array(
+        $two = new Context([
             'foo' => 'FOO',
             'bar' => '<BAR>',
-        ));
+        ]);
         $this->assertEquals('FOO', $two->find('foo'));
         $this->assertEquals('<BAR>', $two->find('bar'));
 
@@ -30,12 +34,12 @@ class ContextTest extends TestCase
         $this->assertEquals('NAME', $three->find('name'));
     }
 
-    public function testPushPopAndLast()
+    public function testPushPopAndLast(): void
     {
         $context = new Context();
         $this->assertFalse($context->last());
 
-        $dummy = new Mustache_Test_TestDummy();
+        $dummy = new Dummy();
         $context->push($dummy);
         $this->assertSame($dummy, $context->last());
         $this->assertSame($dummy, $context->pop());
@@ -51,19 +55,19 @@ class ContextTest extends TestCase
         $this->assertFalse($context->last());
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $context = new Context();
 
-        $dummy = new Mustache_Test_TestDummy();
+        $dummy = new Dummy();
 
         $obj = new stdClass();
         $obj->name = 'obj';
 
-        $arr = array(
-            'a' => array('b' => array('c' => 'see')),
+        $arr = [
+            'a' => ['b' => ['c' => 'see']],
             'b' => 'bee',
-        );
+        ];
 
         $string = 'some arbitrary string';
 
@@ -93,9 +97,9 @@ class ContextTest extends TestCase
         $this->assertEquals('<bar>', $context->findDot('bar'));
     }
 
-    public function testArrayAccessFind()
+    public function testArrayAccessFind(): void
     {
-        $access = new Mustache_Test_TestArrayAccess([
+        $access = new ArrayAccessImplementor([
             'a' => ['b' => ['c' => 'see']],
             'b' => 'bee',
         ]);
@@ -106,9 +110,9 @@ class ContextTest extends TestCase
         $this->assertEquals(null, $context->findDot('a.b.c.d'));
     }
 
-    public function testAccessorPriority()
+    public function testAccessorPriority(): void
     {
-        $context = new Context(new Mustache_Test_AllTheThings());
+        $context = new Context(new AllTheThings());
 
         $this->assertEquals('win', $context->find('foo'), 'method beats property');
         $this->assertEquals('win', $context->find('bar'), 'property beats ArrayAccess');
@@ -116,25 +120,25 @@ class ContextTest extends TestCase
         $this->assertEquals('win', $context->find('qux'), 'ArrayAccess beats private property');
     }
 
-    public function testAnchoredDotNotation()
+    public function testAnchoredDotNotation(): void
     {
         $context = new Context();
 
-        $a = array(
+        $a = [
             'name'   => 'a',
             'number' => 1,
-        );
+        ];
 
-        $b = array(
+        $b = [
             'number' => 2,
-            'child'  => array(
+            'child'  => [
                 'name' => 'baby bee',
-            ),
-        );
+            ],
+        ];
 
-        $c = array(
+        $c = [
             'name' => 'cee',
-        );
+        ];
 
         $context->push($a);
         $this->assertEquals('a', $context->find('name'));
@@ -167,24 +171,24 @@ class ContextTest extends TestCase
         $this->assertEquals('', $context->findAnchoredDot('.child.name'));
     }
 
-    public function testAnchoredDotNotationThrowsExceptions()
+    public function testAnchoredDotNotationThrowsExceptions(): void
     {
         $context = new Context();
-        $context->push(array('a' => 1));
+        $context->push(['a' => 1]);
         $this->expectException(InvalidArgumentException::class);
         $context->findAnchoredDot('a');
     }
 
-    public function testNullArrayValueMasking()
+    public function testNullArrayValueMasking(): void
     {
         $context = new Context();
 
-        $a = array(
-            'name' => 'not null'
-        );
-        $b = array(
-            'name' => null
-        );
+        $a = [
+            'name' => 'not null',
+        ];
+        $b = [
+            'name' => null,
+        ];
 
         $context->push($a);
         $context->push($b);
@@ -192,16 +196,16 @@ class ContextTest extends TestCase
         $this->assertNull($context->find('name'));
     }
 
-    public function testNullPropertyValueMasking()
+    public function testNullPropertyValueMasking(): void
     {
         $context = new Context();
 
-        $a = (object) array(
-            'name' => 'not null'
-        );
-        $b = (object) array(
-            'name' => null
-        );
+        $a = (object) [
+            'name' => 'not null',
+        ];
+        $b = (object) [
+            'name' => null,
+        ];
 
         $context->push($a);
         $context->push($b);
@@ -209,119 +213,20 @@ class ContextTest extends TestCase
         $this->assertNull($context->find('name'));
     }
 
-    public function testBuggyNullPropertyValueMasking()
+    public function testBuggyNullPropertyValueMasking(): void
     {
         $context = new Context(null, true);
 
-        $a = (object) array(
-            'name' => 'not null'
-        );
-        $b = (object) array(
-            'name' => null
-        );
+        $a = (object) [
+            'name' => 'not null',
+        ];
+        $b = (object) [
+            'name' => null,
+        ];
 
         $context->push($a);
         $context->push($b);
 
         $this->assertEquals($context->find('name'), 'not null');
-    }
-}
-
-class Mustache_Test_TestDummy
-{
-    public $name = 'dummy';
-
-    public function __invoke()
-    {
-        // nothing
-    }
-
-    public static function foo()
-    {
-        return '<foo>';
-    }
-
-    public function bar()
-    {
-        return '<bar>';
-    }
-}
-
-class Mustache_Test_TestArrayAccess implements ArrayAccess
-{
-    private $container = array();
-
-    public function __construct($array)
-    {
-        foreach ($array as $key => $value) {
-            $this->container[$key] = $value;
-        }
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        if (is_null($offset)) {
-            $this->container[] = $value;
-        } else {
-            $this->container[$offset] = $value;
-        }
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->container[$offset]);
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->container[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
-}
-
-class Mustache_Test_AllTheThings implements ArrayAccess
-{
-    public $foo  = 'fail';
-    public $bar  = 'win';
-    private $qux = 'fail';
-
-    public function foo()
-    {
-        return 'win';
-    }
-
-    public function offsetExists($offset)
-    {
-        return true;
-    }
-
-    public function offsetGet($offset)
-    {
-        switch ($offset) {
-            case 'foo':
-            case 'bar':
-                return 'fail';
-
-            case 'baz':
-            case 'qux':
-                return 'win';
-
-            default:
-                return 'lolwhut';
-        }
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        // nada
-    }
-
-    public function offsetUnset($offset)
-    {
-        // nada
     }
 }

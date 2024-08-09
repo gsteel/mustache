@@ -1,27 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Cache;
 
-use Mustache\Exception\InvalidArgumentException;
-use Mustache\Logger\StreamLogger;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class AbstractCacheTest extends TestCase
 {
-    public function testGetSetLogger()
+    public function testGetSetLogger(): void
     {
         $cache  = new CacheStub();
-        $logger = new StreamLogger('php://stdout');
+        $logger = new Logger('Foo');
         $cache->setLogger($logger);
         $this->assertSame($logger, $cache->getLogger());
-    }
-
-    public function testSetLoggerThrowsExceptions()
-    {
-        $cache  = new CacheStub();
-        $logger = new stdClass();
-        $this->expectException(InvalidArgumentException::class);
-        $cache->setLogger($logger);
     }
 }

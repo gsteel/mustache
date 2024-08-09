@@ -1,9 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use Mustache\Test\Functional\HigherOrderSections\Foo;
+use Mustache\Test\Functional\HigherOrderSections\Monster;
 use Mustache\Test\FunctionalTestCase;
+
+use function file_exists;
+use function get_class;
+use function glob;
+use function mkdir;
+use function sprintf;
 
 /**
  * @group lambdas
@@ -11,65 +21,76 @@ use Mustache\Test\FunctionalTestCase;
  */
 class HigherOrderSectionsTest extends FunctionalTestCase
 {
-    private $mustache;
+    private Engine $mustache;
 
     protected function setUp(): void
     {
         $this->mustache = new Engine();
     }
 
-    /**
-     * @dataProvider sectionCallbackData
-     */
-    public function testSectionCallback($data, $tpl, $expect)
+    /** @dataProvider sectionCallbackData */
+    public function testSectionCallback(Foo $data, string $tpl, string $expect): void
     {
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
     }
 
-    public function sectionCallbackData()
+    /** @return list<array{0: Foo, 1: string, 2: string}> */
+    public static function sectionCallbackData(): array
     {
-        $foo = new Mustache_Test_Functional_Foo();
-        $foo->doublewrap = array($foo, 'wrapWithBoth');
+        $foo = new Foo();
+        $foo->doublewrap = [$foo, 'wrapWithBoth'];
 
-        $bar = new Mustache_Test_Functional_Foo();
-        $bar->trimmer = array(get_class($bar), 'staticTrim');
+        $bar = new Foo();
+        $bar->trimmer = [get_class($bar), 'staticTrim'];
 
-        return array(
-            array($foo, '{{#doublewrap}}{{name}}{{/doublewrap}}', sprintf('<strong><em>%s</em></strong>', $foo->name)),
-            array($bar, '{{#trimmer}}   {{name}}   {{/trimmer}}', $bar->name),
-        );
+        return [
+            [$foo, '{{#doublewrap}}{{name}}{{/doublewrap}}', sprintf('<strong><em>%s</em></strong>', $foo->name)],
+            [$bar, '{{#trimmer}}   {{name}}   {{/trimmer}}', $bar->name],
+        ];
     }
 
-    public function testViewArraySectionCallback()
+    public function testSectionCallback2(): void
+    {
+        $one = $this->mustache->loadTemplate('{{name}}');
+        $two = $this->mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
+
+        $foo = new Foo();
+        $foo->name = 'Luigi';
+
+        $this->assertEquals($foo->name, $one->render($foo));
+        $this->assertEquals(sprintf('<em>%s</em>', $foo->name), $two->render($foo));
+    }
+
+    public function testViewArraySectionCallback(): void
     {
         $tpl = $this->mustache->loadTemplate('{{#trim}}    {{name}}    {{/trim}}');
 
-        $foo = new Mustache_Test_Functional_Foo();
+        $foo = new Foo();
 
-        $data = array(
+        $data = [
             'name' => 'Bob',
-            'trim' => array(get_class($foo), 'staticTrim'),
-        );
+            'trim' => [get_class($foo), 'staticTrim'],
+        ];
 
         $this->assertEquals($data['name'], $tpl->render($data));
     }
 
-    public function testMonsters()
+    public function testMonsters(): void
     {
         $tpl = $this->mustache->loadTemplate('{{#title}}{{title}} {{/title}}{{name}}');
 
-        $frank = new Mustache_Test_Functional_Monster();
+        $frank = new Monster();
         $frank->title = 'Dr.';
         $frank->name  = 'Frankenstein';
         $this->assertEquals('Dr. Frankenstein', $tpl->render($frank));
 
-        $dracula = new Mustache_Test_Functional_Monster();
+        $dracula = new Monster();
         $dracula->title = 'Count';
         $dracula->name  = 'Dracula';
         $this->assertEquals('Count Dracula', $tpl->render($dracula));
     }
 
-    public function testPassThroughOptimization()
+    public function testPassThroughOptimization(): void
     {
         $builder = $this->getMockBuilder(Engine::class);
         $builder->onlyMethods(['loadLambda']);
@@ -79,13 +100,13 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
         $tpl = $mustache->loadTemplate('{{#wrap}}NAME{{/wrap}}');
 
-        $foo = new Mustache_Test_Functional_Foo();
-        $foo->wrap = array($foo, 'wrapWithEm');
+        $foo = new Foo();
+        $foo->wrap = [$foo, 'wrapWithEm'];
 
         $this->assertEquals('<em>NAME</em>', $tpl->render($foo));
     }
 
-    public function testWithoutPassThroughOptimization()
+    public function testWithoutPassThroughOptimization(): void
     {
         $builder = $this->getMockBuilder(Engine::class);
         $builder->onlyMethods(['loadLambda']);
@@ -96,82 +117,78 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
         $tpl = $mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
 
-        $foo = new Mustache_Test_Functional_Foo();
-        $foo->wrap = array($foo, 'wrapWithEm');
+        $foo = new Foo();
+        $foo->wrap = [$foo, 'wrapWithEm'];
 
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
     }
 
-    /**
-     * @dataProvider cacheLambdaTemplatesData
-     */
-    public function testCacheLambdaTemplatesOptionWorks($dirName, $tplPrefix, $enable, $expect)
-    {
+    /** @dataProvider cacheLambdaTemplatesData */
+    public function testCacheLambdaTemplatesOptionWorks(
+        string $dirName,
+        string $tplPrefix,
+        bool $enable,
+        int $expect
+    ): void {
         $cacheDir = $this->setUpCacheDir($dirName);
-        $mustache = new Engine(array(
+        $mustache = new Engine([
             'template_class_prefix'  => $tplPrefix,
             'cache'                  => $cacheDir,
             'cache_lambda_templates' => $enable,
-        ));
+        ]);
 
         $tpl = $mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
-        $foo = new Mustache_Test_Functional_Foo();
-        $foo->wrap = array($foo, 'wrapWithEm');
+        $foo = new Foo();
+        $foo->wrap = [$foo, 'wrapWithEm'];
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
         $this->assertCount($expect, glob($cacheDir . '/*.php'));
     }
 
-    public function cacheLambdaTemplatesData()
+    /** @return list<array{0: string, 1: string, 2: bool, 3: int}> */
+    public static function cacheLambdaTemplatesData(): array
     {
-        return array(
-            array('test_enabling_lambda_cache',  '_TestEnablingLambdaCache_',  true,  2),
-            array('test_disabling_lambda_cache', '_TestDisablingLambdaCache_', false, 1),
-        );
+        return [
+            ['test_enabling_lambda_cache',  '_TestEnablingLambdaCache_',  true,  2],
+            ['test_disabling_lambda_cache', '_TestDisablingLambdaCache_', false, 1],
+        ];
     }
 
-    protected function setUpCacheDir($name)
+    private function setUpCacheDir(string $name): string
     {
         $cacheDir = self::$tempDir . '/' . $name;
         if (file_exists($cacheDir)) {
             self::rmdir($cacheDir);
         }
+
         mkdir($cacheDir, 0777, true);
 
         return $cacheDir;
     }
-}
 
-class Mustache_Test_Functional_Foo
-{
-    public $name = 'Justin';
-    public $lorem = 'Lorem ipsum dolor sit amet,';
-
-    public function wrapWithEm($text)
+    public function testAnonymousFunctionSectionCallback(): void
     {
-        return sprintf('<em>%s</em>', $text);
+        $tpl = $this->mustache->loadTemplate('{{#wrapper}}{{name}}{{/wrapper}}');
+
+        $foo = new Foo();
+        $foo->name = 'Mario';
+        $foo->wrapper = static function (string $text): string {
+            return sprintf('<div class="anonymous">%s</div>', $text);
+        };
+
+        $this->assertEquals(sprintf('<div class="anonymous">%s</div>', $foo->name), $tpl->render($foo));
     }
 
-    /**
-     * @param string $text
-     */
-    public function wrapWithStrong($text)
+    public function testViewArrayAnonymousSectionCallback(): void
     {
-        return sprintf('<strong>%s</strong>', $text);
-    }
+        $tpl = $this->mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
 
-    public function wrapWithBoth($text)
-    {
-        return self::wrapWithStrong(self::wrapWithEm($text));
-    }
+        $data = [
+            'name' => 'Bob',
+            'wrap' => static function (string $text): string {
+                return sprintf('[[%s]]', $text);
+            },
+        ];
 
-    public static function staticTrim($text)
-    {
-        return trim($text);
+        $this->assertEquals(sprintf('[[%s]]', $data['name']), $tpl->render($data));
     }
-}
-
-class Mustache_Test_Functional_Monster
-{
-    public $title;
-    public $name;
 }
