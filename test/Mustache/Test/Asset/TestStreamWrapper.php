@@ -13,11 +13,16 @@ use function preg_replace;
 
 /**
  * phpcs:ignoreFile
+ * @psalm-suppress PossiblyUnusedProperty
  */
 final class TestStreamWrapper
 {
     /** @var resource|false */
     private $filehandle = false;
+    /**
+     * @var resource|null
+     */
+    public $context = null;
 
     /**
      * Always returns false.
