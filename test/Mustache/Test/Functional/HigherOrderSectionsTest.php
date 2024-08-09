@@ -1,25 +1,21 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\Functional;
+
+use Mustache\Engine;
+use Mustache\Test\FunctionalTestCase;
 
 /**
  * @group lambdas
  * @group functional
  */
-class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_FunctionalTestCase
+class HigherOrderSectionsTest extends FunctionalTestCase
 {
     private $mustache;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->mustache = new Mustache_Engine();
+        $this->mustache = new Engine();
     }
 
     /**
@@ -73,9 +69,11 @@ class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_Fun
         $this->assertEquals('Count Dracula', $tpl->render($dracula));
     }
 
-    public function testPassthroughOptimization()
+    public function testPassThroughOptimization()
     {
-        $mustache = $this->getMock('Mustache_Engine', array('loadLambda'));
+        $builder = $this->getMockBuilder(Engine::class);
+        $builder->onlyMethods(['loadLambda']);
+        $mustache = $builder->getMock();
         $mustache->expects($this->never())
             ->method('loadLambda');
 
@@ -87,12 +85,14 @@ class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_Fun
         $this->assertEquals('<em>NAME</em>', $tpl->render($foo));
     }
 
-    public function testWithoutPassthroughOptimization()
+    public function testWithoutPassThroughOptimization()
     {
-        $mustache = $this->getMock('Mustache_Engine', array('loadLambda'));
-        $mustache->expects($this->once())
+        $builder = $this->getMockBuilder(Engine::class);
+        $builder->onlyMethods(['loadLambda']);
+        $mustache = $builder->getMock();
+        $mustache->expects(self::once())
             ->method('loadLambda')
-            ->will($this->returnValue($mustache->loadTemplate('<em>{{ name }}</em>')));
+            ->willReturn($mustache->loadTemplate('<em>{{ name }}</em>'));
 
         $tpl = $mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
 
@@ -108,7 +108,7 @@ class Mustache_Test_Functional_HigherOrderSectionsTest extends Mustache_Test_Fun
     public function testCacheLambdaTemplatesOptionWorks($dirName, $tplPrefix, $enable, $expect)
     {
         $cacheDir = $this->setUpCacheDir($dirName);
-        $mustache = new Mustache_Engine(array(
+        $mustache = new Engine(array(
             'template_class_prefix'  => $tplPrefix,
             'cache'                  => $cacheDir,
             'cache_lambda_templates' => $enable,

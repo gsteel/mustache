@@ -1,26 +1,23 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\Functional;
+
+use Mustache\Engine;
+use Mustache\Exception\SyntaxException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group inheritance
  * @group functional
  */
-class Mustache_Test_Functional_InheritanceTest extends PHPUnit_Framework_TestCase
+class InheritanceTest extends TestCase
 {
     private $mustache;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->mustache = new Mustache_Engine(array(
-            'pragmas' => array(Mustache_Engine::PRAGMA_BLOCKS),
+        $this->mustache = new Engine(array(
+            'pragmas' => array(Engine::PRAGMA_BLOCKS),
         ));
     }
 
@@ -521,12 +518,12 @@ class Mustache_Test_Functional_InheritanceTest extends PHPUnit_Framework_TestCas
 
     /**
      * @dataProvider getIllegalInheritanceExamples
-     * @expectedException Mustache_Exception_SyntaxException
-     * @expectedExceptionMessage Illegal content in < parent tag
      */
     public function testIllegalInheritanceExamples($partials, $data, $template)
     {
         $this->mustache->setPartials($partials);
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Illegal content in < parent tag');
         $tpl = $this->mustache->loadTemplate($template);
         $tpl->render($data);
     }

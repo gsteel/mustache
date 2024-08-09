@@ -1,26 +1,23 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\Functional;
+
+use Mustache\Engine;
+use Mustache\Exception\SyntaxException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group dynamic-names
  * @group functional
  */
-class Mustache_Test_Functional_DynamicPartialsTest extends PHPUnit_Framework_TestCase
+class DynamicPartialsTest extends TestCase
 {
     private $mustache;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->mustache = new Mustache_Engine(array(
-            'pragmas' => array(Mustache_Engine::PRAGMA_DYNAMIC_NAMES),
+        $this->mustache = new Engine(array(
+            'pragmas' => array(Engine::PRAGMA_DYNAMIC_NAMES),
         ));
     }
 
@@ -58,11 +55,11 @@ class Mustache_Test_Functional_DynamicPartialsTest extends PHPUnit_Framework_Tes
 
     /**
      * @dataProvider getDynamicNameParseErrors
-     * @expectedException Mustache_Exception_SyntaxException
-     * @expectedExceptionMessage Nesting error:
      */
     public function testDynamicNameParseErrors($template)
     {
+        $this->expectException(SyntaxException::class);
+        $this->expectExceptionMessage('Nesting error:');
         $this->mustache->render($template);
     }
 

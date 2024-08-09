@@ -1,25 +1,24 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\FiveThree\Functional;
+
+use DateTime;
+use DateTimeZone;
+use Mustache\Engine;
+use Mustache\Exception\UnknownFilterException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group filters
  * @group functional
  */
-class Mustache_Test_FiveThree_Functional_FiltersTest extends PHPUnit_Framework_TestCase
+class FiltersTest extends TestCase
 {
     private $mustache;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->mustache = new Mustache_Engine();
+        $this->mustache = new Engine();
     }
 
     /**
@@ -71,7 +70,7 @@ class Mustache_Test_FiveThree_Functional_FiltersTest extends PHPUnit_Framework_T
             return sprintf('[[%s]]', $value);
         });
 
-        $foo = new \StdClass();
+        $foo = new \stdClass();
         $foo->date = new DateTime('1/1/2000', new DateTimeZone('UTC'));
 
         $this->assertEquals('[[2000-01-01 12:01:00]]', $tpl->render($foo));
@@ -128,11 +127,11 @@ EOS;
     }
 
     /**
-     * @expectedException Mustache_Exception_UnknownFilterException
      * @dataProvider brokenPipeData
      */
     public function testThrowsExceptionForBrokenPipes($tpl, $data)
     {
+        $this->expectException(UnknownFilterException::class);
         $this->mustache->render($tpl, $data);
     }
 

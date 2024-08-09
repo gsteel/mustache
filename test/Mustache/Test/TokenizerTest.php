@@ -1,47 +1,35 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test;
 
-/**
- * @group unit
- */
-class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
+use Mustache\Exception\SyntaxException;
+use Mustache\Tokenizer;
+use PHPUnit\Framework\TestCase;
+
+class TokenizerTest extends TestCase
 {
     /**
      * @dataProvider getTokens
      */
     public function testScan($text, $delimiters, $expected)
     {
-        $tokenizer = new Mustache_Tokenizer();
+        $tokenizer = new Tokenizer();
         $this->assertSame($expected, $tokenizer->scan($text, $delimiters));
     }
 
-    /**
-     * @expectedException Mustache_Exception_SyntaxException
-     */
     public function testUnevenBracesThrowExceptions()
     {
-        $tokenizer = new Mustache_Tokenizer();
-
+        $tokenizer = new Tokenizer();
         $text = '{{{ name }}';
+        $this->expectException(SyntaxException::class);
         $tokenizer->scan($text, null);
     }
 
-    /**
-     * @expectedException Mustache_Exception_SyntaxException
-     */
     public function testUnevenBracesWithCustomDelimiterThrowExceptions()
     {
-        $tokenizer = new Mustache_Tokenizer();
-
+        $tokenizer = new Tokenizer();
         $text = '<%{ name %>';
+        $this->expectException(SyntaxException::class);
         $tokenizer->scan($text, '<% %>');
     }
 
@@ -53,9 +41,9 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 null,
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => 'text',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => 'text',
                     ),
                 ),
             ),
@@ -65,9 +53,9 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 '<<< >>>',
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => 'text',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => 'text',
                     ),
                 ),
             ),
@@ -77,12 +65,12 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 null,
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'name',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 10,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'name',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 10,
                     ),
                 ),
             ),
@@ -92,9 +80,9 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 '<<< >>>',
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => '{{ name }}',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => '{{ name }}',
                     ),
                 ),
             ),
@@ -104,12 +92,12 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 '<<< >>>',
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'name',
-                        Mustache_Tokenizer::OTAG  => '<<<',
-                        Mustache_Tokenizer::CTAG  => '>>>',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 12,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'name',
+                        Tokenizer::OTAG  => '<<<',
+                        Tokenizer::CTAG  => '>>>',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 12,
                     ),
                 ),
             ),
@@ -119,63 +107,63 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 null,
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_UNESCAPED,
-                        Mustache_Tokenizer::NAME  => 'a',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 8,
+                        Tokenizer::TYPE  => Tokenizer::T_UNESCAPED,
+                        Tokenizer::NAME  => 'a',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 8,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => "\n",
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => "\n",
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_SECTION,
-                        Mustache_Tokenizer::NAME  => 'b',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 1,
-                        Mustache_Tokenizer::INDEX => 18,
+                        Tokenizer::TYPE  => Tokenizer::T_SECTION,
+                        Tokenizer::NAME  => 'b',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 1,
+                        Tokenizer::INDEX => 18,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 1,
-                        Mustache_Tokenizer::VALUE => "  \n",
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 1,
+                        Tokenizer::VALUE => "  \n",
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_DELIM_CHANGE,
-                        Mustache_Tokenizer::LINE  => 2,
+                        Tokenizer::TYPE  => Tokenizer::T_DELIM_CHANGE,
+                        Tokenizer::LINE  => 2,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'c',
-                        Mustache_Tokenizer::OTAG  => '|',
-                        Mustache_Tokenizer::CTAG  => '|',
-                        Mustache_Tokenizer::LINE  => 2,
-                        Mustache_Tokenizer::INDEX => 37,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'c',
+                        Tokenizer::OTAG  => '|',
+                        Tokenizer::CTAG  => '|',
+                        Tokenizer::LINE  => 2,
+                        Tokenizer::INDEX => 37,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_END_SECTION,
-                        Mustache_Tokenizer::NAME  => 'b',
-                        Mustache_Tokenizer::OTAG  => '|',
-                        Mustache_Tokenizer::CTAG  => '|',
-                        Mustache_Tokenizer::LINE  => 2,
-                        Mustache_Tokenizer::INDEX => 37,
+                        Tokenizer::TYPE  => Tokenizer::T_END_SECTION,
+                        Tokenizer::NAME  => 'b',
+                        Tokenizer::OTAG  => '|',
+                        Tokenizer::CTAG  => '|',
+                        Tokenizer::LINE  => 2,
+                        Tokenizer::INDEX => 37,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 2,
-                        Mustache_Tokenizer::VALUE => "\n",
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 2,
+                        Tokenizer::VALUE => "\n",
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_UNESCAPED,
-                        Mustache_Tokenizer::NAME  => 'd',
-                        Mustache_Tokenizer::OTAG  => '|',
-                        Mustache_Tokenizer::CTAG  => '|',
-                        Mustache_Tokenizer::LINE  => 3,
-                        Mustache_Tokenizer::INDEX => 51,
+                        Tokenizer::TYPE  => Tokenizer::T_UNESCAPED,
+                        Tokenizer::NAME  => 'd',
+                        Tokenizer::OTAG  => '|',
+                        Tokenizer::CTAG  => '|',
+                        Tokenizer::LINE  => 3,
+                        Tokenizer::INDEX => 51,
                     ),
 
                 ),
@@ -187,25 +175,25 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 null,
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_SECTION,
-                        Mustache_Tokenizer::NAME  => 'a',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 8,
+                        Tokenizer::TYPE  => Tokenizer::T_SECTION,
+                        Tokenizer::NAME  => 'a',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 8,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => '0',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => '0',
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_END_SECTION,
-                        Mustache_Tokenizer::NAME  => 'a',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 9,
+                        Tokenizer::TYPE  => Tokenizer::T_END_SECTION,
+                        Tokenizer::NAME  => 'a',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 9,
                     ),
                 ),
             ),
@@ -216,43 +204,43 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 '<% %>',
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'a',
-                        Mustache_Tokenizer::OTAG  => '<%',
-                        Mustache_Tokenizer::CTAG  => '%>',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 7,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'a',
+                        Tokenizer::OTAG  => '<%',
+                        Tokenizer::CTAG  => '%>',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 7,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => '} ',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => '} ',
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'b',
-                        Mustache_Tokenizer::OTAG  => '<%',
-                        Mustache_Tokenizer::CTAG  => '%>',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 16,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'b',
+                        Tokenizer::OTAG  => '<%',
+                        Tokenizer::CTAG  => '%>',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 16,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => '%> ',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => '%> ',
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'c',
-                        Mustache_Tokenizer::OTAG  => '<%',
-                        Mustache_Tokenizer::CTAG  => '%>',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 26,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'c',
+                        Tokenizer::OTAG  => '<%',
+                        Tokenizer::CTAG  => '%>',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 26,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => '}}}',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => '}}}',
                     ),
                 ),
             ),
@@ -263,12 +251,12 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 '<% %>',
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_UNESCAPED,
-                        Mustache_Tokenizer::NAME  => 'a',
-                        Mustache_Tokenizer::OTAG  => '<%',
-                        Mustache_Tokenizer::CTAG  => '%>',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 9,
+                        Tokenizer::TYPE  => Tokenizer::T_UNESCAPED,
+                        Tokenizer::NAME  => 'a',
+                        Tokenizer::OTAG  => '<%',
+                        Tokenizer::CTAG  => '%>',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 9,
                     ),
                 ),
             ),
@@ -279,25 +267,25 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 null,
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_BLOCK_VAR,
-                        Mustache_Tokenizer::NAME  => 'arg',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 8,
+                        Tokenizer::TYPE  => Tokenizer::T_BLOCK_VAR,
+                        Tokenizer::NAME  => 'arg',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 8,
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_TEXT,
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::VALUE => 'default',
+                        Tokenizer::TYPE  => Tokenizer::T_TEXT,
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::VALUE => 'default',
                     ),
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_END_SECTION,
-                        Mustache_Tokenizer::NAME  => 'arg',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 15,
+                        Tokenizer::TYPE  => Tokenizer::T_END_SECTION,
+                        Tokenizer::NAME  => 'arg',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 15,
                     ),
                 ),
             ),
@@ -308,12 +296,12 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 ' <% %> ',
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'name',
-                        Mustache_Tokenizer::OTAG  => '<%',
-                        Mustache_Tokenizer::CTAG  => '%>',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 10,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'name',
+                        Tokenizer::OTAG  => '<%',
+                        Tokenizer::CTAG  => '%>',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 10,
                     ),
                 ),
             ),
@@ -324,12 +312,12 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 '',
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'name',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 10,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'name',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 10,
                     ),
                 ),
             ),
@@ -340,12 +328,12 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
                 42,
                 array(
                     array(
-                        Mustache_Tokenizer::TYPE  => Mustache_Tokenizer::T_ESCAPED,
-                        Mustache_Tokenizer::NAME  => 'name',
-                        Mustache_Tokenizer::OTAG  => '{{',
-                        Mustache_Tokenizer::CTAG  => '}}',
-                        Mustache_Tokenizer::LINE  => 0,
-                        Mustache_Tokenizer::INDEX => 10,
+                        Tokenizer::TYPE  => Tokenizer::T_ESCAPED,
+                        Tokenizer::NAME  => 'name',
+                        Tokenizer::OTAG  => '{{',
+                        Tokenizer::CTAG  => '}}',
+                        Tokenizer::LINE  => 0,
+                        Tokenizer::INDEX => 10,
                     ),
                 ),
             ),
@@ -354,40 +342,40 @@ class Mustache_Test_TokenizerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getUnclosedTags
-     * @expectedException Mustache_Exception_SyntaxException
      */
     public function testUnclosedTagsThrowExceptions($text)
     {
-        $tokenizer = new Mustache_Tokenizer();
+        $tokenizer = new Tokenizer();
+        $this->expectException(SyntaxException::class);
         $tokenizer->scan($text, null);
     }
 
     public function getUnclosedTags()
     {
-        return array(
-            array('{{ name'),
-            array('{{ name }'),
-            array('{{{ name'),
-            array('{{{ name }'),
-            array('{{& name'),
-            array('{{& name }'),
-            array('{{# name'),
-            array('{{# name }'),
-            array('{{^ name'),
-            array('{{^ name }'),
-            array('{{/ name'),
-            array('{{/ name }'),
-            array('{{> name'),
-            array('{{< name'),
-            array('{{> name }'),
-            array('{{< name }'),
-            array('{{$ name'),
-            array('{{$ name }'),
-            array('{{= <% %>'),
-            array('{{= <% %>='),
-            array('{{= <% %>=}'),
-            array('{{% name'),
-            array('{{% name }'),
-        );
+        return [
+            ['{{ name'],
+            ['{{ name }'],
+            ['{{{ name'],
+            ['{{{ name }'],
+            ['{{& name'],
+            ['{{& name }'],
+            ['{{# name'],
+            ['{{# name }'],
+            ['{{^ name'],
+            ['{{^ name }'],
+            ['{{/ name'],
+            ['{{/ name }'],
+            ['{{> name'],
+            ['{{< name'],
+            ['{{> name }'],
+            ['{{< name }'],
+            ['{{$ name'],
+            ['{{$ name }'],
+            ['{{= <% %>'],
+            ['{{= <% %>='],
+            ['{{= <% %>=}'],
+            ['{{% name'],
+            ['{{% name }'],
+        ];
     }
 }

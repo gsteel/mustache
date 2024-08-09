@@ -1,13 +1,9 @@
 <?php
 
-/*
- * This file is part of Mustache.php.
- *
- * (c) 2010-2017 Justin Hileman
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Mustache\Test\Functional;
+
+use Mustache\Engine;
+use Mustache\Test\SpecTestCase;
 
 /**
  * A PHPUnit test case wrapping the Mustache Spec.
@@ -15,24 +11,13 @@
  * @group mustache-spec
  * @group functional
  */
-class Mustache_Test_Functional_MustacheDynamicNamesSpecTest extends Mustache_Test_SpecTestCase
+class MustacheDynamicNamesSpecTest extends SpecTestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        self::$mustache = new Mustache_Engine(array(
-          'pragmas' => array(Mustache_Engine::PRAGMA_DYNAMIC_NAMES),
+        self::$mustache = new Engine(array(
+          'pragmas' => array(Engine::PRAGMA_DYNAMIC_NAMES),
         ));
-    }
-
-    /**
-     * For some reason data providers can't mark tests skipped, so this test exists
-     * simply to provide a 'skipped' test if the `spec` submodule isn't initialized.
-     */
-    public function testSpecInitialized()
-    {
-        if (!file_exists(dirname(__FILE__) . '/../../../../vendor/spec/specs/')) {
-            $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
-        }
     }
 
     /**
