@@ -5,3 +5,4 @@
 /.gitmodules export-ignore
 /.gitignore export-ignore
 /composer.lock export-ignore
+/.laminas-ci export-ignore
