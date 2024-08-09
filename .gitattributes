@@ -1,8 +1,7 @@
 /test export-ignore
 /CONTRIBUTING.md export-ignore
-/.php_cs export-ignore
+/phpcs.xml export-ignore
 /phpunit.xml.dist export-ignore
-/.travis.yml export-ignore
-/.styleci.yml export-ignore
 /.gitmodules export-ignore
 /.gitignore export-ignore
+/composer.lock export-ignore
