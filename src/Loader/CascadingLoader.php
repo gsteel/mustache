@@ -12,7 +12,7 @@ use Mustache\Source;
  * A Mustache Template cascading loader implementation, which delegates to other
  * Loader instances.
  */
-class CascadingLoader implements Loader
+final class CascadingLoader implements Loader
 {
     /** @var list<Loader> */
     private array $loaders;

@@ -21,7 +21,7 @@ use Mustache\Source;
  *     $tpl = $m->loadTemplate('{{ foo }}');
  *     echo $tpl->render(array('foo' => 'bar')); // "bar"
  */
-class StringLoader implements Loader
+final class StringLoader implements Loader
 {
     public function load(string $name): string|Source
     {

@@ -17,7 +17,9 @@ class MustacheInjectionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->mustache = new Engine();
+        $this->mustache = new Engine([
+            'strict_callables' => false,
+        ]);
     }
 
     /**

@@ -12,7 +12,7 @@ use Psr\Log\LogLevel;
  * The in-memory cache is used for uncached lambda section templates. It's also useful during development, but is not
  * recommended for production use.
  */
-class NoopCache extends AbstractCache
+final class NoopCache extends AbstractCache
 {
     /**
      * Loads nothing. Move along.

@@ -11,23 +11,22 @@ use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Mustache\Cache\FilesystemCache;
 use Mustache\Cache\NoopCache;
-use Mustache\Compiler;
 use Mustache\Engine;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
+use Mustache\HelperCollection;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\ProductionFilesystemLoader;
 use Mustache\Loader\StringLoader;
-use Mustache\Parser;
 use Mustache\Template;
 use Mustache\Test\Asset\EngineStub;
-use Mustache\Tokenizer;
 use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 
 use function dirname;
 use function file_get_contents;
 use function realpath;
+use function strtolower;
 use function sys_get_temp_dir;
 use function tempnam;
 
@@ -42,8 +41,6 @@ class EngineTest extends FunctionalTestCase
         $partialsLoader = new ArrayLoader();
         $mustache       = new Engine([
             'template_class_prefix' => '__whot__',
-            'cache'                 => self::$tempDir,
-            'cache_file_mode'       => 777,
             'logger'                => $logger,
             'loader'                => $loader,
             'partials_loader'       => $partialsLoader,
@@ -60,19 +57,10 @@ class EngineTest extends FunctionalTestCase
             'pragmas'      => [Engine::PRAGMA_FILTERS],
         ]);
 
-        $this->assertSame($logger, $mustache->getLogger());
-        $this->assertSame($loader, $mustache->getLoader());
-        $this->assertSame($partialsLoader, $mustache->getPartialsLoader());
         $this->assertEquals('{{ foo }}', $partialsLoader->load('foo'));
         $this->assertStringContainsString('__whot__', $mustache->getTemplateClassName('{{ foo }}'));
         $this->assertEquals('strtoupper', $mustache->getEscape());
-        $this->assertEquals(ENT_QUOTES, $mustache->getEntityFlags());
         $this->assertEquals('ISO-8859-1', $mustache->getCharset());
-        $this->assertTrue($mustache->hasHelper('foo'));
-        $this->assertTrue($mustache->hasHelper('bar'));
-        $this->assertFalse($mustache->hasHelper('baz'));
-        $this->assertInstanceOf(FilesystemCache::class, $mustache->getCache());
-        $this->assertEquals([Engine::PRAGMA_FILTERS], $mustache->getPragmas());
     }
 
     public static function getFoo(): string
@@ -102,51 +90,12 @@ class EngineTest extends FunctionalTestCase
         $this->assertEquals($source, $mustache->source);
     }
 
-    public function testSettingServices(): void
-    {
-        $logger    = new NullLogger();
-        $loader    = new StringLoader();
-        $tokenizer = new Tokenizer();
-        $parser    = new Parser();
-        $compiler  = new Compiler();
-        $mustache  = new Engine();
-        $cache     = new FilesystemCache(self::$tempDir);
-
-        $this->assertNotSame($logger, $mustache->getLogger());
-        $mustache->setLogger($logger);
-        $this->assertSame($logger, $mustache->getLogger());
-
-        $this->assertNotSame($loader, $mustache->getLoader());
-        $mustache->setLoader($loader);
-        $this->assertSame($loader, $mustache->getLoader());
-
-        $this->assertNotSame($loader, $mustache->getPartialsLoader());
-        $mustache->setPartialsLoader($loader);
-        $this->assertSame($loader, $mustache->getPartialsLoader());
-
-        $this->assertNotSame($tokenizer, $mustache->getTokenizer());
-        $mustache->setTokenizer($tokenizer);
-        $this->assertSame($tokenizer, $mustache->getTokenizer());
-
-        $this->assertNotSame($parser, $mustache->getParser());
-        $mustache->setParser($parser);
-        $this->assertSame($parser, $mustache->getParser());
-
-        $this->assertNotSame($compiler, $mustache->getCompiler());
-        $mustache->setCompiler($compiler);
-        $this->assertSame($compiler, $mustache->getCompiler());
-
-        $this->assertNotSame($cache, $mustache->getCache());
-        $mustache->setCache($cache);
-        $this->assertSame($cache, $mustache->getCache());
-    }
-
     /** @group functional */
     public function testCache(): void
     {
         $mustache = new Engine([
             'template_class_prefix' => '__whot__',
-            'cache'                 => self::$tempDir,
+            'cache'                 => new FilesystemCache(self::$tempDir),
         ]);
 
         $source    = '{{ foo }}';
@@ -158,28 +107,30 @@ class EngineTest extends FunctionalTestCase
 
     public function testLambdaCache(): void
     {
+        $cache = new NoopCache();
         $mustache = new EngineStub([
-            'cache'                  => self::$tempDir,
+            'cache'                  => $cache,
             'cache_lambda_templates' => true,
         ]);
 
-        $this->assertNotInstanceOf(NoopCache::class, $mustache->getProtectedLambdaCache());
-        $this->assertSame($mustache->getCache(), $mustache->getProtectedLambdaCache());
+        $this->assertSame($cache, $mustache->getProtectedLambdaCache());
     }
 
     public function testWithoutLambdaCache(): void
     {
+        $cache = new NoopCache();
         $mustache = new EngineStub([
-            'cache' => self::$tempDir,
+            'cache' => $cache,
         ]);
 
         $this->assertInstanceOf(NoopCache::class, $mustache->getProtectedLambdaCache());
-        $this->assertNotSame($mustache->getCache(), $mustache->getProtectedLambdaCache());
+        $this->assertNotSame($cache, $mustache->getProtectedLambdaCache());
     }
 
     public function testEmptyTemplatePrefixThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        /** @psalm-suppress InvalidArgument */
         new Engine([
             'template_class_prefix' => '',
         ]);
@@ -189,6 +140,7 @@ class EngineTest extends FunctionalTestCase
     public function testNonCallableEscapeThrowsException(mixed $escape): void
     {
         $this->expectException(InvalidArgumentException::class);
+        /** @psalm-suppress MixedArgumentTypeCoercion */
         new Engine(['escape' => $escape]);
     }
 
@@ -222,39 +174,64 @@ class EngineTest extends FunctionalTestCase
         $this->assertEquals('FOOBAZ', $mustache->render('{{>foo}}{{>bar}}{{>baz}}', []));
     }
 
-    public function testHelpers(): void
+    public function testHelperRegisteredInConstructorWithArray(): void
     {
-        $foo = [$this, 'getFoo'];
-        $bar = 'BAR';
-        $mustache = new Engine([
+        $engine = new Engine([
             'helpers' => [
-                'foo' => $foo,
-                'bar' => $bar,
+                'lower' => static function (string $value): string {
+                    return strtolower($value);
+                },
             ],
         ]);
 
-        $helpers = $mustache->getHelpers();
-        $this->assertTrue($mustache->hasHelper('foo'));
-        $this->assertTrue($mustache->hasHelper('bar'));
-        $this->assertTrue($helpers->has('foo'));
-        $this->assertTrue($helpers->has('bar'));
-        $this->assertSame($foo, $mustache->getHelper('foo'));
-        $this->assertSame($bar, $mustache->getHelper('bar'));
+        $result = $engine->render('{{#lower}}FOO{{/lower}}');
+        self::assertSame('foo', $result);
+    }
 
-        $mustache->removeHelper('bar');
-        $this->assertFalse($mustache->hasHelper('bar'));
-        $mustache->addHelper('bar', $bar);
-        $this->assertSame($bar, $mustache->getHelper('bar'));
+    public function testHelperRegisteredInConstructorWithCollection(): void
+    {
+        $helpers = new HelperCollection([
+            'lower' => static function (string $value): string {
+                return strtolower($value);
+            },
+        ]);
 
-        $baz = [$this, 'wrapWithUnderscores'];
-        $this->assertFalse($mustache->hasHelper('baz'));
-        $this->assertFalse($helpers->has('baz'));
+        $engine = new Engine([
+            'helpers' => $helpers,
+        ]);
 
-        $mustache->addHelper('baz', $baz);
-        $this->assertTrue($mustache->hasHelper('baz'));
-        $this->assertTrue($helpers->has('baz'));
+        $result = $engine->render('{{#lower}}FOO{{/lower}}');
+        self::assertSame('foo', $result);
+    }
 
-        // ... and a functional test
+    public function testHelpersCanBeMutatedViaTheHelperCollection(): void
+    {
+        $helpers = new HelperCollection();
+        $engine = new Engine([
+            'helpers' => $helpers,
+        ]);
+
+        $helpers->add('lower', static function (string $value): string {
+            return strtolower($value);
+        });
+
+        $result = $engine->render('{{#lower}}FOO{{/lower}}');
+        self::assertSame('foo', $result);
+    }
+
+    public function testHelpers(): void
+    {
+        $helpers = new HelperCollection([
+            'foo' => static fn (): string => 'foo',
+            'bar' => 'BAR',
+            'baz' => static fn (string $text): string => '__' . $text . '__',
+        ]);
+
+        $mustache = new Engine([
+            'helpers' => $helpers,
+            'strict_callables' => true,
+        ]);
+
         $tpl = $mustache->loadTemplate('{{foo}} - {{bar}} - {{#baz}}qux{{/baz}}');
         $this->assertEquals('foo - BAR - __qux__', $tpl->render());
         $this->assertEquals('foo - BAR - __qux__', $tpl->render(['qux' => "won't mess things up"]));
@@ -335,6 +312,7 @@ class EngineTest extends FunctionalTestCase
     public function testUnknownPragmaThrowsException(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        /** @psalm-suppress InvalidArgument */
         new Engine([
             'pragmas' => ['UNKNOWN'],
         ]);

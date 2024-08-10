@@ -19,7 +19,7 @@ use function file_exists;
  *
  * {@inheritDoc}
  */
-class ProductionFilesystemLoader extends FilesystemLoader
+final class ProductionFilesystemLoader extends FilesystemLoader
 {
     /** @var list<string> */
     private array $statProps;

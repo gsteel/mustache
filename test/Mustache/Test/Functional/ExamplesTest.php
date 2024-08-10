@@ -33,6 +33,7 @@ class ExamplesTest extends TestCase
     {
         $mustache = new Engine([
             'partials' => $partials,
+            'strict_callables' => false,
         ]);
         $this->assertEquals($expected, $mustache->loadTemplate($source)->render($context));
     }

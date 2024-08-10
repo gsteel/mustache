@@ -93,87 +93,16 @@
     <InvalidDocblock>
       <code><![CDATA[private function parse(string $source): array]]></code>
     </InvalidDocblock>
-    <InvalidNullableReturnType>
-      <code><![CDATA[Cache]]></code>
-    </InvalidNullableReturnType>
-    <InvalidStringClass>
-      <code><![CDATA[new $className($this)]]></code>
-    </InvalidStringClass>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->templates[$className]]]></code>
-    </LessSpecificReturnStatement>
-    <MixedArgument>
-      <code><![CDATA[$cache]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$options['helpers']]]></code>
-      <code><![CDATA[$options['loader']]]></code>
-      <code><![CDATA[$options['logger']]]></code>
-      <code><![CDATA[$options['partials']]]></code>
-      <code><![CDATA[$options['partials_loader']]]></code>
+    <NoValue>
       <code><![CDATA[$pragma]]></code>
-    </MixedArgument>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->pragmas[$pragma]]]></code>
-      <code><![CDATA[self::$knownPragmas[$pragma]]]></code>
-    </MixedArrayOffset>
-    <MixedAssignment>
-      <code><![CDATA[$cache]]></code>
-      <code><![CDATA[$helper]]></code>
-      <code><![CDATA[$mode]]></code>
-      <code><![CDATA[$pragma]]></code>
-      <code><![CDATA[$this->charset]]></code>
-      <code><![CDATA[$this->delimiters]]></code>
-      <code><![CDATA[$this->entityFlags]]></code>
-      <code><![CDATA[$this->strictCallables]]></code>
-      <code><![CDATA[$this->templateClassPrefix]]></code>
-    </MixedAssignment>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$this->pragmas]]></code>
-    </MixedPropertyTypeCoercion>
-    <MixedReturnStatement>
-      <code><![CDATA[$this->cache]]></code>
-      <code><![CDATA[$this->helpers]]></code>
-      <code><![CDATA[$this->helpers]]></code>
-    </MixedReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[Template]]></code>
-    </MoreSpecificReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->cache]]></code>
-    </NullableReturnStatement>
+    </NoValue>
     <PropertyNotSetInConstructor>
-      <code><![CDATA[$cache]]></code>
-      <code><![CDATA[$compiler]]></code>
       <code><![CDATA[$escape]]></code>
-      <code><![CDATA[$helpers]]></code>
-      <code><![CDATA[$lambdaCache]]></code>
-      <code><![CDATA[$loader]]></code>
-      <code><![CDATA[$parser]]></code>
-      <code><![CDATA[$partialsLoader]]></code>
-      <code><![CDATA[$tokenizer]]></code>
     </PropertyNotSetInConstructor>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$this->templates]]></code>
-    </PropertyTypeCoercion>
-    <RedundantCondition>
-      <code><![CDATA[isset($this->loader) && ! $this->loader instanceof StringLoader]]></code>
-    </RedundantCondition>
     <RedundantPropertyInitializationCheck>
       <code><![CDATA['default']]></code>
       <code><![CDATA[isset($this->escape)]]></code>
-      <code><![CDATA[isset($this->loader)]]></code>
-      <code><![CDATA[isset($this->loader)]]></code>
-      <code><![CDATA[isset($this->partialsLoader)]]></code>
-      <code><![CDATA[isset($this->partialsLoader)]]></code>
-      <code><![CDATA[isset($this->partialsLoader)]]></code>
     </RedundantPropertyInitializationCheck>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$this->delimiters]]></code>
-    </RiskyTruthyFalsyComparison>
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[getLogger]]></code>
-      <code><![CDATA[getLogger]]></code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="src/HelperCollection.php">
     <MixedAssignment>
@@ -188,21 +117,7 @@
       <code><![CDATA[(string) $string]]></code>
     </RedundantCast>
   </file>
-  <file src="src/Loader/FilesystemLoader.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->templates]]></code>
-    </InvalidPropertyAssignmentValue>
-  </file>
   <file src="src/Loader/InlineLoader.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string|Source]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->templates[$name]]]></code>
-    </NullableReturnStatement>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->templates]]></code>
-    </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$content]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -289,18 +204,9 @@
     </PropertyTypeCoercion>
   </file>
   <file src="src/Source/FilesystemSource.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[stat($this->fileName)]]></code>
-    </InvalidPropertyAssignmentValue>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[string]]></code>
     </PossiblyUnusedReturnValue>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[$stat]]></code>
-    </PropertyNotSetInConstructor>
-    <RedundantPropertyInitializationCheck>
-      <code><![CDATA[isset($this->stat)]]></code>
-    </RedundantPropertyInitializationCheck>
   </file>
   <file src="src/Template.php">
     <MixedAssignment>
@@ -436,26 +342,6 @@
       <code><![CDATA[$info['extension']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="test/Mustache/Test/Functional/FiltersTest.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$v]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingClosureParamType>
-    <MissingClosureReturnType>
-      <code><![CDATA[static function ($value) {]]></code>
-      <code><![CDATA[static function ($value) {]]></code>
-      <code><![CDATA[static function (DateTime $value) {]]></code>
-    </MissingClosureReturnType>
-    <MixedArgument>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedArgument>
-  </file>
   <file src="test/Mustache/Test/Functional/HigherOrderSections/Foo.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[staticTrim]]></code>
@@ -573,9 +459,6 @@
     <MixedAssignment>
       <code><![CDATA[$args]]></code>
     </MixedAssignment>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getFoo]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Loader/FilesystemLoaderTest.php">
     <InvalidArgument>

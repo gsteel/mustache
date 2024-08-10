@@ -11,7 +11,7 @@ namespace Mustache;
  * giving them access to a `render` method for rendering a string with the
  * current context.
  */
-class LambdaHelper
+final class LambdaHelper
 {
     /**
      * Mustache Lambda Helper constructor.

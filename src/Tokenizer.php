@@ -21,7 +21,7 @@ use function trim;
  *
  * This class is responsible for turning raw template source into a set of Mustache tokens.
  */
-class Tokenizer
+final class Tokenizer
 {
     // Finite state machine states
     private const IN_TEXT = 0;

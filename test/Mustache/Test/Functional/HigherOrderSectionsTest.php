@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mustache\Test\Functional;
 
+use Mustache\Cache\FilesystemCache;
 use Mustache\Engine;
 use Mustache\Test\Functional\HigherOrderSections\Foo;
 use Mustache\Test\Functional\HigherOrderSections\Monster;
@@ -24,7 +25,9 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
     protected function setUp(): void
     {
-        $this->mustache = new Engine();
+        $this->mustache = new Engine([
+            'strict_callables' => false,
+        ]);
     }
 
     /** @dataProvider sectionCallbackData */
@@ -92,6 +95,9 @@ class HigherOrderSectionsTest extends FunctionalTestCase
     public function testPassThroughOptimization(): void
     {
         $builder = $this->getMockBuilder(Engine::class);
+        $builder->setConstructorArgs([
+            ['strict_callables' => false],
+        ]);
         $builder->onlyMethods(['loadLambda']);
         $mustache = $builder->getMock();
         $mustache->expects($this->never())
@@ -108,6 +114,9 @@ class HigherOrderSectionsTest extends FunctionalTestCase
     public function testWithoutPassThroughOptimization(): void
     {
         $builder = $this->getMockBuilder(Engine::class);
+        $builder->setConstructorArgs([
+            ['strict_callables' => false],
+        ]);
         $builder->onlyMethods(['loadLambda']);
         $mustache = $builder->getMock();
         $mustache->expects(self::once())
@@ -122,7 +131,11 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
     }
 
-    /** @dataProvider cacheLambdaTemplatesData */
+    /**
+     * @param non-empty-string $tplPrefix
+     *
+     * @dataProvider cacheLambdaTemplatesData
+     */
     public function testCacheLambdaTemplatesOptionWorks(
         string $dirName,
         string $tplPrefix,
@@ -130,10 +143,12 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         int $expect,
     ): void {
         $cacheDir = $this->setUpCacheDir($dirName);
+        $cache = new FilesystemCache($cacheDir);
         $mustache = new Engine([
             'template_class_prefix'  => $tplPrefix,
-            'cache'                  => $cacheDir,
+            'cache'                  => $cache,
             'cache_lambda_templates' => $enable,
+            'strict_callables' => false,
         ]);
 
         $tpl = $mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');
@@ -143,7 +158,7 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         $this->assertCount($expect, glob($cacheDir . '/*.php'));
     }
 
-    /** @return list<array{0: string, 1: string, 2: bool, 3: int}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: bool, 3: int}> */
     public static function cacheLambdaTemplatesData(): array
     {
         return [
