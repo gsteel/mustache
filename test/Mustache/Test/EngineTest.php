@@ -14,6 +14,7 @@ use Mustache\Cache\NoopCache;
 use Mustache\Engine;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
+use Mustache\HelperCollection;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\ProductionFilesystemLoader;
 use Mustache\Loader\StringLoader;
@@ -25,6 +26,7 @@ use Psr\Log\NullLogger;
 use function dirname;
 use function file_get_contents;
 use function realpath;
+use function strtolower;
 use function sys_get_temp_dir;
 use function tempnam;
 
@@ -59,9 +61,6 @@ class EngineTest extends FunctionalTestCase
         $this->assertStringContainsString('__whot__', $mustache->getTemplateClassName('{{ foo }}'));
         $this->assertEquals('strtoupper', $mustache->getEscape());
         $this->assertEquals('ISO-8859-1', $mustache->getCharset());
-        $this->assertTrue($mustache->hasHelper('foo'));
-        $this->assertTrue($mustache->hasHelper('bar'));
-        $this->assertFalse($mustache->hasHelper('baz'));
     }
 
     public static function getFoo(): string
@@ -175,40 +174,64 @@ class EngineTest extends FunctionalTestCase
         $this->assertEquals('FOOBAZ', $mustache->render('{{>foo}}{{>bar}}{{>baz}}', []));
     }
 
-    public function testHelpers(): void
+    public function testHelperRegisteredInConstructorWithArray(): void
     {
-        $foo = [$this, 'getFoo'];
-        $bar = 'BAR';
-        $mustache = new Engine([
+        $engine = new Engine([
             'helpers' => [
-                'foo' => $foo,
-                'bar' => $bar,
+                'lower' => static function (string $value): string {
+                    return strtolower($value);
+                },
             ],
-            'strict_callables' => false,
         ]);
 
-        $helpers = $mustache->getHelpers();
-        $this->assertTrue($mustache->hasHelper('foo'));
-        $this->assertTrue($mustache->hasHelper('bar'));
-        $this->assertTrue($helpers->has('foo'));
-        $this->assertTrue($helpers->has('bar'));
-        $this->assertSame($foo, $mustache->getHelper('foo'));
-        $this->assertSame($bar, $mustache->getHelper('bar'));
+        $result = $engine->render('{{#lower}}FOO{{/lower}}');
+        self::assertSame('foo', $result);
+    }
 
-        $mustache->removeHelper('bar');
-        $this->assertFalse($mustache->hasHelper('bar'));
-        $mustache->addHelper('bar', $bar);
-        $this->assertSame($bar, $mustache->getHelper('bar'));
+    public function testHelperRegisteredInConstructorWithCollection(): void
+    {
+        $helpers = new HelperCollection([
+            'lower' => static function (string $value): string {
+                return strtolower($value);
+            },
+        ]);
 
-        $baz = [$this, 'wrapWithUnderscores'];
-        $this->assertFalse($mustache->hasHelper('baz'));
-        $this->assertFalse($helpers->has('baz'));
+        $engine = new Engine([
+            'helpers' => $helpers,
+        ]);
 
-        $mustache->addHelper('baz', $baz);
-        $this->assertTrue($mustache->hasHelper('baz'));
-        $this->assertTrue($helpers->has('baz'));
+        $result = $engine->render('{{#lower}}FOO{{/lower}}');
+        self::assertSame('foo', $result);
+    }
 
-        // ... and a functional test
+    public function testHelpersCanBeMutatedViaTheHelperCollection(): void
+    {
+        $helpers = new HelperCollection();
+        $engine = new Engine([
+            'helpers' => $helpers,
+        ]);
+
+        $helpers->add('lower', static function (string $value): string {
+            return strtolower($value);
+        });
+
+        $result = $engine->render('{{#lower}}FOO{{/lower}}');
+        self::assertSame('foo', $result);
+    }
+
+    public function testHelpers(): void
+    {
+        $helpers = new HelperCollection([
+            'foo' => static fn (): string => 'foo',
+            'bar' => 'BAR',
+            'baz' => static fn (string $text): string => '__' . $text . '__',
+        ]);
+
+        $mustache = new Engine([
+            'helpers' => $helpers,
+            'strict_callables' => true,
+        ]);
+
         $tpl = $mustache->loadTemplate('{{foo}} - {{bar}} - {{#baz}}qux{{/baz}}');
         $this->assertEquals('foo - BAR - __qux__', $tpl->render());
         $this->assertEquals('foo - BAR - __qux__', $tpl->render(['qux' => "won't mess things up"]));

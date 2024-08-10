@@ -94,18 +94,11 @@
       <code><![CDATA[private function parse(string $source): array]]></code>
     </InvalidDocblock>
     <InvalidStringClass>
-      <code><![CDATA[new $className($this)]]></code>
+      <code><![CDATA[new $className($this, $this->helpers)]]></code>
     </InvalidStringClass>
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->templates[$className]]]></code>
     </LessSpecificReturnStatement>
-    <MixedAssignment>
-      <code><![CDATA[$helper]]></code>
-    </MixedAssignment>
-    <MixedReturnStatement>
-      <code><![CDATA[$this->helpers]]></code>
-      <code><![CDATA[$this->helpers]]></code>
-    </MixedReturnStatement>
     <MoreSpecificReturnType>
       <code><![CDATA[Template]]></code>
     </MoreSpecificReturnType>
@@ -114,7 +107,6 @@
     </NoValue>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$escape]]></code>
-      <code><![CDATA[$helpers]]></code>
     </PropertyNotSetInConstructor>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->templates]]></code>
@@ -388,26 +380,6 @@
       <code><![CDATA[$info['extension']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="test/Mustache/Test/Functional/FiltersTest.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$v]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingClosureParamType>
-    <MissingClosureReturnType>
-      <code><![CDATA[static function ($value) {]]></code>
-      <code><![CDATA[static function ($value) {]]></code>
-      <code><![CDATA[static function (DateTime $value) {]]></code>
-    </MissingClosureReturnType>
-    <MixedArgument>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedArgument>
-  </file>
   <file src="test/Mustache/Test/Functional/HigherOrderSections/Foo.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[staticTrim]]></code>
@@ -525,9 +497,6 @@
     <MixedAssignment>
       <code><![CDATA[$args]]></code>
     </MixedAssignment>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getFoo]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Loader/FilesystemLoaderTest.php">
     <InvalidArgument>

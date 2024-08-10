@@ -22,16 +22,12 @@ class HelperCollection
      *
      * Optionally accepts an array (or Traversable) of `$name => $helper` pairs.
      *
-     * @param iterable<string, mixed> $helpers (default: null)
+     * @param iterable<string, mixed> $helpers
      *
      * @throws InvalidArgumentException if the $helpers argument isn't an array or Traversable.
      */
-    public function __construct(iterable|null $helpers = null)
+    public function __construct(iterable $helpers = [])
     {
-        if ($helpers === null) {
-            return;
-        }
-
         foreach ($helpers as $name => $helper) {
             $this->add($name, $helper);
         }

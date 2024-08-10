@@ -45,7 +45,7 @@ use const ENT_SUBSTITUTE;
  *     loader?: Loader,
  *     partials_loader?: Loader,
  *     partials?: array<string, string>,
- *     helpers?: array<string, mixed>,
+ *     helpers?: iterable<string, mixed>|HelperCollection,
  *     escape?: callable(string): string,
  *     entity_flags?: int,
  *     charset?: string,
@@ -79,7 +79,7 @@ class Engine
     private bool $cacheLambdaTemplates = false;
     private readonly Loader $loader;
     private Loader|null $partialsLoader;
-    private HelperCollection|null $helpers;
+    private HelperCollection $helpers;
     /** @var callable */
     private $escape;
     private readonly int $entityFlags;
@@ -202,9 +202,10 @@ class Engine
             $this->setPartials($options['partials']);
         }
 
-        if (isset($options['helpers'])) {
-            $this->setHelpers($options['helpers']);
-        }
+        $helpersOption = $options['helpers'] ?? [];
+        $this->helpers = $helpersOption instanceof HelperCollection
+            ? $helpersOption
+            : new HelperCollection($helpersOption);
 
         if (isset($options['escape'])) {
             if (! is_callable($options['escape'])) {
@@ -324,84 +325,6 @@ class Engine
     }
 
     /**
-     * Set an array of Mustache helpers.
-     *
-     * An array of 'helpers'. Helpers can be global variables or objects, closures (e.g. for higher order sections), or
-     * any other valid Mustache context value. They will be prepended to the context stack, so they will be available in
-     * any template loaded by this Mustache instance.
-     *
-     * @param iterable<string, mixed> $helpers
-     *
-     * @throws InvalidArgumentException if $helpers is not an array or Traversable.
-     */
-    public function setHelpers(iterable $helpers): void
-    {
-        $this->getHelpers()->clear();
-
-        foreach ($helpers as $name => $helper) {
-            $this->addHelper($name, $helper);
-        }
-    }
-
-    /**
-     * Get the current set of Mustache helpers.
-     *
-     * @see Engine::setHelpers
-     */
-    public function getHelpers(): HelperCollection
-    {
-        if (! isset($this->helpers)) {
-            $this->helpers = new HelperCollection();
-        }
-
-        return $this->helpers;
-    }
-
-    /**
-     * Add a new Mustache helper.
-     *
-     * @see Engine::setHelpers
-     */
-    public function addHelper(string $name, mixed $helper): void
-    {
-        $this->getHelpers()->add($name, $helper);
-    }
-
-    /**
-     * Get a Mustache helper by name.
-     *
-     * @see Engine::setHelpers
-     *
-     * @return mixed Helper
-     */
-    public function getHelper(string $name): mixed
-    {
-        return $this->getHelpers()->get($name);
-    }
-
-    /**
-     * Check whether this Mustache instance has a helper.
-     *
-     * @see Engine::setHelpers
-     *
-     * @return bool True if the helper is present
-     */
-    public function hasHelper(string $name): bool
-    {
-        return $this->getHelpers()->has($name);
-    }
-
-    /**
-     * Remove a helper by name.
-     *
-     * @see Engine::setHelpers
-     */
-    public function removeHelper(string $name): void
-    {
-        $this->getHelpers()->remove($name);
-    }
-
-    /**
      * Get the current Lambda Cache instance.
      *
      * If 'cache_lambda_templates' is enabled, this is the default cache instance. Otherwise, it is a NoopCache.
@@ -439,7 +362,7 @@ class Engine
         // Keep this list in alphabetical order :)
         $chunks = [
             'charset' => $this->charset,
-            'delimiters' => $this->delimiters ? $this->delimiters : '{{ }}',
+            'delimiters' => $this->delimiters ?: '{{ }}',
             'entityFlags' => $this->entityFlags,
             'escape' => isset($this->escape) ? 'custom' : 'default',
             'key' => $source instanceof Source ? $source->getKey() : 'source',
@@ -543,7 +466,7 @@ class Engine
                 ['className' => $className],
             );
 
-            $this->templates[$className] = new $className($this);
+            $this->templates[$className] = new $className($this, $this->helpers);
         }
 
         return $this->templates[$className];

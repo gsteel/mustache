@@ -6,11 +6,11 @@ namespace Mustache\Test\Functional;
 
 use Closure;
 use DateTime;
-use DateTimeZone;
+use DateTimeImmutable;
 use Mustache\Engine;
 use Mustache\Exception\UnknownFilterException;
+use Mustache\HelperCollection;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 use function array_keys;
 use function array_map;
@@ -22,13 +22,6 @@ use function sprintf;
  */
 class FiltersTest extends TestCase
 {
-    private const CHAINED_SECTION_FILTERS_TPL = <<<'EOS'
-        {{% FILTERS }}
-        {{# word | echo | with_index }}
-        {{ key }}: {{ value }}
-        {{/ word | echo | with_index }}
-        EOS;
-
     private Engine $mustache;
 
     protected function setUp(): void
@@ -44,18 +37,20 @@ class FiltersTest extends TestCase
      */
     public function testSingleFilter(string $tpl, array $helpers, array|object $data, string $expect): void
     {
-        $this->mustache->setHelpers($helpers);
-        $this->assertEquals($expect, $this->mustache->render($tpl, $data));
+        $engine = new Engine([
+            'helpers' => $helpers,
+        ]);
+        $this->assertEquals($expect, $engine->render($tpl, $data));
     }
 
     /** @return list<array{0: string, 1: array<string, Closure>, 2: object|array, 3: string}> */
     public static function singleFilterData(): array
     {
         $helpers = [
-            'longdate' => static function (DateTime $value) {
-                return $value->format('Y-m-d h:m:s');
+            'longdate' => static function (DateTimeImmutable $value): string {
+                return $value->format('Y-m-d H:i:s');
             },
-            'echo' => static function ($value) {
+            'echo' => static function (mixed $value): array {
                 return [$value, $value, $value];
             },
         ];
@@ -64,8 +59,8 @@ class FiltersTest extends TestCase
             [
                 '{{% FILTERS }}{{ date | longdate }}',
                 $helpers,
-                (object) ['date' => new DateTime('1/1/2000', new DateTimeZone('UTC'))],
-                '2000-01-01 12:01:00',
+                (object) ['date' => DateTimeImmutable::createFromFormat('!Y-m-d', '2020-01-01')],
+                '2020-01-01 00:00:00',
             ],
 
             [
@@ -79,40 +74,62 @@ class FiltersTest extends TestCase
 
     public function testChainedFilters(): void
     {
-        $tpl = $this->mustache->loadTemplate('{{% FILTERS }}{{ date | longdate | withbrackets }}');
+        $helpers = new HelperCollection([
+            'longdate' => static function (DateTime $value): string {
+                return $value->format('Y-m-d H:i:s');
+            },
+            'withbrackets' => static function (string $value): string {
+                return sprintf('[[%s]]', $value);
+            },
+        ]);
 
-        $this->mustache->addHelper('longdate', static function (DateTime $value) {
-            return $value->format('Y-m-d h:m:s');
-        });
+        $engine = new Engine([
+            'helpers' => $helpers,
+        ]);
 
-        $this->mustache->addHelper('withbrackets', static function ($value) {
-            return sprintf('[[%s]]', $value);
-        });
+        $date = DateTime::createFromFormat('!Y-m-d', '2020-01-01');
 
-        $foo = new stdClass();
-        $foo->date = new DateTime('1/1/2000', new DateTimeZone('UTC'));
+        $result = $engine->render(
+            '{{% FILTERS }}{{ date | longdate | withbrackets }}',
+            [
+                'date' => $date,
+            ],
+        );
 
-        $this->assertEquals('[[2000-01-01 12:01:00]]', $tpl->render($foo));
+        self::assertSame('[[2020-01-01 00:00:00]]', $result);
     }
 
     public function testChainedSectionFilters(): void
     {
-        $tpl = $this->mustache->loadTemplate(self::CHAINED_SECTION_FILTERS_TPL);
+        $template = <<<'EOS'
+            {{% FILTERS }}
+            {{# word | echo | with_index }}
+            {{ key }}: {{ value }}
+            {{/ word | echo | with_index }}
+            EOS;
 
-        $this->mustache->addHelper('echo', static function ($value) {
-            return [$value, $value, $value];
-        });
+        $helpers = new HelperCollection([
+            'echo' => static function (string $value): array {
+                return [$value, $value, $value];
+            },
+            'with_index' => static function (array $value): array {
+                return array_map(static function (int|string $k, string $v) {
+                    return [
+                        'key'   => $k,
+                        'value' => $v,
+                    ];
+                }, array_keys($value), $value);
+            },
+        ]);
 
-        $this->mustache->addHelper('with_index', static function ($value) {
-            return array_map(static function ($k, $v) {
-                return [
-                    'key'   => $k,
-                    'value' => $v,
-                ];
-            }, array_keys($value), $value);
-        });
+        $engine = new Engine([
+            'helpers' => $helpers,
+        ]);
 
-        $this->assertEquals("0: bacon\n1: bacon\n2: bacon\n", $tpl->render(['word' => 'bacon']));
+        $this->assertSame(
+            "0: bacon\n1: bacon\n2: bacon\n",
+            $engine->render($template, ['word' => 'bacon']),
+        );
     }
 
     /**
@@ -130,7 +147,7 @@ class FiltersTest extends TestCase
     {
         $data = [
             'foo' => 'FOO',
-            'bar' => static function ($value) {
+            'bar' => static function (mixed $value): string {
                 return $value === 'FOO' ? 'win!' : 'fail :(';
             },
         ];
@@ -164,7 +181,7 @@ class FiltersTest extends TestCase
                 '{{% FILTERS }}{{ foo | bar | baz }}',
                 [
                     'foo' => 'FOO',
-                    'bar' => static function () {
+                    'bar' => static function (): string {
                         return 'BAR';
                     },
                 ],
@@ -173,7 +190,7 @@ class FiltersTest extends TestCase
                 '{{% FILTERS }}{{ foo | bar | baz }}',
                 [
                     'foo' => 'FOO',
-                    'baz' => static function () {
+                    'baz' => static function (): string {
                         return 'BAZ';
                     },
                 ],
@@ -181,7 +198,7 @@ class FiltersTest extends TestCase
             [
                 '{{% FILTERS }}{{ foo | bar | baz }}',
                 [
-                    'bar' => static function () {
+                    'bar' => static function (): string {
                         return 'BAR';
                     },
                 ],
@@ -189,7 +206,7 @@ class FiltersTest extends TestCase
             [
                 '{{% FILTERS }}{{ foo | bar | baz }}',
                 [
-                    'baz' => static function () {
+                    'baz' => static function (): string {
                         return 'BAZ';
                     },
                 ],
@@ -198,10 +215,10 @@ class FiltersTest extends TestCase
                 '{{% FILTERS }}{{ foo | bar.baz }}',
                 [
                     'foo' => 'FOO',
-                    'bar' => static function () {
+                    'bar' => static function (): string {
                         return 'BAR';
                     },
-                    'baz' => static function () {
+                    'baz' => static function (): string {
                         return 'BAZ';
                     },
                 ],
@@ -215,7 +232,7 @@ class FiltersTest extends TestCase
                 '{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}',
                 [
                     'foo' => 'FOO',
-                    'bar' => static function () {
+                    'bar' => static function (): string {
                         return 'BAR';
                     },
                 ],
@@ -224,7 +241,7 @@ class FiltersTest extends TestCase
                 '{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}',
                 [
                     'foo' => 'FOO',
-                    'baz' => static function () {
+                    'baz' => static function (): string {
                         return 'BAZ';
                     },
                 ],
@@ -232,7 +249,7 @@ class FiltersTest extends TestCase
             [
                 '{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}',
                 [
-                    'bar' => static function () {
+                    'bar' => static function (): string {
                         return 'BAR';
                     },
                 ],
@@ -240,7 +257,7 @@ class FiltersTest extends TestCase
             [
                 '{{% FILTERS }}{{# foo | bar | baz }}{{ . }}{{/ foo | bar | baz }}',
                 [
-                    'baz' => static function () {
+                    'baz' => static function (): string {
                         return 'BAZ';
                     },
                 ],
@@ -249,10 +266,10 @@ class FiltersTest extends TestCase
                 '{{% FILTERS }}{{# foo | bar.baz }}{{ . }}{{/ foo | bar.baz }}',
                 [
                     'foo' => 'FOO',
-                    'bar' => static function () {
+                    'bar' => static function (): string {
                         return 'BAR';
                     },
-                    'baz' => static function () {
+                    'baz' => static function (): string {
                         return 'BAZ';
                     },
                 ],

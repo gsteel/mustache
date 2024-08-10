@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Test;
 
 use Mustache\Exception\InvalidArgumentException;
+use Mustache\Exception\UnknownHelperException;
 use Mustache\HelperCollection;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -15,7 +16,7 @@ class HelperCollectionTest extends TestCase
 {
     public function testConstructor(): void
     {
-        $foo = [$this, 'getFoo'];
+        $foo = static fn (): string => 'foo';
         $bar = 'BAR';
 
         $helpers = new HelperCollection([
@@ -27,14 +28,60 @@ class HelperCollectionTest extends TestCase
         $this->assertSame($bar, $helpers->get('bar'));
     }
 
-    public static function getFoo(): void
+    public function testHelpersCanBeAddedAtRuntime(): void
     {
-        echo 'foo';
+        $foo = static fn (): string => 'foo';
+        $helpers = new HelperCollection();
+        $helpers->add('foo', $foo);
+
+        self::assertSame($foo, $helpers->get('foo'));
+    }
+
+    public function testHelpersCanBeRemovedAtRuntime(): void
+    {
+        $foo = static fn (): string => 'foo';
+        $helpers = new HelperCollection([
+            'foo' => $foo,
+        ]);
+
+        $helpers->remove('foo');
+        $this->expectException(UnknownHelperException::class);
+        self::assertNull($helpers->get('foo'));
+    }
+
+    public function testHelperExistenceCanBeQueried(): void
+    {
+        $foo = static fn (): string => 'foo';
+        $helpers = new HelperCollection([
+            'foo' => $foo,
+        ]);
+
+        self::assertTrue($helpers->has('foo'));
+        self::assertFalse($helpers->has('bar'));
+    }
+
+    public function testHelpersCanBeEmpty(): void
+    {
+        self::assertTrue(
+            (new HelperCollection())->isEmpty(),
+        );
+    }
+
+    public function testHelpersCanBeEmptied(): void
+    {
+        $foo = static fn (): string => 'foo';
+        $helpers = new HelperCollection([
+            'foo' => $foo,
+        ]);
+
+        $helpers->clear();
+        self::assertTrue($helpers->isEmpty());
+        self::assertFalse($helpers->has('foo'));
     }
 
     public function testAccessorsAndMutators(): void
     {
-        $foo = [$this, 'getFoo'];
+        $foo = static fn (): string => 'foo';
         $bar = 'BAR';
 
         $helpers = new HelperCollection();
@@ -60,7 +107,7 @@ class HelperCollectionTest extends TestCase
 
     public function testMagicMethods(): void
     {
-        $foo = [$this, 'getFoo'];
+        $foo = static fn (): string => 'foo';
         $bar = 'BAR';
 
         $helpers = new HelperCollection();

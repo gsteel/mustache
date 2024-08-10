@@ -24,8 +24,10 @@ abstract class Template
     /**
      * Mustache Template constructor.
      */
-    public function __construct(protected Engine $mustache)
-    {
+    public function __construct(
+        protected Engine $mustache,
+        protected HelperCollection $helpers,
+    ) {
     }
 
     /**
@@ -132,9 +134,8 @@ abstract class Template
     {
         $stack = new Context(null, $this->mustache->useBuggyPropertyShadowing());
 
-        $helpers = $this->mustache->getHelpers();
-        if (! $helpers->isEmpty()) {
-            $stack->push($helpers);
+        if (! $this->helpers->isEmpty()) {
+            $stack->push($this->helpers);
         }
 
         if (! empty($context)) {

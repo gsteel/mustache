@@ -6,6 +6,7 @@ namespace Mustache\Test;
 
 use Mustache\Context;
 use Mustache\Engine;
+use Mustache\HelperCollection;
 use PHPUnit\Framework\TestCase;
 
 class TemplateTest extends TestCase
@@ -13,7 +14,7 @@ class TemplateTest extends TestCase
     public function testConstructor(): void
     {
         $mustache = new Engine();
-        $template = new TemplateStub($mustache);
+        $template = new TemplateStub($mustache, new HelperCollection());
         $this->assertSame($mustache, $template->getMustache());
     }
 
@@ -21,7 +22,7 @@ class TemplateTest extends TestCase
     {
         $rendered = '<< wheee >>';
         $mustache = new Engine();
-        $template = new TemplateStub($mustache);
+        $template = new TemplateStub($mustache, new HelperCollection());
         $template->rendered = $rendered;
         $context  = new Context();
 
