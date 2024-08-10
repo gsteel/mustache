@@ -55,7 +55,6 @@ class EngineTest extends FunctionalTestCase
             'pragmas'      => [Engine::PRAGMA_FILTERS],
         ]);
 
-        $this->assertSame($logger, $mustache->getLogger());
         $this->assertSame($loader, $mustache->getLoader());
         $this->assertSame($partialsLoader, $mustache->getPartialsLoader());
         $this->assertEquals('{{ foo }}', $partialsLoader->load('foo'));
@@ -97,13 +96,8 @@ class EngineTest extends FunctionalTestCase
 
     public function testSettingServices(): void
     {
-        $logger    = new NullLogger();
         $loader    = new StringLoader();
         $mustache  = new Engine();
-
-        $this->assertNotSame($logger, $mustache->getLogger());
-        $mustache->setLogger($logger);
-        $this->assertSame($logger, $mustache->getLogger());
 
         $this->assertNotSame($loader, $mustache->getLoader());
         $mustache->setLoader($loader);

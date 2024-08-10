@@ -136,9 +136,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$this->delimiters]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[getLogger]]></code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="src/HelperCollection.php">
     <MixedAssignment>

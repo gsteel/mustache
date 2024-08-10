@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mustache;
 
+use Mustache\Cache\AbstractCache;
 use Mustache\Cache\NoopCache;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
@@ -81,7 +82,7 @@ class Engine
     private $escape;
     private int $entityFlags = ENT_COMPAT;
     private string $charset = 'UTF-8';
-    private LoggerInterface|null $logger = null;
+    private LoggerInterface|null $logger;
     private bool $strictCallables = false;
     /** @var array<self::PRAGMA_*, bool> */
     private array $pragmas = [];
@@ -184,6 +185,12 @@ class Engine
             ? $options['cache']
             : new NoopCache();
 
+        $this->logger = $options['logger'] ?? null;
+
+        if ($this->cache instanceof AbstractCache && $this->cache->getLogger() === null) {
+            $this->cache->setLogger($this->logger);
+        }
+
         $this->cacheLambdaTemplates = $options['cache_lambda_templates'] ?? false;
 
         if (isset($options['loader'])) {
@@ -216,10 +223,6 @@ class Engine
 
         if (isset($options['charset'])) {
             $this->charset = $options['charset'];
-        }
-
-        if (isset($options['logger'])) {
-            $this->setLogger($options['logger']);
         }
 
         if (isset($options['strict_callables'])) {
@@ -445,20 +448,6 @@ class Engine
     public function removeHelper(string $name): void
     {
         $this->getHelpers()->remove($name);
-    }
-
-    public function setLogger(LoggerInterface|null $logger = null): void
-    {
-        if ($this->cache->getLogger() === null) {
-            $this->cache->setLogger($logger);
-        }
-
-        $this->logger = $logger;
-    }
-
-    public function getLogger(): LoggerInterface|null
-    {
-        return $this->logger;
     }
 
     /**
