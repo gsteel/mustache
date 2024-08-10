@@ -23,7 +23,9 @@ use function json_encode;
 use function md5;
 use function sprintf;
 
-use const ENT_COMPAT;
+use const ENT_HTML401;
+use const ENT_QUOTES;
+use const ENT_SUBSTITUTE;
 
 /**
  * A Mustache implementation in PHP.
@@ -72,26 +74,26 @@ class Engine
     private array $templates = [];
     // Environment
     private string $templateClassPrefix = '__Mustache_';
-    private Cache $cache;
+    private readonly Cache $cache;
     private Cache|null $lambdaCache = null;
     private bool $cacheLambdaTemplates = false;
-    private Loader $loader;
+    private readonly Loader $loader;
     private Loader|null $partialsLoader;
     private HelperCollection|null $helpers;
     /** @var callable */
     private $escape;
-    private int $entityFlags = ENT_COMPAT;
+    private readonly int $entityFlags;
     private string $charset = 'UTF-8';
-    private LoggerInterface|null $logger;
+    private readonly LoggerInterface|null $logger;
     private bool $strictCallables = false;
     /** @var array<self::PRAGMA_*, bool> */
     private array $pragmas = [];
     private string|null $delimiters = null;
     private bool $buggyPropertyShadowing = false;
     // Services
-    private Tokenizer $tokenizer;
-    private Parser $parser;
-    private Compiler $compiler;
+    private readonly Tokenizer $tokenizer;
+    private readonly Parser $parser;
+    private readonly Compiler $compiler;
 
     /**
      * Mustache class constructor.
@@ -212,9 +214,7 @@ class Engine
             $this->escape = $options['escape'];
         }
 
-        if (isset($options['entity_flags'])) {
-            $this->entityFlags = $options['entity_flags'];
-        }
+        $this->entityFlags = $options['entity_flags'] ?? ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401;
 
         if (isset($options['charset'])) {
             $this->charset = $options['charset'];
@@ -263,14 +263,6 @@ class Engine
     public function getEscape(): callable|null
     {
         return $this->escape;
-    }
-
-    /**
-     * Get the current Mustache entitity type to escape.
-     */
-    public function getEntityFlags(): int
-    {
-        return $this->entityFlags;
     }
 
     /**

@@ -58,7 +58,6 @@ class EngineTest extends FunctionalTestCase
         $this->assertEquals('{{ foo }}', $partialsLoader->load('foo'));
         $this->assertStringContainsString('__whot__', $mustache->getTemplateClassName('{{ foo }}'));
         $this->assertEquals('strtoupper', $mustache->getEscape());
-        $this->assertEquals(ENT_QUOTES, $mustache->getEntityFlags());
         $this->assertEquals('ISO-8859-1', $mustache->getCharset());
         $this->assertTrue($mustache->hasHelper('foo'));
         $this->assertTrue($mustache->hasHelper('bar'));
