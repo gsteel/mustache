@@ -14,7 +14,7 @@ class TemplateTest extends TestCase
     public function testConstructor(): void
     {
         $mustache = new Engine();
-        $template = new TemplateStub($mustache, new HelperCollection());
+        $template = new TemplateStub($mustache, new HelperCollection(), true);
         $this->assertSame($mustache, $template->getMustache());
     }
 
@@ -22,7 +22,7 @@ class TemplateTest extends TestCase
     {
         $rendered = '<< wheee >>';
         $mustache = new Engine();
-        $template = new TemplateStub($mustache, new HelperCollection());
+        $template = new TemplateStub($mustache, new HelperCollection(), true);
         $template->rendered = $rendered;
         $context  = new Context();
 

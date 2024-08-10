@@ -466,7 +466,11 @@ class Engine
                 ['className' => $className],
             );
 
-            $this->templates[$className] = new $className($this, $this->helpers);
+            $this->templates[$className] = new $className(
+                $this,
+                $this->helpers,
+                $this->strictCallables,
+            );
         }
 
         return $this->templates[$className];

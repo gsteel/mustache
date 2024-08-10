@@ -12,21 +12,15 @@ use function is_callable;
 use function is_object;
 use function is_string;
 
-/**
- * Abstract Mustache Template class.
- *
- * @abstract
- */
 abstract class Template
 {
-    protected bool $strictCallables = false;
-
     /**
      * Mustache Template constructor.
      */
-    public function __construct(
+    final public function __construct(
         protected Engine $mustache,
         protected HelperCollection $helpers,
+        protected bool $strictCallables,
     ) {
     }
 
@@ -43,7 +37,7 @@ abstract class Template
      *
      * @return string Rendered template
      */
-    public function __invoke(mixed $context = []): string
+    final public function __invoke(mixed $context = []): string
     {
         return $this->render($context);
     }
@@ -55,7 +49,7 @@ abstract class Template
      *
      * @return string Rendered template
      */
-    public function render(mixed $context = []): string
+    final public function render(mixed $context = []): string
     {
         return $this->renderInternal(
             $this->prepareContextStack($context),
