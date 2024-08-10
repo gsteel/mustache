@@ -49,7 +49,7 @@ abstract class Template
      *
      * @return string Rendered template
      */
-    final public function render(mixed $context = []): string
+    public function render(mixed $context = []): string
     {
         return $this->renderInternal(
             $this->prepareContextStack($context),

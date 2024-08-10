@@ -23,7 +23,7 @@ use function sprintf;
 /**
  * Mustache Template rendering Context.
  */
-class Context
+final class Context
 {
     /** @var list<mixed> */
     private array $stack = [];

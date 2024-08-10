@@ -10,6 +10,7 @@ use Mustache\Loader;
 use Mustache\Source;
 
 use function array_key_exists;
+use function assert;
 use function explode;
 use function file_get_contents;
 use function is_file;
@@ -54,7 +55,7 @@ use function trim;
  *     @@ hello
  *     Hello, {{ name }}!
  */
-class InlineLoader implements Loader
+final class InlineLoader implements Loader
 {
     /** @var array<string, string>|null */
     private array|null $templates;
@@ -76,8 +77,10 @@ class InlineLoader implements Loader
      *                         This usually coincides with the `__halt_compiler`
      *                         call, and the `__COMPILER_HALT_OFFSET__`
      */
-    public function __construct(private string $fileName, private int $offset)
-    {
+    public function __construct(
+        private readonly string $fileName,
+        private readonly int $offset,
+    ) {
         if (! is_file($fileName)) {
             throw new InvalidArgumentException('Mustache\Loader\InlineLoader expects a valid filename.');
         }
@@ -92,6 +95,7 @@ class InlineLoader implements Loader
     public function load(string $name): string|Source
     {
         $this->loadTemplates();
+        assert($this->templates !== null);
 
         if (! array_key_exists($name, $this->templates)) {
             throw new UnknownTemplateException($name);
@@ -111,7 +115,7 @@ class InlineLoader implements Loader
 
         $this->templates = [];
         $data = file_get_contents($this->fileName, false, null, $this->offset);
-        foreach (preg_split('/^@@(?= [\w\d\.]+$)/m', $data, -1) as $chunk) {
+        foreach (preg_split('/^@@(?= [\w.]+$)/m', $data, -1) as $chunk) {
             if (! trim($chunk)) {
                 continue;
             }

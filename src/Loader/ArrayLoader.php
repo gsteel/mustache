@@ -23,7 +23,7 @@ use Mustache\Source;
  * The ArrayLoader is used internally as a partials loader by Mustache_Engine instance when an array of partials
  * is set. It can also be used as a quick-and-dirty Template loader.
  */
-class ArrayLoader implements Loader, MutableLoader
+final class ArrayLoader implements Loader, MutableLoader
 {
     /** @param array<string, string> $templates Associative array of Template source (default: []) */
     public function __construct(private array $templates = [])

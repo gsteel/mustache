@@ -26,7 +26,7 @@ use const ENT_COMPAT;
  *
  * This class is responsible for turning a Mustache token parse tree into normal PHP source code.
  */
-class Compiler
+final class Compiler
 {
     private const PARTIAL_INDENT = ', $indent . %s';
     private const PARTIAL = '

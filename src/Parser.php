@@ -24,7 +24,7 @@ use function substr;
  *
  * This class is responsible for turning a set of Mustache tokens into a parse tree.
  */
-class Parser
+final class Parser
 {
     private int $lineNum = -1;
     private int $lineTokens = 0;

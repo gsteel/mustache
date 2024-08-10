@@ -70,7 +70,7 @@ class Engine
         self::PRAGMA_DYNAMIC_NAMES => true,
     ];
     // Mustache\Template cache
-    /** @var array<class-string, Template> */
+    /** @var array<class-string<Template>, Template> */
     private array $templates = [];
     // Environment
     private string $templateClassPrefix = '__Mustache_';
@@ -362,7 +362,7 @@ class Engine
         // Keep this list in alphabetical order :)
         $chunks = [
             'charset' => $this->charset,
-            'delimiters' => $this->delimiters ?: '{{ }}',
+            'delimiters' => $this->delimiters ?? '{{ }}',
             'entityFlags' => $this->entityFlags,
             'escape' => isset($this->escape) ? 'custom' : 'default',
             'key' => $source instanceof Source ? $source->getKey() : 'source',
@@ -448,6 +448,7 @@ class Engine
      */
     private function loadSource(string|Source $source, Cache|null $cache = null): Template
     {
+        /** @psalm-var class-string<Template> $className */
         $className = $this->getTemplateClassName($source);
 
         if (! isset($this->templates[$className])) {

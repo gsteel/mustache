@@ -39,7 +39,7 @@ class FilesystemLoader implements Loader
 {
     private string $baseDir;
     private string $extension = '.mustache';
-    /** @var array<string, string> */
+    /** @var array<string, string|Source> */
     private array $templates = [];
 
     /**

@@ -93,31 +93,16 @@
     <InvalidDocblock>
       <code><![CDATA[private function parse(string $source): array]]></code>
     </InvalidDocblock>
-    <InvalidStringClass>
-      <code><![CDATA[new $className($this, $this->helpers)]]></code>
-    </InvalidStringClass>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->templates[$className]]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[Template]]></code>
-    </MoreSpecificReturnType>
     <NoValue>
       <code><![CDATA[$pragma]]></code>
     </NoValue>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$escape]]></code>
     </PropertyNotSetInConstructor>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$this->templates]]></code>
-    </PropertyTypeCoercion>
     <RedundantPropertyInitializationCheck>
       <code><![CDATA['default']]></code>
       <code><![CDATA[isset($this->escape)]]></code>
     </RedundantPropertyInitializationCheck>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$this->delimiters]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/HelperCollection.php">
     <MixedAssignment>
@@ -132,21 +117,7 @@
       <code><![CDATA[(string) $string]]></code>
     </RedundantCast>
   </file>
-  <file src="src/Loader/FilesystemLoader.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->templates]]></code>
-    </InvalidPropertyAssignmentValue>
-  </file>
   <file src="src/Loader/InlineLoader.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string|Source]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->templates[$name]]]></code>
-    </NullableReturnStatement>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->templates]]></code>
-    </PossiblyNullArgument>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$content]]></code>
     </PossiblyUndefinedArrayOffset>
@@ -233,18 +204,9 @@
     </PropertyTypeCoercion>
   </file>
   <file src="src/Source/FilesystemSource.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[stat($this->fileName)]]></code>
-    </InvalidPropertyAssignmentValue>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[string]]></code>
     </PossiblyUnusedReturnValue>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[$stat]]></code>
-    </PropertyNotSetInConstructor>
-    <RedundantPropertyInitializationCheck>
-      <code><![CDATA[isset($this->stat)]]></code>
-    </RedundantPropertyInitializationCheck>
   </file>
   <file src="src/Template.php">
     <MixedAssignment>

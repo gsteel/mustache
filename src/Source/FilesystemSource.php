@@ -20,18 +20,20 @@ use function stat;
  * It is more suitable for production use, and is used by default in the
  * ProductionFilesystemLoader.
  */
-class FilesystemSource implements Source
+final class FilesystemSource implements Source
 {
-    /** @var array<string, int>|false */
-    private array|false $stat;
+    /** @var array<array-key, int>|null */
+    private array|null $stat = null;
 
     /**
      * Filesystem Source constructor.
      *
      * @param list<string> $statProps
      */
-    public function __construct(private string $fileName, private array $statProps)
-    {
+    public function __construct(
+        private readonly string $fileName,
+        private readonly array $statProps,
+    ) {
     }
 
     /**
@@ -46,13 +48,16 @@ class FilesystemSource implements Source
         ];
 
         if (! empty($this->statProps)) {
-            if (! isset($this->stat)) {
-                $this->stat = stat($this->fileName);
+            $stat = $this->stat;
+            if ($stat === null) {
+                $stat = stat($this->fileName);
             }
 
-            if ($this->stat === false) {
+            if ($stat === false) {
                 throw new RuntimeException(sprintf('Failed to read source file "%s".', $this->fileName));
             }
+
+            $this->stat = $stat;
 
             foreach ($this->statProps as $prop) {
                 $chunks[$prop] = $this->stat[$prop];

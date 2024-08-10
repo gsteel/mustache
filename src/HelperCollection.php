@@ -12,7 +12,7 @@ use function array_key_exists;
 /**
  * A collection of helpers for a Mustache instance.
  */
-class HelperCollection
+final class HelperCollection
 {
     /** @var array<string, mixed> */
     private array $helpers = [];

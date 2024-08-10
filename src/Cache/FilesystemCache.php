@@ -29,7 +29,7 @@ use function umask;
  *
  * The FilesystemCache benefits from any opcode caching that may be setup in your environment. So do that, k?
  */
-class FilesystemCache extends AbstractCache
+final class FilesystemCache extends AbstractCache
 {
     /**
      * Filesystem cache constructor.
