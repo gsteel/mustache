@@ -52,7 +52,6 @@ use const ENT_SUBSTITUTE;
  *     logger?: LoggerInterface,
  *     strict_callables?: bool,
  *     pragmas?: list<Engine::PRAGMA_*>,
- *     buggy_property_shadowing?: bool,
  * }
  */
 class Engine
@@ -89,7 +88,6 @@ class Engine
     /** @var array<self::PRAGMA_*, bool> */
     private array $pragmas = [];
     private string|null $delimiters = null;
-    private bool $buggyPropertyShadowing = false;
     // Services
     private readonly Tokenizer $tokenizer;
     private readonly Parser $parser;
@@ -235,8 +233,6 @@ class Engine
 
             $this->pragmas[$pragma] = true;
         }
-
-        $this->buggyPropertyShadowing = $options['buggy_property_shadowing'] ?? false;
     }
 
     /**
@@ -270,16 +266,6 @@ class Engine
     public function getCharset(): string
     {
         return $this->charset;
-    }
-
-    /**
-     * Check whether to use buggy property shadowing.
-     *
-     * See https://github.com/bobthecow/mustache.php/pull/410
-     */
-    public function useBuggyPropertyShadowing(): bool
-    {
-        return $this->buggyPropertyShadowing;
     }
 
     /**
