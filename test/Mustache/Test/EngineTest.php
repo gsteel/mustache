@@ -184,6 +184,7 @@ class EngineTest extends FunctionalTestCase
                 'foo' => $foo,
                 'bar' => $bar,
             ],
+            'strict_callables' => false,
         ]);
 
         $helpers = $mustache->getHelpers();

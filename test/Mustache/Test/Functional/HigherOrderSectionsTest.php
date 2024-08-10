@@ -25,7 +25,9 @@ class HigherOrderSectionsTest extends FunctionalTestCase
 
     protected function setUp(): void
     {
-        $this->mustache = new Engine();
+        $this->mustache = new Engine([
+            'strict_callables' => false,
+        ]);
     }
 
     /** @dataProvider sectionCallbackData */
@@ -93,6 +95,9 @@ class HigherOrderSectionsTest extends FunctionalTestCase
     public function testPassThroughOptimization(): void
     {
         $builder = $this->getMockBuilder(Engine::class);
+        $builder->setConstructorArgs([
+            ['strict_callables' => false],
+        ]);
         $builder->onlyMethods(['loadLambda']);
         $mustache = $builder->getMock();
         $mustache->expects($this->never())
@@ -109,6 +114,9 @@ class HigherOrderSectionsTest extends FunctionalTestCase
     public function testWithoutPassThroughOptimization(): void
     {
         $builder = $this->getMockBuilder(Engine::class);
+        $builder->setConstructorArgs([
+            ['strict_callables' => false],
+        ]);
         $builder->onlyMethods(['loadLambda']);
         $mustache = $builder->getMock();
         $mustache->expects(self::once())
@@ -140,6 +148,7 @@ class HigherOrderSectionsTest extends FunctionalTestCase
             'template_class_prefix'  => $tplPrefix,
             'cache'                  => $cache,
             'cache_lambda_templates' => $enable,
+            'strict_callables' => false,
         ]);
 
         $tpl = $mustache->loadTemplate('{{#wrap}}{{name}}{{/wrap}}');

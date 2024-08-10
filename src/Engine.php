@@ -85,7 +85,7 @@ class Engine
     private readonly int $entityFlags;
     private string $charset = 'UTF-8';
     private readonly LoggerInterface|null $logger;
-    private bool $strictCallables = false;
+    private readonly bool $strictCallables;
     /** @var array<self::PRAGMA_*, bool> */
     private array $pragmas = [];
     private string|null $delimiters = null;
@@ -220,9 +220,7 @@ class Engine
             $this->charset = $options['charset'];
         }
 
-        if (isset($options['strict_callables'])) {
-            $this->strictCallables = $options['strict_callables'];
-        }
+        $this->strictCallables = $options['strict_callables'] ?? true;
 
         if (isset($options['delimiters'])) {
             $this->delimiters = $options['delimiters'];
