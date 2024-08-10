@@ -55,8 +55,6 @@ class EngineTest extends FunctionalTestCase
             'pragmas'      => [Engine::PRAGMA_FILTERS],
         ]);
 
-        $this->assertSame($loader, $mustache->getLoader());
-        $this->assertSame($partialsLoader, $mustache->getPartialsLoader());
         $this->assertEquals('{{ foo }}', $partialsLoader->load('foo'));
         $this->assertStringContainsString('__whot__', $mustache->getTemplateClassName('{{ foo }}'));
         $this->assertEquals('strtoupper', $mustache->getEscape());
@@ -92,20 +90,6 @@ class EngineTest extends FunctionalTestCase
 
         $this->assertEquals($output, $mustache->render($source, $data));
         $this->assertEquals($source, $mustache->source);
-    }
-
-    public function testSettingServices(): void
-    {
-        $loader    = new StringLoader();
-        $mustache  = new Engine();
-
-        $this->assertNotSame($loader, $mustache->getLoader());
-        $mustache->setLoader($loader);
-        $this->assertSame($loader, $mustache->getLoader());
-
-        $this->assertNotSame($loader, $mustache->getPartialsLoader());
-        $mustache->setPartialsLoader($loader);
-        $this->assertSame($loader, $mustache->getPartialsLoader());
     }
 
     /** @group functional */

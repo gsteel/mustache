@@ -76,7 +76,7 @@ class Engine
     private Cache|null $lambdaCache = null;
     private bool $cacheLambdaTemplates = false;
     private Loader $loader;
-    private Loader $partialsLoader;
+    private Loader|null $partialsLoader;
     private HelperCollection|null $helpers;
     /** @var callable */
     private $escape;
@@ -193,13 +193,8 @@ class Engine
 
         $this->cacheLambdaTemplates = $options['cache_lambda_templates'] ?? false;
 
-        if (isset($options['loader'])) {
-            $this->setLoader($options['loader']);
-        }
-
-        if (isset($options['partials_loader'])) {
-            $this->setPartialsLoader($options['partials_loader']);
-        }
+        $this->loader = $options['loader'] ?? new StringLoader();
+        $this->partialsLoader = $options['partials_loader'] ?? null;
 
         if (isset($options['partials'])) {
             $this->setPartials($options['partials']);
@@ -307,45 +302,14 @@ class Engine
     }
 
     /**
-     * Set the Mustache template Loader instance.
-     */
-    public function setLoader(Loader $loader): void
-    {
-        $this->loader = $loader;
-    }
-
-    /**
-     * Get the current Mustache template Loader instance.
-     *
-     * If no Loader instance has been explicitly specified, this method will instantiate and return
-     * a StringLoader instance.
-     */
-    public function getLoader(): Loader
-    {
-        if (! isset($this->loader)) {
-            $this->loader = new StringLoader();
-        }
-
-        return $this->loader;
-    }
-
-    /**
-     * Set the Mustache partials Loader instance.
-     */
-    public function setPartialsLoader(Loader $partialsLoader): void
-    {
-        $this->partialsLoader = $partialsLoader;
-    }
-
-    /**
      * Get the current Mustache partials Loader instance.
      *
      * If no Loader instance has been explicitly specified, this method will instantiate and return
      * an ArrayLoader instance.
      */
-    public function getPartialsLoader(): Loader
+    private function getPartialsLoader(): Loader
     {
-        if (! isset($this->partialsLoader)) {
+        if ($this->partialsLoader === null) {
             $this->partialsLoader = new ArrayLoader();
         }
 
@@ -361,15 +325,12 @@ class Engine
      */
     public function setPartials(array $partials = []): void
     {
-        if (! isset($this->partialsLoader)) {
-            $this->partialsLoader = new ArrayLoader();
-        }
-
-        if (! $this->partialsLoader instanceof MutableLoader) {
+        $loader = $this->getPartialsLoader();
+        if (! $loader instanceof MutableLoader) {
             throw new RuntimeException('Unable to set partials on an immutable \Mustache\Loader instance');
         }
 
-        $this->partialsLoader->setTemplates($partials);
+        $loader->setTemplates($partials);
     }
 
     /**
@@ -513,7 +474,7 @@ class Engine
      */
     public function loadTemplate(string $name): Template
     {
-        return $this->loadSource($this->getLoader()->load($name));
+        return $this->loadSource($this->loader->load($name));
     }
 
     /**
@@ -525,11 +486,12 @@ class Engine
     public function loadPartial(string $name): Template|null
     {
         try {
-            if (isset($this->partialsLoader)) {
-                $loader = $this->partialsLoader;
-            } elseif (isset($this->loader) && ! $this->loader instanceof StringLoader) {
+            $loader = $this->partialsLoader;
+            if ($loader === null && ! $this->loader instanceof StringLoader) {
                 $loader = $this->loader;
-            } else {
+            }
+
+            if ($loader === null) {
                 throw new UnknownTemplateException($name);
             }
 

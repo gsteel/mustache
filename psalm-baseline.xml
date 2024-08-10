@@ -115,23 +115,13 @@
     <PropertyNotSetInConstructor>
       <code><![CDATA[$escape]]></code>
       <code><![CDATA[$helpers]]></code>
-      <code><![CDATA[$loader]]></code>
-      <code><![CDATA[$partialsLoader]]></code>
     </PropertyNotSetInConstructor>
     <PropertyTypeCoercion>
       <code><![CDATA[$this->templates]]></code>
     </PropertyTypeCoercion>
-    <RedundantCondition>
-      <code><![CDATA[isset($this->loader) && ! $this->loader instanceof StringLoader]]></code>
-    </RedundantCondition>
     <RedundantPropertyInitializationCheck>
       <code><![CDATA['default']]></code>
       <code><![CDATA[isset($this->escape)]]></code>
-      <code><![CDATA[isset($this->loader)]]></code>
-      <code><![CDATA[isset($this->loader)]]></code>
-      <code><![CDATA[isset($this->partialsLoader)]]></code>
-      <code><![CDATA[isset($this->partialsLoader)]]></code>
-      <code><![CDATA[isset($this->partialsLoader)]]></code>
     </RedundantPropertyInitializationCheck>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$this->delimiters]]></code>
