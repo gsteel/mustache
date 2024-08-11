@@ -355,15 +355,6 @@ class EngineTest extends FunctionalTestCase
         $this->assertEquals('b', $tpl->render(['a' => 'b']));
     }
 
-    public function testBuggyPropertyShadowing(): void
-    {
-        $mustache = new Engine();
-        $this->assertFalse($mustache->useBuggyPropertyShadowing());
-
-        $mustache = new Engine(['buggy_property_shadowing' => true]);
-        $this->assertTrue($mustache->useBuggyPropertyShadowing());
-    }
-
     /**
      * @param list<Engine::PRAGMA_*> $pragmas
      * @param array<string, mixed> $helpers

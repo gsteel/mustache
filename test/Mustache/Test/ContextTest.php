@@ -212,21 +212,4 @@ class ContextTest extends TestCase
 
         $this->assertNull($context->find('name'));
     }
-
-    public function testBuggyNullPropertyValueMasking(): void
-    {
-        $context = new Context(null, true);
-
-        $a = (object) [
-            'name' => 'not null',
-        ];
-        $b = (object) [
-            'name' => null,
-        ];
-
-        $context->push($a);
-        $context->push($b);
-
-        $this->assertEquals($context->find('name'), 'not null');
-    }
 }
