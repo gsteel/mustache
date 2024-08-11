@@ -4,23 +4,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$realChildren]]></code>
     </ArgumentTypeCoercion>
-    <InvalidArgument>
-      <code><![CDATA[[self::class, 'onlyBlockArgs']]]></code>
-    </InvalidArgument>
-    <InvalidArrayOffset>
-      <code><![CDATA[$this->pragmas[Engine::PRAGMA_ANCHORED_DOT]]]></code>
-    </InvalidArrayOffset>
-    <MissingConstructor>
-      <code><![CDATA[$blocks]]></code>
-      <code><![CDATA[$charset]]></code>
-      <code><![CDATA[$customEscape]]></code>
-      <code><![CDATA[$entityFlags]]></code>
-      <code><![CDATA[$indentNextLine]]></code>
-      <code><![CDATA[$pragmas]]></code>
-      <code><![CDATA[$sections]]></code>
-      <code><![CDATA[$source]]></code>
-      <code><![CDATA[$strictCallables]]></code>
-    </MissingConstructor>
     <MixedArgument>
       <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
       <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
@@ -59,15 +42,9 @@
     <MixedArrayOffset>
       <code><![CDATA[$this->pragmas[$node[Tokenizer::NAME]]]]></code>
     </MixedArrayOffset>
-    <PropertyTypeCoercion>
+    <MixedPropertyTypeCoercion>
       <code><![CDATA[$this->pragmas]]></code>
-      <code><![CDATA[$this->pragmas]]></code>
-      <code><![CDATA[$this->pragmas]]></code>
-    </PropertyTypeCoercion>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[$this->pragmas[Engine::PRAGMA_ANCHORED_DOT]]]></code>
-      <code><![CDATA[isset($this->pragmas[Engine::PRAGMA_ANCHORED_DOT]) && $this->pragmas[Engine::PRAGMA_ANCHORED_DOT]]]></code>
-    </RedundantConditionGivenDocblockType>
+    </MixedPropertyTypeCoercion>
   </file>
   <file src="src/Context.php">
     <MixedArgument>
@@ -75,8 +52,6 @@
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$context]]></code>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
@@ -87,22 +62,9 @@
     </PossiblyUnusedMethod>
   </file>
   <file src="src/Engine.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$tree]]></code>
-    </ArgumentTypeCoercion>
-    <InvalidDocblock>
-      <code><![CDATA[private function parse(string $source): array]]></code>
-    </InvalidDocblock>
     <NoValue>
       <code><![CDATA[$pragma]]></code>
     </NoValue>
-    <PropertyNotSetInConstructor>
-      <code><![CDATA[$escape]]></code>
-    </PropertyNotSetInConstructor>
-    <RedundantPropertyInitializationCheck>
-      <code><![CDATA['default']]></code>
-      <code><![CDATA[isset($this->escape)]]></code>
-    </RedundantPropertyInitializationCheck>
   </file>
   <file src="src/HelperCollection.php">
     <MixedAssignment>
@@ -113,14 +75,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[withDelimiters]]></code>
     </PossiblyUnusedMethod>
-    <RedundantCast>
-      <code><![CDATA[(string) $string]]></code>
-    </RedundantCast>
-  </file>
-  <file src="src/Loader/InlineLoader.php">
-    <PossiblyUndefinedArrayOffset>
-      <code><![CDATA[$content]]></code>
-    </PossiblyUndefinedArrayOffset>
   </file>
   <file src="src/Parser.php">
     <ArgumentTypeCoercion>
@@ -155,9 +109,6 @@
       <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
       <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
       <code><![CDATA[$parent[Tokenizer::TYPE]]]></code>
-      <code><![CDATA[$this->pragmas[Engine::PRAGMA_BLOCKS]]]></code>
-      <code><![CDATA[$this->pragmas[Engine::PRAGMA_DYNAMIC_NAMES]]]></code>
-      <code><![CDATA[$this->pragmas[Engine::PRAGMA_FILTERS]]]></code>
     </InvalidArrayOffset>
     <InvalidReturnStatement>
       <code><![CDATA[$nodes]]></code>
@@ -166,12 +117,6 @@
       <code><![CDATA[$parent]]></code>
       <code><![CDATA[[$name, $isDynamic]]]></code>
     </LessSpecificReturnStatement>
-    <MissingConstructor>
-      <code><![CDATA[$pragmaBlocks]]></code>
-      <code><![CDATA[$pragmaDynamicNames]]></code>
-      <code><![CDATA[$pragmaFilters]]></code>
-      <code><![CDATA[$pragmas]]></code>
-    </MissingConstructor>
     <MixedArgument>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$name]]></code>
@@ -199,9 +144,6 @@
       <code><![CDATA[array{0: string, 1: bool}]]></code>
       <code><![CDATA[list<array<string, mixed>>]]></code>
     </MoreSpecificReturnType>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$this->pragmas]]></code>
-    </PropertyTypeCoercion>
   </file>
   <file src="src/Source/FilesystemSource.php">
     <PossiblyUnusedReturnValue>
@@ -209,28 +151,17 @@
     </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Template.php">
-    <MixedAssignment>
-      <code><![CDATA[$v]]></code>
-    </MixedAssignment>
     <PossiblyUnusedMethod>
       <code><![CDATA[isIterable]]></code>
       <code><![CDATA[resolveValue]]></code>
     </PossiblyUnusedMethod>
-    <UnusedForeachValue>
-      <code><![CDATA[$v]]></code>
-    </UnusedForeachValue>
   </file>
   <file src="src/Tokenizer.php">
-    <MissingConstructor>
-      <code><![CDATA[$state]]></code>
-    </MissingConstructor>
     <PossiblyFalseOperand>
       <code><![CDATA[$closeIndex]]></code>
       <code><![CDATA[$closeIndex]]></code>
       <code><![CDATA[$end]]></code>
       <code><![CDATA[$end]]></code>
-      <code><![CDATA[$this->seenTag]]></code>
-      <code><![CDATA[$this->seenTag]]></code>
       <code><![CDATA[strpos($text, '=', $index)]]></code>
     </PossiblyFalseOperand>
     <PossiblyNullArgument>
@@ -238,12 +169,6 @@
     </PossiblyNullArgument>
     <PossiblyNullOperand>
       <code><![CDATA[$this->ctag]]></code>
-      <code><![CDATA[$this->ctagLen]]></code>
-      <code><![CDATA[$this->ctagLen]]></code>
-      <code><![CDATA[$this->ctagLen]]></code>
-      <code><![CDATA[$this->otagLen]]></code>
-      <code><![CDATA[$this->otagLen]]></code>
-      <code><![CDATA[$this->otagLen]]></code>
     </PossiblyNullOperand>
   </file>
   <file src="test/Mustache/Test/Asset/EngineStub.php">

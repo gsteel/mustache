@@ -6,6 +6,7 @@ namespace Mustache;
 
 use Traversable;
 
+use function array_keys;
 use function call_user_func;
 use function gettype;
 use function is_callable;
@@ -104,7 +105,7 @@ abstract class Template
 
             case 'array':
                 $i = 0;
-                foreach ($value as $k => $v) {
+                foreach (array_keys($value) as $k) {
                     if ($k !== $i++) {
                         return false;
                     }

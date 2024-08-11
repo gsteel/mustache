@@ -120,8 +120,10 @@ final class InlineLoader implements Loader
                 continue;
             }
 
-            [$name, $content] = explode("\n", $chunk, 2);
-            $this->templates[trim($name)] = trim($content);
+            $data = explode("\n", $chunk, 2);
+            $name = trim($data[0]);
+            $content = trim($data[1] ?? '');
+            $this->templates[$name] = $content;
         }
     }
 }

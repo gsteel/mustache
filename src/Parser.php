@@ -28,13 +28,13 @@ final class Parser
 {
     private int $lineNum = -1;
     private int $lineTokens = 0;
-    /** @var list<Engine::PRAGMA_*> */
-    private array $pragmas;
-    /** @var list<Engine::PRAGMA_*> */
+    /** @var array<Engine::PRAGMA_*, bool> */
+    private array $pragmas = [];
+    /** @var array<Engine::PRAGMA_*, bool> */
     private array $defaultPragmas = [];
-    private bool $pragmaFilters;
-    private bool $pragmaBlocks;
-    private bool $pragmaDynamicNames;
+    private bool $pragmaFilters = false;
+    private bool $pragmaBlocks = false;
+    private bool $pragmaDynamicNames = false;
 
     /**
      * Process an array of Mustache tokens and convert them into a parse tree.
@@ -385,6 +385,8 @@ final class Parser
 
     /**
      * Enable a pragma.
+     *
+     * @param Engine::PRAGMA_* $name
      */
     private function enablePragma(string $name): void
     {

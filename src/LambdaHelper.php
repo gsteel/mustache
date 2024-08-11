@@ -20,8 +20,11 @@ final class LambdaHelper
      * @param Context $context  Rendering context
      * @param string|null $delims   Optional custom delimiters, in the format `{{= <% %> =}}`. (default: null)
      */
-    public function __construct(private Engine $mustache, private Context $context, private string|null $delims = null)
-    {
+    public function __construct(
+        private readonly Engine $mustache,
+        private readonly Context $context,
+        private readonly string|null $delims = null,
+    ) {
     }
 
     /**
@@ -32,7 +35,7 @@ final class LambdaHelper
     public function render(string $string): string
     {
         return $this->mustache
-            ->loadLambda((string) $string, $this->delims)
+            ->loadLambda($string, $this->delims)
             ->renderInternal($this->context);
     }
 
