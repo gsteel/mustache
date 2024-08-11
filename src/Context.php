@@ -143,6 +143,7 @@ final class Context
     {
         $chunks = explode('.', $id);
         $first = array_shift($chunks);
+        /** @psalm-var mixed $value */
         $value = $this->findVariableInStack($first, $this->stack);
 
         foreach ($chunks as $chunk) {
@@ -150,6 +151,7 @@ final class Context
                 return $value;
             }
 
+            /** @psalm-var mixed $value */
             $value = $this->findVariableInStack($chunk, [$value]);
         }
 

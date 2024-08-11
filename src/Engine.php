@@ -79,8 +79,8 @@ class Engine
     private readonly Loader $loader;
     private Loader|null $partialsLoader;
     private HelperCollection $helpers;
-    /** @var callable */
-    private $escape;
+    /** @var callable|null */
+    private $escape = null;
     private readonly int $entityFlags;
     private string $charset = 'UTF-8';
     private readonly LoggerInterface|null $logger;
@@ -480,7 +480,7 @@ class Engine
      *
      * @see Parser::parse
      *
-     * @return list<string, mixed> Token tree
+     * @return list<array<string, mixed>> Token tree
      */
     private function parse(string $source): array
     {

@@ -19,7 +19,9 @@ use function trim;
 use function ucfirst;
 use function var_export;
 
-use const ENT_COMPAT;
+use const ENT_HTML401;
+use const ENT_QUOTES;
+use const ENT_SUBSTITUTE;
 
 /**
  * Mustache Compiler class.
@@ -29,43 +31,50 @@ use const ENT_COMPAT;
 final class Compiler
 {
     private const PARTIAL_INDENT = ', $indent . %s';
-    private const PARTIAL = '
+    private const PARTIAL = <<<'PHP'
+        /** @var \Mustache\Template $partial */
         if ($partial = $this->mustache->loadPartial(%s)) {
             $buffer .= $partial->renderInternal($context%s);
         }
-    ';
-    private const PARENT = '
+        PHP;
+    private const PARENT = <<<'PHP'
+        /** @var \Mustache\Context $context  */
+        /** @var \Mustache\Template $parent */
         if ($parent = $this->mustache->loadPartial(%s)) {
             $context->pushBlockContext([%s
             ]);
             $buffer .= $parent->renderInternal($context, $indent);
             $context->popBlockContext();
         }
-    ';
+        PHP;
 
-    private const PARENT_NO_CONTEXT = '
+    private const PARENT_NO_CONTEXT = <<<'PHP'
         if ($parent = $this->mustache->loadPartial(%s)) {
             $buffer .= $parent->renderInternal($context, $indent);
         }
-    ';
+        PHP;
     private const LINE_INDENT = '$indent . ';
-    private const SECTION_CALL = '
+    private const SECTION_CALL = <<<'PHP'
         $value = $context->%s(%s);%s
         $buffer .= $this->section%s($context, $indent, $value);
-    ';
+        PHP;
 
-    private const SECTION = '
+    private const SECTION = <<<'PHP'
         private function section%s(\Mustache\Context $context, $indent, $value)
         {
-            $buffer = \'\';
+            /** @var \Mustache\Template $this */
+            /** @var \Mustache\Context $context */
+            /** @var \Mustache\Engine $engine */
+            $engine = $this->mustache;
+            $buffer = '';
 
             if (%s) {
                 $source = %s;
                 $result = (string) call_user_func($value, $source, %s);
-                if (strpos($result, \'{{\') === false) {
+                if (strpos($result, '{{') === false) {
                     $buffer .= $result;
                 } else {
-                    $buffer .= $this->mustache
+                    $buffer .= $engine
                         ->loadLambda($result%s)
                         ->renderInternal($context);
                 }
@@ -80,8 +89,8 @@ final class Compiler
 
             return $buffer;
         }
-    ';
-    private const KLASS = <<<'EOF'
+        PHP;
+    private const KLASS = <<<'PHP'
         <?php
 
         class %s extends \Mustache\Template
@@ -99,9 +108,9 @@ final class Compiler
         %s
         %s
         }
-        EOF;
+        PHP;
 
-    private const KLASS_NO_LAMBDAS = <<<'EOF'
+    private const KLASS_NO_LAMBDAS = <<<'PHP'
         <?php
 
         class %s extends \Mustache\Template
@@ -114,64 +123,68 @@ final class Compiler
                 return $buffer;
             }
         }
-        EOF;
+        PHP;
     private const STRICT_CALLABLE = 'protected bool $strictCallables = true;';
     private const LINE = '$buffer .= "\n";';
     private const TEXT = '$buffer .= %s%s;';
-    private const INVERTED_SECTION = '
+    private const INVERTED_SECTION = <<<'PHP'
         $value = $context->%s(%s);%s
         if (empty($value)) {
             %s
         }
-    ';
-    private const DYNAMIC_NAME = '$this->resolveValue($context->%s(%s), $context)';
-    private const BLOCK_VAR = '
+        PHP;
+    private const DYNAMIC_NAME = <<<'PHP'
+        /** @var \Mustache\Template $this */
+        $this->resolveValue($context->%s(%s), $context)
+        PHP;
+    private const BLOCK_VAR = <<<'PHP'
+        /** @var \Mustache\Context $context */
         $blockFunction = $context->findInBlock(%s);
         if (is_callable($blockFunction)) {
             $buffer .= call_user_func($blockFunction, $context);
         %s}
-    ';
+        PHP;
     private const BLOCK_VAR_ELSE = '} else {%s';
     private const BLOCK_ARG = '%s => [$this, \'block%s\'],';
-    private const BLOCK_FUNCTION = '
+    private const BLOCK_FUNCTION = <<<'PHP'
         public function block%s($context)
         {
-            $indent = $buffer = \'\';%s
+            $indent = $buffer = '';%s
 
             return $buffer;
         }
-    ';
-    private const VARIABLE = '
+        PHP;
+    private const VARIABLE = <<<'PHP'
         $value = $this->resolveValue($context->%s(%s), $context);%s
-        $buffer .= %s($value === null ? \'\' : %s);
-    ';
+        $buffer .= %s($value === null ? '' : %s);
+        PHP;
     private const DEFAULT_ESCAPE = 'htmlspecialchars(%s, %s, %s)';
     private const CUSTOM_ESCAPE = 'call_user_func($this->mustache->getEscape(), %s)';
     private const IS_CALLABLE = '!is_string(%s) && is_callable(%s)';
     private const STRICT_IS_CALLABLE = 'is_object(%s) && is_callable(%s)';
 
-    private const FILTER = '
+    private const FILTER = <<<'PHP'
         $filter = $context->%s(%s);
-        if (!(%s)) {
+        if (! (%s)) {
             throw new \Mustache\Exception\UnknownFilterException(%s);
         }
         $value = call_user_func($filter, $value);%s
-    ';
+        PHP;
 
-    /** @var list<Engine::PRAGMA_*> */
-    private array $pragmas;
-    /** @var list<Engine::PRAGMA_*> */
+    /** @var array<Engine::PRAGMA_*, bool> */
+    private array $pragmas = [];
+    /** @var array<Engine::PRAGMA_*, bool> */
     private array $defaultPragmas = [];
     /** @var array<string, string> */
-    private array $sections;
+    private array $sections = [];
     /** @var array<string, string> */
-    private array $blocks;
-    private string $source;
-    private bool $indentNextLine;
-    private bool $customEscape;
-    private int $entityFlags;
-    private string $charset;
-    private bool $strictCallables;
+    private array $blocks = [];
+    private string $source = '';
+    private bool $indentNextLine = false;
+    private bool $customEscape = false;
+    private int $entityFlags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401;
+    private string $charset = 'utf-8';
+    private bool $strictCallables = false;
 
     /**
      * Compile a Mustache token parse tree into PHP source code.
@@ -182,7 +195,7 @@ final class Compiler
      * @param bool $customEscape    (default: false)
      * @param string $charset         (default: 'UTF-8')
      * @param bool $strictCallables (default: false)
-     * @param int $entityFlags     (default: ENT_COMPAT)
+     * @param int $entityFlags     (default: ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401)
      *
      * @return string Generated PHP source code
      */
@@ -193,7 +206,7 @@ final class Compiler
         bool $customEscape = false,
         string $charset = 'UTF-8',
         bool $strictCallables = false,
-        int $entityFlags = ENT_COMPAT,
+        int $entityFlags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401,
     ): string {
         $this->pragmas = $this->defaultPragmas;
         $this->sections = [];
@@ -582,10 +595,10 @@ final class Compiler
      */
     private function parent(string $id, bool $dynamic, string $indent, array $children, int $level): string
     {
-        $realChildren = array_filter($children, [self::class, 'onlyBlockArgs']);
+        $realChildren = array_filter($children, static fn (array $node): bool => self::onlyBlockArgs($node));
         $partialName = $this->resolveDynamicName($id, $dynamic);
 
-        if (empty($realChildren)) {
+        if ($realChildren === []) {
             return sprintf($this->prepare(self::PARENT_NO_CONTEXT, $level), $partialName);
         }
 

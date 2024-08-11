@@ -92,25 +92,25 @@ final class Tokenizer
     public const VALUE = 'value';
     public const FILTERS = 'filters';
 
-    private int|null $state;
+    private int|null $state = null;
     private string|null $tagType = null;
     private string $buffer = '';
     /** @var list<array<string, mixed>> */
     private array $tokens = [];
-    private int|false $seenTag = 0;
+    private int $seenTag = 0;
     private int $line = 0;
     private string|null $otag = null;
     private string|null $otagChar = null;
-    private int|null $otagLen = null;
+    private int $otagLen = 0;
     private string|null $ctag = null;
     private string|null $ctagChar = null;
-    private int|null $ctagLen = null;
+    private int $ctagLen = 0;
 
     /**
      * Scan and tokenize template source.
      *
      * @param string $text       Mustache template source to tokenize
-     * @param string $delimiters Optionally, pass initial opening and closing delimiters (default: empty string)
+     * @param string|null $delimiters Optionally, pass initial opening and closing delimiters (default: empty string)
      *
      * @return list<array<string, mixed>> Set of Mustache tokens
      *
@@ -248,7 +248,7 @@ final class Tokenizer
         $this->tagType = null;
         $this->buffer = '';
         $this->tokens = [];
-        $this->seenTag = false;
+        $this->seenTag = 0;
         $this->line = 0;
 
         $this->otag = '{{';
