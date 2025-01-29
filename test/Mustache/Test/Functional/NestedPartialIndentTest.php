@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group functional
- * @group partials
- */
+#[Group('functional')]
+#[Group('partials')]
 class NestedPartialIndentTest extends TestCase
 {
-    /**
-     * @param array<string, string> $partials
-     *
-     * @dataProvider partialsAndStuff
-     */
+    /** @param array<string, string> $partials */
+    #[DataProvider('partialsAndStuff')]
     public function testNestedPartialsAreIndentedProperly(string $src, array $partials, string $expected): void
     {
         $m = new Engine([

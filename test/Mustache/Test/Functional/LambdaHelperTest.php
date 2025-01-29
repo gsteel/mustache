@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 use function strtoupper;
 
-/**
- * @group lambdas
- * @group functional
- */
+#[Group('lambdas')]
+#[Group('functional')]
 class LambdaHelperTest extends TestCase
 {
     private Engine $mustache;

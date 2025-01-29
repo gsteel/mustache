@@ -6,8 +6,9 @@ namespace Mustache\Test\Cache;
 
 use Mustache\Cache\FilesystemCache;
 use Mustache\Test\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\Group;
 
-/** @group functional */
+#[Group('functional')]
 class FilesystemCacheTest extends FunctionalTestCase
 {
     public function testCacheGetNone(): void

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
+<files psalm-version="6.0.0@b8e96bb617bf59382113b1b56cef751f648a7dc9">
   <file src="src/Compiler.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$realChildren]]></code>
@@ -180,23 +180,7 @@
       <code><![CDATA[$template]]></code>
     </PropertyNotSetInConstructor>
   </file>
-  <file src="test/Mustache/Test/Asset/TestStreamWrapper.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->filehandle]]></code>
-    </InvalidPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[stream_close]]></code>
-      <code><![CDATA[stream_eof]]></code>
-      <code><![CDATA[stream_open]]></code>
-      <code><![CDATA[stream_read]]></code>
-      <code><![CDATA[stream_stat]]></code>
-      <code><![CDATA[url_stat]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="test/Mustache/Test/ContextTestAsset/AllTheThings.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[foo]]></code>
-    </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$bar]]></code>
       <code><![CDATA[$foo]]></code>
@@ -211,44 +195,14 @@
     </MixedAssignment>
   </file>
   <file src="test/Mustache/Test/ContextTestAsset/Dummy.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[bar]]></code>
-      <code><![CDATA[foo]]></code>
-    </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$name]]></code>
     </PossiblyUnusedProperty>
-  </file>
-  <file src="test/Mustache/Test/EngineTest.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$className]]></code>
-    </ArgumentTypeCoercion>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getFoo]]></code>
-      <code><![CDATA[wrapWithUnderscores]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="test/Mustache/Test/Functional/ClassForStrictCallables.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[instanceCallable]]></code>
-      <code><![CDATA[instanceName]]></code>
-      <code><![CDATA[staticCallable]]></code>
-      <code><![CDATA[staticName]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ClassWithCall.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__call]]></code>
-    </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$name]]></code>
     </PossiblyUnusedProperty>
-  </file>
-  <file src="test/Mustache/Test/Functional/ClassWithLambda.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[placeholder]]></code>
-      <code><![CDATA[upper]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ExamplesTest.php">
     <InvalidStringClass>
@@ -268,10 +222,6 @@
     </PossiblyUndefinedArrayOffset>
   </file>
   <file src="test/Mustache/Test/Functional/HigherOrderSections/Foo.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[staticTrim]]></code>
-      <code><![CDATA[wrapWithBoth]]></code>
-    </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
       <code><![CDATA[$doublewrap]]></code>
       <code><![CDATA[$lorem]]></code>
@@ -334,10 +284,6 @@
     <InvalidReturnType>
       <code><![CDATA[list<array{1: string, 2: array<string, mixed>, 3: array<string, string>, 4: string}>]]></code>
     </InvalidReturnType>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[lambdaInterpolationCallback]]></code>
-      <code><![CDATA[lambdaSectionCallback]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/MustacheSpecTest.php">
     <LessSpecificReturnType>
@@ -359,16 +305,6 @@
     <UnevaluatedCode>
       <code><![CDATA[return null;]]></code>
     </UnevaluatedCode>
-  </file>
-  <file src="test/Mustache/Test/Functional/ObjectSection/Beta.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__get]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="test/Mustache/Test/Functional/ObjectSection/Delta.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[name]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="test/Mustache/Test/Functional/ObjectSection/Gamma.php">
     <PossiblyUnusedProperty>
@@ -406,10 +342,6 @@
     </UndefinedConstant>
   </file>
   <file src="test/Mustache/Test/Loader/ProductionFilesystemLoaderTest.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA['Mustache\Source']]></code>
-      <code><![CDATA['Mustache\Source']]></code>
-    </ArgumentTypeCoercion>
     <InvalidArgument>
       <code><![CDATA[['extension' => null]]]></code>
     </InvalidArgument>
@@ -432,23 +364,6 @@
     </PossiblyInvalidMethodCall>
   </file>
   <file src="test/Mustache/Test/SpecTestCase.php">
-    <MixedArrayAccess>
-      <code><![CDATA[$spec['tests']]]></code>
-      <code><![CDATA[$test['data']]]></code>
-      <code><![CDATA[$test['desc']]]></code>
-      <code><![CDATA[$test['expected']]]></code>
-      <code><![CDATA[$test['name']]]></code>
-      <code><![CDATA[$test['partials']]]></code>
-      <code><![CDATA[$test['template']]]></code>
-    </MixedArrayAccess>
-    <MixedAssignment>
-      <code><![CDATA[$spec]]></code>
-      <code><![CDATA[$test]]></code>
-    </MixedAssignment>
-    <MixedOperand>
-      <code><![CDATA[$test['desc']]]></code>
-      <code><![CDATA[$test['name']]]></code>
-    </MixedOperand>
     <MixedReturnTypeCoercion>
       <code><![CDATA[$data]]></code>
       <code><![CDATA[list<array{0: string, 1: string, 2: array<string, string>, 3: array<string, mixed>, 4: string}>]]></code>

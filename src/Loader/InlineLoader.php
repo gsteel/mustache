@@ -14,6 +14,8 @@ use function assert;
 use function explode;
 use function file_get_contents;
 use function is_file;
+use function is_iterable;
+use function is_string;
 use function preg_split;
 use function trim;
 
@@ -115,8 +117,11 @@ final class InlineLoader implements Loader
 
         $this->templates = [];
         $data = file_get_contents($this->fileName, false, null, $this->offset);
-        foreach (preg_split('/^@@(?= [\w.]+$)/m', $data, -1) as $chunk) {
-            if (! trim($chunk)) {
+        assert(is_string($data));
+        $chunks = preg_split('/^@@(?= [\w.]+$)/m', $data, -1);
+        assert(is_iterable($chunks));
+        foreach ($chunks as $chunk) {
+            if (trim($chunk) === '') {
                 continue;
             }
 

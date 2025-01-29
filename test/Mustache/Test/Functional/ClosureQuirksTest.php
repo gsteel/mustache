@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group lambdas
- * @group functional
- */
+#[Group('lambdas')]
+#[Group('functional')]
 class ClosureQuirksTest extends TestCase
 {
     private Engine $mustache;

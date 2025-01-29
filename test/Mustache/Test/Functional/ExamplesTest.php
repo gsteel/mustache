@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 use function closedir;
@@ -16,19 +18,16 @@ use function pathinfo;
 use function readdir;
 use function realpath;
 
-/**
- * @group examples
- * @group functional
- */
+#[Group('examples')]
+#[Group('functional')]
 class ExamplesTest extends TestCase
 {
     /**
      * Test everything in the `examples` directory.
      *
      * @param array<string, string> $partials
-     *
-     * @dataProvider getExamples
      */
+    #[DataProvider('getExamples')]
     public function testExamples(object $context, string $source, array $partials, string $expected): void
     {
         $mustache = new Engine([
@@ -52,9 +51,11 @@ class ExamplesTest extends TestCase
     public static function getExamples(): array
     {
         $path     = realpath(__DIR__ . '/../../../fixtures/examples');
+        self::assertIsString($path);
         $examples = [];
 
         $handle   = opendir($path);
+        self::assertIsResource($handle);
         while (($file = readdir($handle)) !== false) {
             if ($file === '.' || $file === '..') {
                 continue;
@@ -86,6 +87,7 @@ class ExamplesTest extends TestCase
         $expected = null;
 
         $handle = opendir($path);
+        self::assertIsResource($handle);
         while (($file = readdir($handle)) !== false) {
             $fullpath = $path . '/' . $file;
             $info = pathinfo($fullpath);
@@ -103,11 +105,13 @@ class ExamplesTest extends TestCase
                         break;
 
                     case 'mustache':
-                        $source   = file_get_contents($fullpath);
+                        $source = file_get_contents($fullpath);
+                        self::assertIsString($source);
                         break;
 
                     case 'txt':
                         $expected = file_get_contents($fullpath);
+                        self::assertIsString($expected);
                         break;
                 }
             }
@@ -128,6 +132,7 @@ class ExamplesTest extends TestCase
         $partials = [];
 
         $handle = opendir($path);
+        self::assertIsResource($handle);
         while (($file = readdir($handle)) !== false) {
             if ($file === '.' || $file === '..') {
                 continue;
@@ -140,7 +145,9 @@ class ExamplesTest extends TestCase
                 continue;
             }
 
-            $partials[$info['filename']] = file_get_contents($fullpath);
+            $contents = file_get_contents($fullpath);
+            self::assertIsString($contents);
+            $partials[$info['filename']] = $contents;
         }
 
         closedir($handle);

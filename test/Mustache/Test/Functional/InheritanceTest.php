@@ -6,14 +6,13 @@ namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
 use Mustache\Exception\SyntaxException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * phpcs:disable Generic.Files.LineLength
- *
- * @group inheritance
- * @group functional
- */
+/** phpcs:disable Generic.Files.LineLength */
+#[Group('inheritance')]
+#[Group('functional')]
 class InheritanceTest extends TestCase
 {
     private Engine $mustache;
@@ -522,9 +521,8 @@ class InheritanceTest extends TestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, string> $data
-     *
-     * @dataProvider getIllegalInheritanceExamples
      */
+    #[DataProvider('getIllegalInheritanceExamples')]
     public function testIllegalInheritanceExamples(array $partials, array $data, string $template): void
     {
         $this->mustache->setPartials($partials);
@@ -537,9 +535,8 @@ class InheritanceTest extends TestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, string> $data
-     *
-     * @dataProvider getLegalInheritanceExamples
      */
+    #[DataProvider('getLegalInheritanceExamples')]
     public function testLegalInheritanceExamples(array $partials, array $data, string $template, string $expect): void
     {
         $this->mustache->setPartials($partials);

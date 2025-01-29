@@ -7,6 +7,7 @@ namespace Mustache\Test;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\UnknownHelperException;
 use Mustache\HelperCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -143,9 +144,8 @@ class HelperCollectionTest extends TestCase
      * @param iterable<string, mixed> $helpers
      * @param array<array-key, mixed> $actions
      * @param class-string<Throwable>|null $exception
-     *
-     * @dataProvider getInvalidHelperArguments
      */
+    #[DataProvider('getInvalidHelperArguments')]
     public function testHelperCollectionIsntAfraidToThrowExceptions(
         iterable $helpers = [],
         array $actions = [],

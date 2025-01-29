@@ -34,6 +34,7 @@ abstract class FunctionalTestCase extends TestCase
     {
         $path = rtrim($path, '/') . '/';
         $handle = opendir($path);
+        self::assertIsResource($handle);
         while (($file = readdir($handle)) !== false) {
             if ($file === '.' || $file === '..') {
                 continue;

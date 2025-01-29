@@ -8,6 +8,7 @@ use Mustache\Engine;
 use Mustache\Exception\SyntaxException;
 use Mustache\Parser;
 use Mustache\Tokenizer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
@@ -15,9 +16,8 @@ class ParserTest extends TestCase
     /**
      * @param list<array<string, mixed>> $tokens
      * @param list<array<string, mixed>> $expected
-     *
-     * @dataProvider getTokenSets
      */
+    #[DataProvider('getTokenSets')]
     public function testParse(array $tokens, array $expected): void
     {
         $parser = new Parser();
@@ -200,9 +200,8 @@ class ParserTest extends TestCase
     /**
      * @param list<array<string, mixed>> $tokens
      * @param list<array<string, mixed>> $expected
-     *
-     * @dataProvider getInheritanceTokenSets
      */
+    #[DataProvider('getInheritanceTokenSets')]
     public function testParseWithInheritance(array $tokens, array $expected): void
     {
         $parser = new Parser();
@@ -329,11 +328,8 @@ class ParserTest extends TestCase
         ];
     }
 
-    /**
-     * @param list<array<string, mixed>> $tokens
-     *
-     * @dataProvider getBadParseTrees
-     */
+    /** @param list<array<string, mixed>> $tokens */
+    #[DataProvider('getBadParseTrees')]
     public function testParserThrowsExceptions(array $tokens): void
     {
         $parser = new Parser();
