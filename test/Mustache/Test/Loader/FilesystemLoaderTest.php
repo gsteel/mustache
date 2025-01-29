@@ -19,6 +19,7 @@ class FilesystemLoaderTest extends TestCase
     public function testConstructor(): void
     {
         $baseDir = realpath(__DIR__ . '/../../../fixtures/templates');
+        self::assertIsString($baseDir);
         $loader = new FilesystemLoader($baseDir, ['extension' => '.ms']);
         $this->assertEquals('alpha contents', $loader->load('alpha'));
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
@@ -34,6 +35,7 @@ class FilesystemLoaderTest extends TestCase
     public function testConstructorWithProtocol(): void
     {
         $baseDir = realpath(__DIR__ . '/../../../fixtures/templates');
+        self::assertIsString($baseDir);
 
         if (! stream_wrapper_register('test', TestStreamWrapper::class)) {
             self::fail('Could not register stream wrapper');
@@ -49,6 +51,7 @@ class FilesystemLoaderTest extends TestCase
     public function testLoadTemplates(): void
     {
         $baseDir = realpath(__DIR__ . '/../../../fixtures/templates');
+        self::assertIsString($baseDir);
         $loader = new FilesystemLoader($baseDir);
         $this->assertEquals('one contents', $loader->load('one'));
         $this->assertEquals('two contents', $loader->load('two.mustache'));
@@ -57,6 +60,7 @@ class FilesystemLoaderTest extends TestCase
     public function testEmptyExtensionString(): void
     {
         $baseDir = realpath(__DIR__ . '/../../../fixtures/templates');
+        self::assertIsString($baseDir);
 
         $loader = new FilesystemLoader($baseDir, ['extension' => '']);
         $this->assertEquals('one contents', $loader->load('one.mustache'));
@@ -76,6 +80,7 @@ class FilesystemLoaderTest extends TestCase
     public function testMissingTemplateThrowsException(): void
     {
         $baseDir = realpath(__DIR__ . '/../../../fixtures/templates');
+        self::assertIsString($baseDir);
         $loader = new FilesystemLoader($baseDir);
 
         $this->expectException(UnknownTemplateException::class);

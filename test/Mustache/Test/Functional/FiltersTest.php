@@ -10,16 +10,16 @@ use DateTimeImmutable;
 use Mustache\Engine;
 use Mustache\Exception\UnknownFilterException;
 use Mustache\HelperCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 use function array_keys;
 use function array_map;
 use function sprintf;
 
-/**
- * @group filters
- * @group functional
- */
+#[Group('filters')]
+#[Group('functional')]
 class FiltersTest extends TestCase
 {
     private Engine $mustache;
@@ -32,9 +32,8 @@ class FiltersTest extends TestCase
     /**
      * @param array<array-key, mixed>|object $data
      * @param array<string, Closure> $helpers
-     *
-     * @dataProvider singleFilterData
      */
+    #[DataProvider('singleFilterData')]
     public function testSingleFilter(string $tpl, array $helpers, array|object $data, string $expect): void
     {
         $engine = new Engine([
@@ -132,11 +131,8 @@ class FiltersTest extends TestCase
         );
     }
 
-    /**
-     * @param array<string, mixed> $data
-     *
-     * @dataProvider interpolateFirstData
-     */
+    /** @param array<string, mixed> $data */
+    #[DataProvider('interpolateFirstData')]
     public function testInterpolateFirst(string $tpl, array $data, string $expect): void
     {
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
@@ -158,11 +154,8 @@ class FiltersTest extends TestCase
         ];
     }
 
-    /**
-     * @param array<string, mixed> $data
-     *
-     * @dataProvider brokenPipeData
-     */
+    /** @param array<string, mixed> $data */
+    #[DataProvider('brokenPipeData')]
     public function testThrowsExceptionForBrokenPipes(string $tpl, array $data): void
     {
         $this->expectException(UnknownFilterException::class);

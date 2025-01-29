@@ -10,9 +10,11 @@ use Mustache\Loader;
 use Mustache\Source;
 
 use function array_key_exists;
+use function assert;
 use function file_exists;
 use function file_get_contents;
 use function is_dir;
+use function is_string;
 use function ltrim;
 use function realpath;
 use function sprintf;
@@ -61,6 +63,7 @@ class FilesystemLoader implements Loader
     {
         if ($this->shouldCheckPath($baseDir) === false) {
             $baseDir = is_dir($baseDir) ? realpath($baseDir) : $baseDir;
+            assert(is_string($baseDir));
         }
 
         if ($this->shouldCheckPath($baseDir) && ! is_dir($baseDir)) {
@@ -114,7 +117,10 @@ class FilesystemLoader implements Loader
             throw new UnknownTemplateException($name);
         }
 
-        return file_get_contents($fileName);
+        $contents = file_get_contents($fileName);
+        assert(is_string($contents));
+
+        return $contents;
     }
 
     /**

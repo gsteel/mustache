@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group mustache_injection
- * @group functional
- */
+#[Group('mustache_injection')]
+#[Group('functional')]
 class MustacheInjectionTest extends TestCase
 {
     private Engine $mustache;
@@ -25,9 +25,8 @@ class MustacheInjectionTest extends TestCase
     /**
      * @param array<string, mixed> $data
      * @param array<string, string> $partials
-     *
-     * @dataProvider injectionData
      */
+    #[DataProvider('injectionData')]
     public function testInjection(string $tpl, array $data, array $partials, string $expect): void
     {
         $this->mustache->setPartials($partials);

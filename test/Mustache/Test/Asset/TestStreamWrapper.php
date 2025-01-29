@@ -9,6 +9,8 @@ use function fclose;
 use function feof;
 use function fgets;
 use function fopen;
+use function is_resource;
+use function PHPUnit\Framework\assertIsString;
 use function preg_replace;
 
 /**
@@ -38,6 +40,7 @@ final class TestStreamWrapper
     public function stream_open(string $path, string $mode): bool
     {
         $path = preg_replace('-^test://-', '', $path);
+        assertIsString($path);
         $this->filehandle = fopen($path, $mode);
 
         return $this->filehandle !== false;
@@ -65,10 +68,11 @@ final class TestStreamWrapper
 
     public function stream_close(): bool
     {
-        assert($this->filehandle !== false);
-
-        fclose($this->filehandle);
+        $handle = $this->filehandle;
         $this->filehandle = false;
+        if (is_resource($handle)) {
+            fclose($handle);
+        }
 
         return true;
     }

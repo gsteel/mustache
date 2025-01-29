@@ -7,12 +7,14 @@ namespace Mustache\Cache;
 use Mustache\Exception\RuntimeException;
 use Psr\Log\LogLevel;
 
+use function assert;
 use function basename;
 use function chmod;
 use function dirname;
 use function file_put_contents;
 use function is_dir;
 use function is_file;
+use function is_string;
 use function mkdir;
 use function rename;
 use function sprintf;
@@ -124,6 +126,8 @@ final class FilesystemCache extends AbstractCache
         );
 
         $tempFile = tempnam($dirName, basename($fileName));
+        assert(is_string($tempFile));
+
         if (@file_put_contents($tempFile, $value) !== false) {
             if (@rename($tempFile, $fileName)) {
                 $mode = $this->fileMode ?? 0666 & ~umask();

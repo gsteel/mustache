@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Mustache\Source;
 
+use JsonException;
 use Mustache\Exception\RuntimeException;
 use Mustache\Source;
 
+use function assert;
 use function file_get_contents;
+use function is_string;
 use function json_encode;
 use function sprintf;
 use function stat;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * Mustache template Filesystem Source.
@@ -40,6 +45,7 @@ final class FilesystemSource implements Source
      * Get the Source key (used to generate the compiled class name).
      *
      * @throws RuntimeException when a source file cannot be read.
+     * @throws JsonException
      */
     public function getKey(): string
     {
@@ -64,7 +70,7 @@ final class FilesystemSource implements Source
             }
         }
 
-        return json_encode($chunks);
+        return json_encode($chunks, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -72,6 +78,9 @@ final class FilesystemSource implements Source
      */
     public function getSource(): string
     {
-        return file_get_contents($this->fileName);
+        $contents = file_get_contents($this->fileName);
+        assert(is_string($contents));
+
+        return $contents;
     }
 }

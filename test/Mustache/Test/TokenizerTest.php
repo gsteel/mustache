@@ -6,15 +6,13 @@ namespace Mustache\Test;
 
 use Mustache\Exception\SyntaxException;
 use Mustache\Tokenizer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class TokenizerTest extends TestCase
 {
-    /**
-     * @param list<array<string, mixed>> $expected
-     *
-     * @dataProvider getTokens
-     */
+    /** @param list<array<string, mixed>> $expected */
+    #[DataProvider('getTokens')]
     public function testScan(string $text, string|null $delimiters, array $expected): void
     {
         $tokenizer = new Tokenizer();
@@ -329,7 +327,7 @@ class TokenizerTest extends TestCase
         ];
     }
 
-    /** @dataProvider getUnclosedTags */
+    #[DataProvider('getUnclosedTags')]
     public function testUnclosedTagsThrowExceptions(string $text): void
     {
         $tokenizer = new Tokenizer();

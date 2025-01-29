@@ -8,7 +8,9 @@ use Mustache\Exception\SyntaxException;
 
 use function array_filter;
 use function array_shift;
+use function assert;
 use function implode;
+use function is_string;
 use function md5;
 use function preg_replace;
 use function sprintf;
@@ -707,7 +709,10 @@ final class Compiler
             $text .= "\n";
         }
 
-        return preg_replace("/\n( {8})?/", "\n" . str_repeat(' ', $bonus * 4), $text);
+        $value = preg_replace("/\n( {8})?/", "\n" . str_repeat(' ', $bonus * 4), $text);
+        assert(is_string($value));
+
+        return $value;
     }
 
     /**

@@ -6,18 +6,18 @@ namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
 use Mustache\LambdaHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
 use function strtoupper;
 
-/**
- * @group lambdas
- * @group functional
- */
+#[Group('lambdas')]
+#[Group('functional')]
 class StrictCallablesTest extends TestCase
 {
-    /** @dataProvider callables */
+    #[DataProvider('callables')]
     public function testStrictCallables(bool $strict, mixed $name, callable $section, string $expected): void
     {
         $mustache = new Engine(['strict_callables' => $strict]);

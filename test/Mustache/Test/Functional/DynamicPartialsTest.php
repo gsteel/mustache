@@ -7,12 +7,12 @@ namespace Mustache\Test\Functional;
 use Mustache\Engine;
 use Mustache\Exception\SyntaxException;
 use Mustache\Loader\StringLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group dynamic-names
- * @group functional
- */
+#[Group('dynamic-names')]
+#[Group('functional')]
 class DynamicPartialsTest extends TestCase
 {
     private Engine $mustache;
@@ -40,7 +40,7 @@ class DynamicPartialsTest extends TestCase
         ];
     }
 
-    /** @dataProvider getValidDynamicNamesExamples */
+    #[DataProvider('getValidDynamicNamesExamples')]
     public function testLegalInheritanceExamples(string $template): void
     {
         $this->assertSame('', $this->mustache->render($template));
@@ -57,7 +57,7 @@ class DynamicPartialsTest extends TestCase
         ];
     }
 
-    /** @dataProvider getDynamicNameParseErrors */
+    #[DataProvider('getDynamicNameParseErrors')]
     public function testDynamicNameParseErrors(string $template): void
     {
         $this->expectException(SyntaxException::class);

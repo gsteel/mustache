@@ -7,6 +7,7 @@ namespace Mustache\Test;
 use Mustache\Compiler;
 use Mustache\Exception\SyntaxException;
 use Mustache\Tokenizer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use const ENT_COMPAT;
@@ -17,9 +18,8 @@ class CompilerTest extends TestCase
     /**
      * @param list<array<string, mixed>> $tree
      * @param list<string> $expected
-     *
-     * @dataProvider getCompileValues
      */
+    #[DataProvider('getCompileValues')]
     public function testCompile(
         string $source,
         array $tree,

@@ -6,13 +6,14 @@ namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
 use Mustache\Test\SpecTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * A PHPUnit test case wrapping the Mustache Spec.
- *
- * @group mustache-spec
- * @group functional
  */
+#[Group('mustache-spec')]
+#[Group('functional')]
 class MustacheInheritanceSpecTest extends SpecTestCase
 {
     public static function setUpBeforeClass(): void
@@ -25,10 +26,9 @@ class MustacheInheritanceSpecTest extends SpecTestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, mixed> $data
-     *
-     * @group inheritance
-     * @dataProvider loadInheritanceSpec
      */
+    #[DataProvider('loadInheritanceSpec')]
+    #[Group('inheritance')]
     public function testInheritanceSpec(
         string $desc,
         string $source,

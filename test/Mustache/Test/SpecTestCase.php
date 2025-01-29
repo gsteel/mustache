@@ -12,6 +12,8 @@ use function file_exists;
 use function file_get_contents;
 use function json_decode;
 
+use const JSON_THROW_ON_ERROR;
+
 abstract class SpecTestCase extends TestCase
 {
     protected static Engine $mustache;
@@ -54,11 +56,18 @@ abstract class SpecTestCase extends TestCase
 
         $data = [];
         $file = file_get_contents($filename);
-        $spec = json_decode($file, true);
+        self::assertIsString($file);
+        $spec = json_decode($file, true, JSON_THROW_ON_ERROR);
+        self::assertIsArray($spec);
 
         foreach ($spec['tests'] as $test) {
+            self::assertIsArray($test);
+            $testName = $test['name'] ?? '';
+            $desc = $test['desc'] ?? '';
+            self::assertIsString($testName);
+            self::assertIsString($desc);
             $data[] = [
-                $test['name'] . ': ' . $test['desc'],
+                $testName . ': ' . $desc,
                 $test['template'],
                 $test['partials'] ??
             [],

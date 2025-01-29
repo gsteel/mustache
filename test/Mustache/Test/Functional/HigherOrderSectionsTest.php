@@ -9,16 +9,16 @@ use Mustache\Engine;
 use Mustache\Test\Functional\HigherOrderSections\Foo;
 use Mustache\Test\Functional\HigherOrderSections\Monster;
 use Mustache\Test\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 use function file_exists;
 use function glob;
 use function mkdir;
 use function sprintf;
 
-/**
- * @group lambdas
- * @group functional
- */
+#[Group('lambdas')]
+#[Group('functional')]
 class HigherOrderSectionsTest extends FunctionalTestCase
 {
     private Engine $mustache;
@@ -30,7 +30,7 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         ]);
     }
 
-    /** @dataProvider sectionCallbackData */
+    #[DataProvider('sectionCallbackData')]
     public function testSectionCallback(Foo $data, string $tpl, string $expect): void
     {
         $this->assertEquals($expect, $this->mustache->render($tpl, $data));
@@ -131,11 +131,8 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
     }
 
-    /**
-     * @param non-empty-string $tplPrefix
-     *
-     * @dataProvider cacheLambdaTemplatesData
-     */
+    /** @param non-empty-string $tplPrefix */
+    #[DataProvider('cacheLambdaTemplatesData')]
     public function testCacheLambdaTemplatesOptionWorks(
         string $dirName,
         string $tplPrefix,
@@ -155,7 +152,9 @@ class HigherOrderSectionsTest extends FunctionalTestCase
         $foo = new Foo();
         $foo->wrap = [$foo, 'wrapWithEm'];
         $this->assertEquals('<em>' . $foo->name . '</em>', $tpl->render($foo));
-        $this->assertCount($expect, glob($cacheDir . '/*.php'));
+        $list = glob($cacheDir . '/*.php');
+        self::assertIsArray($list);
+        $this->assertCount($expect, $list);
     }
 
     /** @return list<array{0: string, 1: non-empty-string, 2: bool, 3: int}> */

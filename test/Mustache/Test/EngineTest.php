@@ -20,9 +20,12 @@ use Mustache\Loader\ProductionFilesystemLoader;
 use Mustache\Loader\StringLoader;
 use Mustache\Template;
 use Mustache\Test\Asset\EngineStub;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 
+use function class_exists;
 use function dirname;
 use function file_get_contents;
 use function realpath;
@@ -90,7 +93,7 @@ class EngineTest extends FunctionalTestCase
         $this->assertEquals($source, $mustache->source);
     }
 
-    /** @group functional */
+    #[Group('functional')]
     public function testCache(): void
     {
         $mustache = new Engine([
@@ -101,6 +104,7 @@ class EngineTest extends FunctionalTestCase
         $source    = '{{ foo }}';
         $template  = $mustache->loadTemplate($source);
         $className = $mustache->getTemplateClassName($source);
+        self::assertTrue(class_exists($className));
 
         $this->assertInstanceOf($className, $template);
     }
@@ -136,7 +140,7 @@ class EngineTest extends FunctionalTestCase
         ]);
     }
 
-    /** @dataProvider getBadEscapers */
+    #[DataProvider('getBadEscapers')]
     public function testNonCallableEscapeThrowsException(mixed $escape): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -268,6 +272,7 @@ class EngineTest extends FunctionalTestCase
     public function testPartialLoadFailLogging(): void
     {
         $name     = tempnam(sys_get_temp_dir(), 'mustache-test');
+        self::assertIsString($name);
         $mustache = new Engine([
             'logger' => new Logger(
                 'log',
@@ -283,14 +288,18 @@ class EngineTest extends FunctionalTestCase
         $result = $mustache->render('{{> foo }}{{> bar }}{{> baz }}', []);
         $this->assertEquals('FOOBAR', $result);
 
-        $this->assertStringContainsString('WARNING: Partial not found: "baz"', file_get_contents($name));
+        $contents = file_get_contents($name);
+        self::assertIsString($contents);
+        $this->assertStringContainsString('WARNING: Partial not found: "baz"', $contents);
     }
 
     public function testCacheWarningLogging(): void
     {
         [$name, $mustache] = $this->getLoggedMustache(LogLevel::WARNING);
         $mustache->render('{{ foo }}', ['foo' => 'FOO']);
-        $this->assertStringContainsString('WARNING: Template cache disabled, evaluating', file_get_contents($name));
+        $contents = file_get_contents($name);
+        self::assertIsString($contents);
+        $this->assertStringContainsString('WARNING: Template cache disabled, evaluating', $contents);
     }
 
     public function testLoggingIsNotTooAnnoying(): void
@@ -305,6 +314,7 @@ class EngineTest extends FunctionalTestCase
         [$name, $mustache] = $this->getLoggedMustache(LogLevel::DEBUG);
         $mustache->render('{{ foo }}{{> bar }}', ['foo' => 'FOO']);
         $log = file_get_contents($name);
+        self::assertIsString($log);
         $this->assertStringContainsString('DEBUG: Instantiating template: ', $log);
         $this->assertStringContainsString('WARNING: Partial not found: "bar"', $log);
     }
@@ -321,6 +331,7 @@ class EngineTest extends FunctionalTestCase
     public function testCompileFromMustacheSourceInstance(): void
     {
         $baseDir = realpath(dirname(__FILE__) . '/../../fixtures/templates');
+        self::assertIsString($baseDir);
         $mustache = new Engine([
             'loader' => new ProductionFilesystemLoader($baseDir),
         ]);
@@ -331,6 +342,7 @@ class EngineTest extends FunctionalTestCase
     private function getLoggedMustache(string $level = LogLevel::ERROR): array
     {
         $name     = tempnam(sys_get_temp_dir(), 'mustache-test');
+        self::assertIsString($name);
         $mustache = new Engine([
             'logger' => new Logger('log', [new StreamHandler($name, $level)], [new PsrLogMessageProcessor()]),
         ]);
@@ -359,9 +371,8 @@ class EngineTest extends FunctionalTestCase
      * @param list<Engine::PRAGMA_*> $pragmas
      * @param array<string, mixed> $helpers
      * @param array<string, mixed> $data
-     *
-     * @dataProvider pragmaData
      */
+    #[DataProvider('pragmaData')]
     public function testPragmasConstructorOption(
         array $pragmas,
         array $helpers,

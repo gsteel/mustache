@@ -9,12 +9,11 @@ use Mustache\Test\Functional\ObjectSection\Alpha;
 use Mustache\Test\Functional\ObjectSection\Beta;
 use Mustache\Test\Functional\ObjectSection\Delta;
 use Mustache\Test\Functional\ObjectSection\Gamma;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group sections
- * @group functional
- */
+#[Group('sections')]
+#[Group('functional')]
 class ObjectSectionTest extends TestCase
 {
     private Engine $mustache;
@@ -30,14 +29,14 @@ class ObjectSectionTest extends TestCase
         $this->assertEquals('Foo', $tpl->render(new Alpha()));
     }
 
-    /** @group magic_methods */
+    #[Group('magic_methods')]
     public function testObjectWithGet(): void
     {
         $tpl = $this->mustache->loadTemplate('{{#foo}}{{name}}{{/foo}}');
         $this->assertEquals('Foo', $tpl->render(new Beta()));
     }
 
-    /** @group magic_methods */
+    #[Group('magic_methods')]
     public function testSectionObjectWithGet(): void
     {
         $tpl = $this->mustache->loadTemplate('{{#bar}}{{#foo}}{{name}}{{/foo}}{{/bar}}');

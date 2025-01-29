@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group magic_methods
- * @group functional
- */
+#[Group('magic_methods')]
+#[Group('functional')]
 class CallTest extends TestCase
 {
     public function testCallEatsContext(): void

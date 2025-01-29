@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Test\SpecTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
 use function is_array;
 
 /**
  * A PHPUnit test case wrapping the Mustache Spec.
- *
- * @group mustache-spec
- * @group functional
  */
+#[Group('mustache-spec')]
+#[Group('functional')]
 class MustacheSpecTest extends SpecTestCase
 {
     /**
      * @param array<string, string> $partials
      * @param array<string, mixed> $data
-     *
-     * @group comments
-     * @dataProvider loadCommentSpec
      */
+    #[DataProvider('loadCommentSpec')]
+    #[Group('comments')]
     public function testCommentSpec(string $desc, string $source, array $partials, array $data, string $expected): void
     {
         $template = self::loadTemplate($source, $partials);
@@ -38,10 +38,9 @@ class MustacheSpecTest extends SpecTestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, mixed> $data
-     *
-     * @group delimiters
-     * @dataProvider loadDelimitersSpec
      */
+    #[DataProvider('loadDelimitersSpec')]
+    #[Group('delimiters')]
     public function testDelimitersSpec(
         string $desc,
         string $source,
@@ -59,12 +58,9 @@ class MustacheSpecTest extends SpecTestCase
         return self::loadSpec('delimiters');
     }
 
-    /**
-     * @param array<string, string> $partials
-     *
-     * @group interpolation
-     * @dataProvider loadInterpolationSpec
-     */
+    /** @param array<string, string> $partials */
+    #[DataProvider('loadInterpolationSpec')]
+    #[Group('interpolation')]
     public function testInterpolationSpec(
         string $desc,
         string $source,
@@ -85,11 +81,10 @@ class MustacheSpecTest extends SpecTestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, mixed> $data
-     *
-     * @group inverted
-     * @group inverted-sections
-     * @dataProvider loadInvertedSpec
      */
+    #[DataProvider('loadInvertedSpec')]
+    #[Group('inverted')]
+    #[Group('inverted-sections')]
     public function testInvertedSpec(string $desc, string $source, array $partials, array $data, string $expected): void
     {
         $template = self::loadTemplate($source, $partials);
@@ -105,10 +100,9 @@ class MustacheSpecTest extends SpecTestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, mixed> $data
-     *
-     * @group partials
-     * @dataProvider loadPartialsSpec
      */
+    #[DataProvider('loadPartialsSpec')]
+    #[Group('partials')]
     public function testPartialsSpec(string $desc, string $source, array $partials, array $data, string $expected): void
     {
         $template = self::loadTemplate($source, $partials);
@@ -124,10 +118,9 @@ class MustacheSpecTest extends SpecTestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, mixed> $data
-     *
-     * @group sections
-     * @dataProvider loadSectionsSpec
      */
+    #[DataProvider('loadSectionsSpec')]
+    #[Group('sections')]
     public function testSectionsSpec(string $desc, string $source, array $partials, array $data, string $expected): void
     {
         $template = self::loadTemplate($source, $partials);
@@ -143,10 +136,9 @@ class MustacheSpecTest extends SpecTestCase
     /**
      * @param array<string, string> $partials
      * @param array<string, mixed> $data
-     *
-     * @group lambdas
-     * @dataProvider loadLambdasSpec
      */
+    #[DataProvider('loadLambdasSpec')]
+    #[Group('lambdas')]
     public function testLambdasSpec(string $desc, string $source, array $partials, array $data, string $expected): void
     {
         $template = self::loadTemplate($source, $partials);

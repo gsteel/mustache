@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mustache;
 
+use JsonException;
 use Mustache\Cache\AbstractCache;
 use Mustache\Cache\NoopCache;
 use Mustache\Exception\InvalidArgumentException;
@@ -26,6 +27,7 @@ use function sprintf;
 use const ENT_HTML401;
 use const ENT_QUOTES;
 use const ENT_SUBSTITUTE;
+use const JSON_THROW_ON_ERROR;
 
 /**
  * A Mustache implementation in PHP.
@@ -335,6 +337,8 @@ class Engine
      * the same template could be parsed and compiled multiple different ways.
      *
      * @return string Mustache Template class name
+     *
+     * @throws JsonException
      */
     public function getTemplateClassName(string|Source $source): string
     {
@@ -357,7 +361,7 @@ class Engine
             'version' => self::VERSION,
         ];
 
-        $key = json_encode($chunks);
+        $key = json_encode($chunks, JSON_THROW_ON_ERROR);
 
         // Template Source instances have already provided their own source key. For strings, just include the whole
         // source string in the md5 hash.
