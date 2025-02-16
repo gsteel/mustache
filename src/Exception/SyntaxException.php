@@ -10,7 +10,7 @@ use Throwable;
 /**
  * Mustache syntax exception.
  */
-class SyntaxException extends LogicException implements Exception
+final class SyntaxException extends LogicException implements Exception
 {
     /** @param array<string, mixed> $token */
     public function __construct(string $msg, private array $token, Throwable|null $previous = null)

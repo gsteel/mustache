@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('lambdas')]
 #[Group('functional')]
-class ClosureQuirksTest extends TestCase
+final class ClosureQuirksTest extends TestCase
 {
     private Engine $mustache;
 

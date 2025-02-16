@@ -9,7 +9,7 @@ use Mustache\Engine;
 use Mustache\HelperCollection;
 use PHPUnit\Framework\TestCase;
 
-class TemplateTest extends TestCase
+final class TemplateTest extends TestCase
 {
     public function testConstructor(): void
     {

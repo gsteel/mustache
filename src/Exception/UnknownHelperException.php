@@ -15,7 +15,7 @@ use const PHP_VERSION;
 /**
  * Unknown helper exception.
  */
-class UnknownHelperException extends InvalidArgumentException implements Exception
+final class UnknownHelperException extends InvalidArgumentException implements Exception
 {
     public function __construct(private string $helperName, Throwable|null $previous = null)
     {

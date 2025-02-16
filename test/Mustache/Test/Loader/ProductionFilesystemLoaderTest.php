@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use function dirname;
 use function realpath;
 
-class ProductionFilesystemLoaderTest extends TestCase
+final class ProductionFilesystemLoaderTest extends TestCase
 {
     public function testConstructor(): void
     {

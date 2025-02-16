@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('mustache-spec')]
 #[Group('functional')]
-class MustacheInheritanceSpecTest extends SpecTestCase
+final class MustacheInheritanceSpecTest extends SpecTestCase
 {
     public static function setUpBeforeClass(): void
     {

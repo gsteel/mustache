@@ -20,7 +20,7 @@ use function realpath;
 
 #[Group('examples')]
 #[Group('functional')]
-class ExamplesTest extends TestCase
+final class ExamplesTest extends TestCase
 {
     /**
      * Test everything in the `examples` directory.

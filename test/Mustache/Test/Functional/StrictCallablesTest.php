@@ -15,7 +15,7 @@ use function strtoupper;
 
 #[Group('lambdas')]
 #[Group('functional')]
-class StrictCallablesTest extends TestCase
+final class StrictCallablesTest extends TestCase
 {
     #[DataProvider('callables')]
     public function testStrictCallables(bool $strict, mixed $name, callable $section, string $expected): void

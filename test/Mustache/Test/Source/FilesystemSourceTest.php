@@ -14,7 +14,7 @@ use function set_error_handler;
 
 use const E_WARNING;
 
-class FilesystemSourceTest extends TestCase
+final class FilesystemSourceTest extends TestCase
 {
     public function testMissingTemplateThrowsException(): void
     {

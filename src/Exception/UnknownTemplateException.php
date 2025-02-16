@@ -15,7 +15,7 @@ use const PHP_VERSION;
 /**
  * Unknown template exception.
  */
-class UnknownTemplateException extends InvalidArgumentException implements Exception
+final class UnknownTemplateException extends InvalidArgumentException implements Exception
 {
     public function __construct(private string $templateName, Throwable|null $previous = null)
     {

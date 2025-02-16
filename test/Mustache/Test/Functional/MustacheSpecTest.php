@@ -15,7 +15,7 @@ use function is_array;
  */
 #[Group('mustache-spec')]
 #[Group('functional')]
-class MustacheSpecTest extends SpecTestCase
+final class MustacheSpecTest extends SpecTestCase
 {
     /**
      * @param array<string, string> $partials

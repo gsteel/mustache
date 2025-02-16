@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('dynamic-names')]
 #[Group('functional')]
-class DynamicPartialsTest extends TestCase
+final class DynamicPartialsTest extends TestCase
 {
     private Engine $mustache;
 

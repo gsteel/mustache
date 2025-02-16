@@ -9,7 +9,7 @@ use Mustache\Test\FunctionalTestCase;
 use PHPUnit\Framework\Attributes\Group;
 
 #[Group('functional')]
-class FilesystemCacheTest extends FunctionalTestCase
+final class FilesystemCacheTest extends FunctionalTestCase
 {
     public function testCacheGetNone(): void
     {

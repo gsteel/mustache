@@ -6,10 +6,7 @@ namespace Mustache\Exception;
 
 use Mustache\Exception;
 
-/**
- * Invalid argument exception.
- */
+/** phpcs:disable SlevomatCodingStandard.Classes.RequireAbstractOrFinal */
 class InvalidArgumentException extends \InvalidArgumentException implements Exception
 {
-    // This space intentionally left blank.
 }

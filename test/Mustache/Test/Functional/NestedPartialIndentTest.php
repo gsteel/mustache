@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('functional')]
 #[Group('partials')]
-class NestedPartialIndentTest extends TestCase
+final class NestedPartialIndentTest extends TestCase
 {
     /** @param array<string, string> $partials */
     #[DataProvider('partialsAndStuff')]

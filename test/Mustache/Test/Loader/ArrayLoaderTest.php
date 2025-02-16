@@ -8,7 +8,7 @@ use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader\ArrayLoader;
 use PHPUnit\Framework\TestCase;
 
-class ArrayLoaderTest extends TestCase
+final class ArrayLoaderTest extends TestCase
 {
     public function testConstructor(): void
     {

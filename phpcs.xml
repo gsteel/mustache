@@ -13,6 +13,7 @@
     <file>test</file>
 
     <rule ref="Doctrine" />
+    <rule ref="SlevomatCodingStandard.Classes.RequireAbstractOrFinal" />
 
     <!--
     Exclude Examples

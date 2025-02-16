@@ -39,6 +39,8 @@ use const JSON_THROW_ON_ERROR;
  *
  * This is very, very rad.
  *
+ * phpcs:disable SlevomatCodingStandard.Classes.RequireAbstractOrFinal
+ *
  * @psalm-type Options = array{
  *     cache?: Cache,
  *     template_class_prefix?: non-empty-string,

@@ -35,7 +35,7 @@ use function tempnam;
 
 use const ENT_QUOTES;
 
-class EngineTest extends FunctionalTestCase
+final class EngineTest extends FunctionalTestCase
 {
     public function testConstructor(): void
     {

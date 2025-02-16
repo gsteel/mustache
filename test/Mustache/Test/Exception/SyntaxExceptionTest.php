@@ -9,7 +9,7 @@ use Mustache\Exception\SyntaxException;
 use Mustache\Tokenizer;
 use PHPUnit\Framework\TestCase;
 
-class SyntaxExceptionTest extends TestCase
+final class SyntaxExceptionTest extends TestCase
 {
     public function testGetToken(): void
     {

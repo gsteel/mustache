@@ -12,7 +12,7 @@ use Mustache\Test\ContextTestAsset\Dummy;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ContextTest extends TestCase
+final class ContextTest extends TestCase
 {
     public function testConstructor(): void
     {
