@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 /** phpcs:disable Generic.Files.LineLength */
 #[Group('inheritance')]
 #[Group('functional')]
-class InheritanceTest extends TestCase
+final class InheritanceTest extends TestCase
 {
     private Engine $mustache;
 

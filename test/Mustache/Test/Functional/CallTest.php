@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('magic_methods')]
 #[Group('functional')]
-class CallTest extends TestCase
+final class CallTest extends TestCase
 {
     public function testCallEatsContext(): void
     {

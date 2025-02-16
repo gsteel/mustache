@@ -8,7 +8,7 @@ use Exception;
 use Mustache\Exception\UnknownFilterException;
 use PHPUnit\Framework\TestCase;
 
-class UnknownFilterExceptionTest extends TestCase
+final class UnknownFilterExceptionTest extends TestCase
 {
     public function testMessage(): void
     {

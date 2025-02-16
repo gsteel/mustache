@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('lambdas')]
 #[Group('functional')]
-class PartialLambdaIndentTest extends TestCase
+final class PartialLambdaIndentTest extends TestCase
 {
     public function testLambdasInsidePartialsAreIndentedProperly(): void
     {

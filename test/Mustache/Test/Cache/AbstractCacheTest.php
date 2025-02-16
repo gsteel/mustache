@@ -7,7 +7,7 @@ namespace Mustache\Test\Cache;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
-class AbstractCacheTest extends TestCase
+final class AbstractCacheTest extends TestCase
 {
     public function testGetSetLogger(): void
     {

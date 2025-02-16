@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use const ENT_COMPAT;
 use const ENT_QUOTES;
 
-class CompilerTest extends TestCase
+final class CompilerTest extends TestCase
 {
     /**
      * @param list<array<string, mixed>> $tree

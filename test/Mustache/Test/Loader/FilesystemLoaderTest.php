@@ -14,7 +14,7 @@ use function realpath;
 use function stream_wrapper_register;
 use function stream_wrapper_unregister;
 
-class FilesystemLoaderTest extends TestCase
+final class FilesystemLoaderTest extends TestCase
 {
     public function testConstructor(): void
     {

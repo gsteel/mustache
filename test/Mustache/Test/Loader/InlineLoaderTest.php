@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * phpcs:ignoreFile
  */
-class InlineLoaderTest extends TestCase
+final class InlineLoaderTest extends TestCase
 {
     public function testLoadTemplates(): void
     {

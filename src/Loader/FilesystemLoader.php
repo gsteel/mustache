@@ -36,6 +36,8 @@ use function substr;
  *          'loader'          => new Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views'),
  *          'partials_loader' => new Mustache\Loader\FilesystemLoader(dirname(__FILE__).'/views/partials'),
  *     ));
+ *
+ * phpcs:disable SlevomatCodingStandard.Classes.RequireAbstractOrFinal
  */
 class FilesystemLoader implements Loader
 {

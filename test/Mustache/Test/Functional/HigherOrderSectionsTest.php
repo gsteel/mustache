@@ -19,7 +19,7 @@ use function sprintf;
 
 #[Group('lambdas')]
 #[Group('functional')]
-class HigherOrderSectionsTest extends FunctionalTestCase
+final class HigherOrderSectionsTest extends FunctionalTestCase
 {
     private Engine $mustache;
 

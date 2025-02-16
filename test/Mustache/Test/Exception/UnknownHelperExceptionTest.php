@@ -8,7 +8,7 @@ use Exception;
 use Mustache\Exception\UnknownHelperException;
 use PHPUnit\Framework\TestCase;
 
-class UnknownHelperExceptionTest extends TestCase
+final class UnknownHelperExceptionTest extends TestCase
 {
     public function testMessage(): void
     {

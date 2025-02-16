@@ -9,7 +9,7 @@ use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\CascadingLoader;
 use PHPUnit\Framework\TestCase;
 
-class CascadingLoaderTest extends TestCase
+final class CascadingLoaderTest extends TestCase
 {
     public function testLoadTemplates(): void
     {

@@ -7,7 +7,7 @@ namespace Mustache\Test\Loader;
 use Mustache\Loader\StringLoader;
 use PHPUnit\Framework\TestCase;
 
-class StringLoaderTest extends TestCase
+final class StringLoaderTest extends TestCase
 {
     public function testLoadTemplates(): void
     {

@@ -20,7 +20,7 @@ use function sprintf;
 
 #[Group('filters')]
 #[Group('functional')]
-class FiltersTest extends TestCase
+final class FiltersTest extends TestCase
 {
     private Engine $mustache;
 

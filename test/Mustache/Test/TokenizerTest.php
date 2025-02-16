@@ -9,7 +9,7 @@ use Mustache\Tokenizer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class TokenizerTest extends TestCase
+final class TokenizerTest extends TestCase
 {
     /** @param list<array<string, mixed>> $expected */
     #[DataProvider('getTokens')]

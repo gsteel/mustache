@@ -16,7 +16,7 @@ use const PHP_VERSION;
 /**
  * Unknown filter exception.
  */
-class UnknownFilterException extends UnexpectedValueException implements Exception
+final class UnknownFilterException extends UnexpectedValueException implements Exception
 {
     public function __construct(private string $filterName, Throwable|null $previous = null)
     {

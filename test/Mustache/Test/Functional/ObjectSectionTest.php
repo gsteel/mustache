@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('sections')]
 #[Group('functional')]
-class ObjectSectionTest extends TestCase
+final class ObjectSectionTest extends TestCase
 {
     private Engine $mustache;
 

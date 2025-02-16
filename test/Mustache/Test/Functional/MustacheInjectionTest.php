@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 #[Group('mustache_injection')]
 #[Group('functional')]
-class MustacheInjectionTest extends TestCase
+final class MustacheInjectionTest extends TestCase
 {
     private Engine $mustache;
 

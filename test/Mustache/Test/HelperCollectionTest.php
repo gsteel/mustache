@@ -13,7 +13,7 @@ use Throwable;
 
 use function call_user_func_array;
 
-class HelperCollectionTest extends TestCase
+final class HelperCollectionTest extends TestCase
 {
     public function testConstructor(): void
     {

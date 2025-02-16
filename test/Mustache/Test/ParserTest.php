@@ -11,7 +11,7 @@ use Mustache\Tokenizer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class ParserTest extends TestCase
+final class ParserTest extends TestCase
 {
     /**
      * @param list<array<string, mixed>> $tokens

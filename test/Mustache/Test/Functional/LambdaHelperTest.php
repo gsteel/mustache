@@ -13,7 +13,7 @@ use function strtoupper;
 
 #[Group('lambdas')]
 #[Group('functional')]
-class LambdaHelperTest extends TestCase
+final class LambdaHelperTest extends TestCase
 {
     private Engine $mustache;
 
