@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use Override;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
@@ -14,6 +15,7 @@ final class ClosureQuirksTest extends TestCase
 {
     private Engine $mustache;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->mustache = new Engine();

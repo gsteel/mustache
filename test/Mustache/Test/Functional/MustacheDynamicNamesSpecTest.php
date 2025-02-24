@@ -6,6 +6,7 @@ namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
 use Mustache\Test\SpecTestCase;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('functional')]
 final class MustacheDynamicNamesSpecTest extends SpecTestCase
 {
+    #[Override]
     public static function setUpBeforeClass(): void
     {
         self::$mustache = new Engine([

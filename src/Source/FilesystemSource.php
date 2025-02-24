@@ -7,6 +7,7 @@ namespace Mustache\Source;
 use JsonException;
 use Mustache\Exception\RuntimeException;
 use Mustache\Source;
+use Override;
 
 use function assert;
 use function file_get_contents;
@@ -47,6 +48,7 @@ final class FilesystemSource implements Source
      * @throws RuntimeException when a source file cannot be read.
      * @throws JsonException
      */
+    #[Override]
     public function getKey(): string
     {
         $chunks = [
@@ -76,6 +78,7 @@ final class FilesystemSource implements Source
     /**
      * Get the template Source.
      */
+    #[Override]
     public function getSource(): string
     {
         $contents = file_get_contents($this->fileName);

@@ -7,6 +7,7 @@ namespace Mustache\Loader;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader;
 use Mustache\Source;
+use Override;
 
 /**
  * Mustache Template array Loader implementation.
@@ -30,6 +31,7 @@ final class ArrayLoader implements Loader, MutableLoader
     {
     }
 
+    #[Override]
     public function load(string $name): string|Source
     {
         if (! isset($this->templates[$name])) {
@@ -44,6 +46,7 @@ final class ArrayLoader implements Loader, MutableLoader
      *
      * @param array<string, string> $templates
      */
+    #[Override]
     public function setTemplates(array $templates): void
     {
         $this->templates = $templates;
@@ -54,6 +57,7 @@ final class ArrayLoader implements Loader, MutableLoader
      *
      * @param string $template Mustache Template source
      */
+    #[Override]
     public function setTemplate(string $name, string $template): void
     {
         $this->templates[$name] = $template;

@@ -7,6 +7,7 @@ namespace Mustache\Loader;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader;
 use Mustache\Source;
+use Override;
 
 /**
  * A Mustache Template cascading loader implementation, which delegates to other
@@ -43,6 +44,7 @@ final class CascadingLoader implements Loader
         $this->loaders[] = $loader;
     }
 
+    #[Override]
     public function load(string $name): string|Source
     {
         foreach ($this->loaders as $loader) {

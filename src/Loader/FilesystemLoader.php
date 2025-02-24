@@ -8,6 +8,7 @@ use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Loader;
 use Mustache\Source;
+use Override;
 
 use function array_key_exists;
 use function assert;
@@ -95,6 +96,7 @@ class FilesystemLoader implements Loader
      *
      * @inheritDoc
      */
+    #[Override]
     public function load(string $name): string|Source
     {
         if (! isset($this->templates[$name])) {

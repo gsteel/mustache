@@ -7,6 +7,7 @@ namespace Mustache\Test\Functional;
 use Mustache\Engine;
 use Mustache\Exception\SyntaxException;
 use Mustache\Loader\StringLoader;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +18,7 @@ final class DynamicPartialsTest extends TestCase
 {
     private Engine $mustache;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->mustache = new Engine([

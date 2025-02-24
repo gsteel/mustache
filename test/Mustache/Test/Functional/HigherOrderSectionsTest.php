@@ -9,6 +9,7 @@ use Mustache\Engine;
 use Mustache\Test\Functional\HigherOrderSections\Foo;
 use Mustache\Test\Functional\HigherOrderSections\Monster;
 use Mustache\Test\FunctionalTestCase;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
@@ -23,6 +24,7 @@ final class HigherOrderSectionsTest extends FunctionalTestCase
 {
     private Engine $mustache;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->mustache = new Engine([

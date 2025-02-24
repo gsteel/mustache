@@ -11,6 +11,8 @@ use function array_key_exists;
 
 /**
  * A collection of helpers for a Mustache instance.
+ *
+ * @psalm-no-seal-properties
  */
 final class HelperCollection
 {

@@ -9,6 +9,7 @@ use Mustache\Test\Functional\ObjectSection\Alpha;
 use Mustache\Test\Functional\ObjectSection\Beta;
 use Mustache\Test\Functional\ObjectSection\Delta;
 use Mustache\Test\Functional\ObjectSection\Gamma;
+use Override;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
@@ -18,6 +19,7 @@ final class ObjectSectionTest extends TestCase
 {
     private Engine $mustache;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->mustache = new Engine();
