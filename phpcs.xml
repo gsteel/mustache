@@ -12,7 +12,14 @@
     <file>src</file>
     <file>test</file>
 
-    <rule ref="Doctrine" />
+    <rule ref="Doctrine">
+        <!-- Disable deprecated sniff -->
+        <exclude name="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat" />
+    </rule>
+
+    <!-- Replacement Rule for UnionTypeHintFormat -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DNFTypeHintFormat" />
+
     <rule ref="SlevomatCodingStandard.Classes.RequireAbstractOrFinal" />
 
     <!--
