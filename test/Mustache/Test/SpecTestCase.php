@@ -6,6 +6,7 @@ namespace Mustache\Test;
 
 use Mustache\Engine;
 use Mustache\Template;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 use function file_exists;
@@ -18,6 +19,7 @@ abstract class SpecTestCase extends TestCase
 {
     protected static Engine $mustache;
 
+    #[Override]
     protected function setUp(): void
     {
         if (file_exists(__DIR__ . '/../../../vendor/spec/specs/')) {
@@ -27,6 +29,7 @@ abstract class SpecTestCase extends TestCase
         $this->markTestSkipped('Mustache spec submodule not initialized: run "git submodule update --init"');
     }
 
+    #[Override]
     public static function setUpBeforeClass(): void
     {
         self::$mustache = new Engine();

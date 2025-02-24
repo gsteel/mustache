@@ -6,6 +6,7 @@ namespace Mustache\Loader;
 
 use Mustache\Loader;
 use Mustache\Source;
+use Override;
 
 /**
  * Mustache Template string Loader implementation.
@@ -23,6 +24,7 @@ use Mustache\Source;
  */
 final class StringLoader implements Loader
 {
+    #[Override]
     public function load(string $name): string|Source
     {
         return $name;

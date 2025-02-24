@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mustache\Cache;
 
+use Override;
 use Psr\Log\LogLevel;
 
 /**
@@ -17,6 +18,7 @@ final class NoopCache extends AbstractCache
     /**
      * Loads nothing. Move along.
      */
+    #[Override]
     public function load(string $key): bool
     {
         return false;
@@ -25,6 +27,7 @@ final class NoopCache extends AbstractCache
     /**
      * Loads the compiled Mustache Template class without caching.
      */
+    #[Override]
     public function cache(string $key, string $value): void
     {
         $this->log(

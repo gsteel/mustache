@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use Mustache\Engine;
 use Mustache\Exception\UnknownFilterException;
 use Mustache\HelperCollection;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -24,6 +25,7 @@ final class FiltersTest extends TestCase
 {
     private Engine $mustache;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->mustache = new Engine();

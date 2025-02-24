@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Cache;
 
 use Mustache\Exception\RuntimeException;
+use Override;
 use Psr\Log\LogLevel;
 
 use function assert;
@@ -46,6 +47,7 @@ final class FilesystemCache extends AbstractCache
     /**
      * Load the class from cache using `require_once`.
      */
+    #[Override]
     public function load(string $key): bool
     {
         $fileName = $this->getCacheFilename($key);
@@ -61,6 +63,7 @@ final class FilesystemCache extends AbstractCache
     /**
      * Mustache\Cache and load the compiled class.
      */
+    #[Override]
     public function cache(string $key, string $value): void
     {
         $fileName = $this->getCacheFilename($key);

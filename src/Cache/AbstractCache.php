@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Cache;
 
 use Mustache\Cache;
+use Override;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -26,6 +27,7 @@ abstract class AbstractCache implements Cache
         return $this->logger;
     }
 
+    #[Override]
     public function setLogger(LoggerInterface|null $logger = null): void
     {
         $this->logger = $logger;

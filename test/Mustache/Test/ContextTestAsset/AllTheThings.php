@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Test\ContextTestAsset;
 
 use ArrayAccess;
+use Override;
 
 /** @implements ArrayAccess<array-key, mixed> */
 final class AllTheThings implements ArrayAccess
@@ -19,12 +20,14 @@ final class AllTheThings implements ArrayAccess
     }
 
     /** @param array-key $offset */
+    #[Override]
     public function offsetExists($offset): bool
     {
         return true;
     }
 
     /** @param array-key $offset */
+    #[Override]
     public function offsetGet($offset): string
     {
         switch ($offset) {
@@ -42,12 +45,14 @@ final class AllTheThings implements ArrayAccess
     }
 
     /** @param array-key $offset */
+    #[Override]
     public function offsetSet($offset, mixed $value): void
     {
         // nada
     }
 
     /** @param array-key $offset */
+    #[Override]
     public function offsetUnset($offset): void
     {
         // nada

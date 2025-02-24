@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mustache\Test;
 
+use Override;
 use PHPUnit\Framework\TestCase;
 
 use function closedir;
@@ -20,6 +21,7 @@ abstract class FunctionalTestCase extends TestCase
 {
     protected static string $tempDir;
 
+    #[Override]
     public static function setUpBeforeClass(): void
     {
         self::$tempDir = sys_get_temp_dir() . '/mustache_test';

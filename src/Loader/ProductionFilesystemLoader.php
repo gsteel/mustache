@@ -8,6 +8,7 @@ use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
 use Mustache\Source;
 use Mustache\Source\FilesystemSource;
+use Override;
 
 use function array_key_exists;
 use function file_exists;
@@ -77,6 +78,7 @@ final class ProductionFilesystemLoader extends FilesystemLoader
      *
      * @throws UnknownTemplateException If a template file is not found.
      */
+    #[Override]
     protected function loadFile(string $name): Source
     {
         $fileName = $this->getFileName($name);
