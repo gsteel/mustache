@@ -10,7 +10,7 @@ use Mustache\Cache\NoopCache;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
-use Mustache\Helper\ImmutableHelperManager;
+use Mustache\Helper\ImmutableHelperCollection;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\MutableLoader;
 use Mustache\Loader\StringLoader;
@@ -50,7 +50,7 @@ use const JSON_THROW_ON_ERROR;
  *     loader?: Loader,
  *     partials_loader?: Loader,
  *     partials?: array<string, string>,
- *     helpers?: array<string, mixed>|HelperManager,
+ *     helpers?: array<string, mixed>|HelperCollection,
  *     escape?: callable(string): string,
  *     entity_flags?: int,
  *     charset?: string,
@@ -83,7 +83,7 @@ class Engine
     private bool $cacheLambdaTemplates = false;
     private readonly Loader $loader;
     private Loader|null $partialsLoader;
-    private HelperManager $helpers;
+    private HelperCollection $helpers;
     /** @var callable|null */
     private $escape = null;
     private readonly int $entityFlags;
@@ -206,9 +206,9 @@ class Engine
         }
 
         $helpersOption = $options['helpers'] ?? [];
-        $this->helpers = $helpersOption instanceof HelperManager
+        $this->helpers = $helpersOption instanceof HelperCollection
             ? $helpersOption
-            : new ImmutableHelperManager($helpersOption);
+            : new ImmutableHelperCollection($helpersOption);
 
         if (isset($options['escape'])) {
             if (! is_callable($options['escape'])) {

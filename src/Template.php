@@ -21,7 +21,7 @@ abstract class Template
      */
     final public function __construct(
         protected Engine $mustache,
-        protected HelperManager $helpers,
+        protected HelperCollection $helpers,
         protected bool $strictCallables,
     ) {
     }

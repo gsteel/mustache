@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Helper;
 
 use Mustache\Exception\UnknownHelperException;
-use Mustache\HelperManager;
+use Mustache\HelperCollection;
 use Override;
 
 /**
@@ -13,9 +13,9 @@ use Override;
  *
  * @psalm-no-seal-properties
  */
-final readonly class CascadingHelperManager implements HelperManager
+final readonly class CascadingHelperCollection implements HelperCollection
 {
-    /** @param list<HelperManager> $managers */
+    /** @param list<HelperCollection> $managers */
     public function __construct(private array $managers)
     {
     }

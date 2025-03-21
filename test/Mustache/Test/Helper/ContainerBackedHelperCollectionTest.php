@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Mustache\Test\Helper;
 
 use Mustache\Exception\UnknownHelperException;
-use Mustache\Helper\ContainerBackedHelperManager;
+use Mustache\Helper\ContainerBackedHelperCollection;
 use PHPUnit\Framework\TestCase;
 
-final class ContainerBackedHelperManagerTest extends TestCase
+final class ContainerBackedHelperCollectionTest extends TestCase
 {
     public function testHas(): void
     {
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             ['foo' => 'bar'],
             new InMemoryContainer([
                 'bar' => 'baz',
@@ -28,7 +28,7 @@ final class ContainerBackedHelperManagerTest extends TestCase
 
     public function testHasConsultsTheContainer(): void
     {
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             ['foo' => 'bar'],
             new InMemoryContainer([]),
         );
@@ -39,7 +39,7 @@ final class ContainerBackedHelperManagerTest extends TestCase
 
     public function testGet(): void
     {
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             ['foo' => 'bar'],
             new InMemoryContainer([
                 'bar' => 'baz',
@@ -52,7 +52,7 @@ final class ContainerBackedHelperManagerTest extends TestCase
 
     public function testExceptionThrownAccessingUnmapped(): void
     {
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             ['foo' => 'bar'],
             new InMemoryContainer([
                 'bar' => 'baz',
@@ -64,7 +64,7 @@ final class ContainerBackedHelperManagerTest extends TestCase
 
     public function testExceptionThrownAccessingMappedHelperNotPresentInTheContainer(): void
     {
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             ['foo' => 'bar'],
             new InMemoryContainer([]),
         );
@@ -74,13 +74,13 @@ final class ContainerBackedHelperManagerTest extends TestCase
 
     public function testIsEmpty(): void
     {
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             [],
             new InMemoryContainer([]),
         );
         self::assertTrue($helpers->isEmpty());
 
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             ['foo' => 'bar'],
             new InMemoryContainer([
                 'bar' => 'baz',
@@ -91,7 +91,7 @@ final class ContainerBackedHelperManagerTest extends TestCase
 
     public function testIsEmptyDoesNotCheckMappedServicesArePresentInTheContainer(): void
     {
-        $helpers = new ContainerBackedHelperManager(
+        $helpers = new ContainerBackedHelperCollection(
             ['foo' => 'bar'],
             new InMemoryContainer([]),
         );

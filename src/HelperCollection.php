@@ -6,7 +6,7 @@ namespace Mustache;
 
 use Mustache\Exception\UnknownHelperException;
 
-interface HelperManager
+interface HelperCollection
 {
     /**
      * Check whether a given helper is present in the collection.
@@ -30,14 +30,14 @@ interface HelperManager
     /**
      * Magic isset().
      *
-     * @see HelperManager::has
+     * @see HelperCollection::has
      */
     public function __isset(string $name): bool;
 
     /**
      * Magic accessor.
      *
-     * @see HelperManager::get
+     * @see HelperCollection::get
      */
     public function __get(string $name): mixed;
 }

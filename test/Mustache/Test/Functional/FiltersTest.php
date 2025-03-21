@@ -9,7 +9,7 @@ use DateTime;
 use DateTimeImmutable;
 use Mustache\Engine;
 use Mustache\Exception\UnknownFilterException;
-use Mustache\Helper\ImmutableHelperManager;
+use Mustache\Helper\ImmutableHelperCollection;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -75,7 +75,7 @@ final class FiltersTest extends TestCase
 
     public function testChainedFilters(): void
     {
-        $helpers = new ImmutableHelperManager([
+        $helpers = new ImmutableHelperCollection([
             'longdate' => static fn (DateTime $value): string => $value->format('Y-m-d H:i:s'),
             'withbrackets' => static fn (string $value): string => sprintf('[[%s]]', $value),
         ]);
@@ -105,7 +105,7 @@ final class FiltersTest extends TestCase
             {{/ word | echo | with_index }}
             EOS;
 
-        $helpers = new ImmutableHelperManager([
+        $helpers = new ImmutableHelperCollection([
             'echo' => static fn (string $value): array => [$value, $value, $value],
             'with_index' => static function (array $value): array {
                 return array_map(static function (int|string $k, string $v) {

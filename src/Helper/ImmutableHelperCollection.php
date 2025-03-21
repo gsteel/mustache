@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Helper;
 
 use Mustache\Exception\UnknownHelperException;
-use Mustache\HelperManager;
+use Mustache\HelperCollection;
 use Override;
 
 /**
@@ -13,7 +13,7 @@ use Override;
  *
  * @psalm-no-seal-properties
  */
-final readonly class ImmutableHelperManager implements HelperManager
+final readonly class ImmutableHelperCollection implements HelperCollection
 {
     /** @param array<string, mixed> $helpers */
     public function __construct(private array $helpers)

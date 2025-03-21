@@ -14,7 +14,7 @@ use Mustache\Cache\NoopCache;
 use Mustache\Engine;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
-use Mustache\Helper\ImmutableHelperManager;
+use Mustache\Helper\ImmutableHelperCollection;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\ProductionFilesystemLoader;
 use Mustache\Loader\StringLoader;
@@ -194,7 +194,7 @@ final class EngineTest extends FunctionalTestCase
 
     public function testHelperRegisteredInConstructorWithCollection(): void
     {
-        $helpers = new ImmutableHelperManager([
+        $helpers = new ImmutableHelperCollection([
             'lower' => static fn (string $value): string => strtolower($value),
         ]);
 
@@ -208,7 +208,7 @@ final class EngineTest extends FunctionalTestCase
 
     public function testHelpers(): void
     {
-        $helpers = new ImmutableHelperManager([
+        $helpers = new ImmutableHelperCollection([
             'foo' => static fn (): string => 'foo',
             'bar' => 'BAR',
             'baz' => static fn (string $text): string => '__' . $text . '__',

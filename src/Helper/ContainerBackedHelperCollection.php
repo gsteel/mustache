@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Helper;
 
 use Mustache\Exception\UnknownHelperException;
-use Mustache\HelperManager;
+use Mustache\HelperCollection;
 use Override;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -16,7 +16,7 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  * @psalm-no-seal-properties
  */
-final readonly class ContainerBackedHelperManager implements HelperManager
+final readonly class ContainerBackedHelperCollection implements HelperCollection
 {
     /** @param array<non-empty-string, non-empty-string> $helpers */
     public function __construct(

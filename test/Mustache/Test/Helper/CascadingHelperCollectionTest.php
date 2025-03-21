@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Mustache\Test\Helper;
 
 use Mustache\Exception\UnknownHelperException;
-use Mustache\Helper\CascadingHelperManager;
-use Mustache\Helper\ImmutableHelperManager;
+use Mustache\Helper\CascadingHelperCollection;
+use Mustache\Helper\ImmutableHelperCollection;
 use Override;
 use PHPUnit\Framework\TestCase;
 
-final class CascadingHelperManagerTest extends TestCase
+final class CascadingHelperCollectionTest extends TestCase
 {
-    private CascadingHelperManager $helpers;
+    private CascadingHelperCollection $helpers;
 
     #[Override]
     protected function setUp(): void
     {
-        $this->helpers = new CascadingHelperManager([
-            new ImmutableHelperManager([
+        $this->helpers = new CascadingHelperCollection([
+            new ImmutableHelperCollection([
                 'foo' => 'bar',
             ]),
-            new ImmutableHelperManager([
+            new ImmutableHelperCollection([
                 'bar' => 'baz',
             ]),
         ]);
@@ -52,7 +52,7 @@ final class CascadingHelperManagerTest extends TestCase
 
     public function testIsEmpty(): void
     {
-        $helpers = new CascadingHelperManager([]);
+        $helpers = new CascadingHelperCollection([]);
         self::assertTrue($helpers->isEmpty());
 
         self::assertFalse($this->helpers->isEmpty());
