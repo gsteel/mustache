@@ -27,7 +27,7 @@ final class Context
 {
     /** @var list<mixed> */
     private array $stack = [];
-    /** @var list<mixed> */
+    /** @var list<array<array-key, mixed>> */
     private array $blockStack = [];
 
     /**
@@ -57,9 +57,9 @@ final class Context
     /**
      * Push a new Context frame onto the block context stack.
      *
-     * @param mixed $value Object or array to use for block context
+     * @param array<array-key, mixed> $value Object or array to use for block context
      */
-    public function pushBlockContext(mixed $value): void
+    public function pushBlockContext(array $value): void
     {
         $this->blockStack[] = $value;
     }
