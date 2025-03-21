@@ -169,7 +169,7 @@ final class MustacheSpecTest extends SpecTestCase
                 }
 
                 $func = $val['php'];
-                $data[$key] = static function ($text = null) use ($func) {
+                $data[$key] = static function (string|null $text = null) use ($func) {
                     return eval($func);
                 };
             } elseif (is_array($val)) {

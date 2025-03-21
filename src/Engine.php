@@ -46,7 +46,7 @@ use const JSON_THROW_ON_ERROR;
  *     cache?: Cache,
  *     template_class_prefix?: non-empty-string,
  *     cache_lambda_templates?: bool,
- *     delimiters?: string,
+ *     delimiters?: non-empty-string|null,
  *     loader?: Loader,
  *     partials_loader?: Loader,
  *     partials?: array<string, string>,
@@ -58,6 +58,7 @@ use const JSON_THROW_ON_ERROR;
  *     strict_callables?: bool,
  *     pragmas?: list<Engine::PRAGMA_*>,
  * }
+ * @psalm-import-type TokenShape from Tokenizer
  */
 class Engine
 {
@@ -67,7 +68,7 @@ class Engine
     public const PRAGMA_BLOCKS = 'BLOCKS';
     public const PRAGMA_ANCHORED_DOT = 'ANCHORED-DOT';
     public const PRAGMA_DYNAMIC_NAMES = 'DYNAMIC-NAMES';
-    private const KNOWN_PRAGMAS = [
+    public const KNOWN_PRAGMAS = [
         self::PRAGMA_FILTERS => true,
         self::PRAGMA_BLOCKS => true,
         self::PRAGMA_ANCHORED_DOT => true,
@@ -92,6 +93,7 @@ class Engine
     private readonly bool $strictCallables;
     /** @var array<self::PRAGMA_*, bool> */
     private array $pragmas = [];
+    /** @var non-empty-string|null */
     private string|null $delimiters = null;
     // Services
     private readonly Tokenizer $tokenizer;
@@ -475,7 +477,7 @@ class Engine
      *
      * @see Tokenizer::scan
      *
-     * @return list<array<string, mixed>> Tokens
+     * @return list<TokenShape> Tokens
      */
     private function tokenize(string $source): array
     {
@@ -487,7 +489,7 @@ class Engine
      *
      * @see Parser::parse
      *
-     * @return list<array<string, mixed>> Token tree
+     * @return list<TokenShape> Token tree
      */
     private function parse(string $source): array
     {

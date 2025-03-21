@@ -46,7 +46,7 @@ final class FilesystemLoaderTest extends TestCase
         $this->assertEquals('alpha contents', $loader->load('alpha'));
         $this->assertEquals('beta contents', $loader->load('beta.ms'));
 
-        stream_wrapper_unregister('test');
+        self::assertTrue(stream_wrapper_unregister('test'));
     }
 
     public function testLoadTemplates(): void

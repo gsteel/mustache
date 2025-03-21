@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Mustache;
 
 use Mustache\Exception\RuntimeException;
+use Stringable;
 
 /**
  * Mustache template Source interface.
  */
-interface Source
+interface Source extends Stringable
 {
     /**
      * Get the Source key (used to generate the compiled class name).

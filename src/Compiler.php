@@ -7,7 +7,9 @@ namespace Mustache;
 use Mustache\Exception\SyntaxException;
 
 use function array_filter;
+use function array_is_list;
 use function array_shift;
+use function array_values;
 use function assert;
 use function implode;
 use function is_string;
@@ -29,6 +31,8 @@ use const ENT_SUBSTITUTE;
  * Mustache Compiler class.
  *
  * This class is responsible for turning a Mustache token parse tree into normal PHP source code.
+ *
+ * @psalm-import-type TokenShape from Tokenizer
  */
 final class Compiler
 {
@@ -192,7 +196,7 @@ final class Compiler
      * Compile a Mustache token parse tree into PHP source code.
      *
      * @param string $source          Mustache Template source code
-     * @param list<array<string, mixed>> $tree            Parse tree of Mustache tokens
+     * @param list<TokenShape> $tree            Parse tree of Mustache tokens
      * @param string $name            Mustache Template class name
      * @param bool $customEscape    (default: false)
      * @param string $charset         (default: 'UTF-8')
@@ -244,7 +248,7 @@ final class Compiler
     /**
      * Helper function for walking the Mustache token parse tree.
      *
-     * @param list<array<string, mixed>> $tree  Parse tree of Mustache tokens
+     * @param list<TokenShape> $tree  Parse tree of Mustache tokens
      * @param int $level (default: 0)
      *
      * @return string Generated PHP source code
@@ -258,12 +262,21 @@ final class Compiler
         foreach ($tree as $node) {
             switch ($node[Tokenizer::TYPE]) {
                 case Tokenizer::T_PRAGMA:
-                    $this->pragmas[$node[Tokenizer::NAME]] = true;
+                    $pragma = Tokenizer::assertPragma($node[Tokenizer::NAME] ?? null, $node);
+                    $this->pragmas[$pragma] = true;
                     break;
 
                 case Tokenizer::T_SECTION:
-                    $code .= $this->section(
+                    assert(isset(
                         $node[Tokenizer::NODES],
+                        $node[Tokenizer::NAME],
+                        $node[Tokenizer::INDEX],
+                        $node[Tokenizer::END],
+                        $node[Tokenizer::OTAG],
+                        $node[Tokenizer::CTAG],
+                    ));
+                    $code .= $this->section(
+                        $this->assertNodeList($node[Tokenizer::NODES]),
                         $node[Tokenizer::NAME],
                         $node[Tokenizer::FILTERS] ?? [],
                         $node[Tokenizer::INDEX],
@@ -275,8 +288,12 @@ final class Compiler
                     break;
 
                 case Tokenizer::T_INVERTED:
-                    $code .= $this->invertedSection(
+                    assert(isset(
                         $node[Tokenizer::NODES],
+                        $node[Tokenizer::NAME],
+                    ));
+                    $code .= $this->invertedSection(
+                        $this->assertNodeList($node[Tokenizer::NODES]),
                         $node[Tokenizer::NAME],
                         $node[Tokenizer::FILTERS] ?? [],
                         $level,
@@ -284,6 +301,7 @@ final class Compiler
                     break;
 
                 case Tokenizer::T_PARTIAL:
+                    assert(isset($node[Tokenizer::NAME]));
                     $code .= $this->partial(
                         $node[Tokenizer::NAME],
                         $node[Tokenizer::DYNAMIC] ?? false,
@@ -293,18 +311,27 @@ final class Compiler
                     break;
 
                 case Tokenizer::T_PARENT:
+                    assert(isset($node[Tokenizer::NAME], $node[Tokenizer::NODES]));
                     $code .= $this->parent(
                         $node[Tokenizer::NAME],
                         $node[Tokenizer::DYNAMIC] ?? false,
                         $node[Tokenizer::INDENT] ?? '',
-                        $node[Tokenizer::NODES],
+                        $this->assertNodeList($node[Tokenizer::NODES]),
                         $level,
                     );
                     break;
 
                 case Tokenizer::T_BLOCK_ARG:
-                    $code .= $this->blockArg(
+                    assert(isset(
                         $node[Tokenizer::NODES],
+                        $node[Tokenizer::NAME],
+                        $node[Tokenizer::INDEX],
+                        $node[Tokenizer::END],
+                        $node[Tokenizer::OTAG],
+                        $node[Tokenizer::CTAG],
+                    ));
+                    $code .= $this->blockArg(
+                        $this->assertNodeList($node[Tokenizer::NODES]),
                         $node[Tokenizer::NAME],
                         $node[Tokenizer::INDEX],
                         $node[Tokenizer::END],
@@ -315,8 +342,16 @@ final class Compiler
                     break;
 
                 case Tokenizer::T_BLOCK_VAR:
-                    $code .= $this->blockVar(
+                    assert(isset(
                         $node[Tokenizer::NODES],
+                        $node[Tokenizer::NAME],
+                        $node[Tokenizer::INDEX],
+                        $node[Tokenizer::END],
+                        $node[Tokenizer::OTAG],
+                        $node[Tokenizer::CTAG],
+                    ));
+                    $code .= $this->blockVar(
+                        $this->assertNodeList($node[Tokenizer::NODES]),
                         $node[Tokenizer::NAME],
                         $node[Tokenizer::INDEX],
                         $node[Tokenizer::END],
@@ -332,6 +367,7 @@ final class Compiler
                 case Tokenizer::T_ESCAPED:
                 case Tokenizer::T_UNESCAPED:
                 case Tokenizer::T_UNESCAPED_2:
+                    assert(isset($node[Tokenizer::NAME]));
                     $code .= $this->variable(
                         $node[Tokenizer::NAME],
                         $node[Tokenizer::FILTERS] ?? [],
@@ -341,6 +377,7 @@ final class Compiler
                     break;
 
                 case Tokenizer::T_TEXT:
+                    assert(isset($node[Tokenizer::VALUE]));
                     $code .= $this->text($node[Tokenizer::VALUE], $level);
                     break;
 
@@ -355,7 +392,7 @@ final class Compiler
     /**
      * Generate Mustache Template class PHP source.
      *
-     * @param list<array<string, mixed>> $tree Parse tree of Mustache tokens
+     * @param list<TokenShape> $tree Parse tree of Mustache tokens
      * @param string $name Mustache Template class name
      *
      * @return string Generated PHP source code
@@ -382,7 +419,7 @@ final class Compiler
     /**
      * Generate Mustache Template inheritance block variable PHP source.
      *
-     * @param list<array<string, mixed>> $nodes Array of child tokens
+     * @param list<TokenShape> $nodes Array of child tokens
      * @param string $id    Section name
      * @param int    $start Section start offset
      * @param int    $end   Section end offset
@@ -416,7 +453,7 @@ final class Compiler
     /**
      * Generate Mustache Template inheritance block argument PHP source.
      *
-     * @param list<array<string, mixed>> $nodes Array of child tokens
+     * @param list<TokenShape> $nodes Array of child tokens
      * @param string $id    Section name
      * @param int    $start Section start offset
      * @param int    $end   Section end offset
@@ -443,7 +480,7 @@ final class Compiler
     /**
      * Generate Mustache Template inheritance block function PHP source.
      *
-     * @param list<array<string, mixed>> $nodes Array of child tokens
+     * @param list<TokenShape> $nodes Array of child tokens
      *
      * @return string key of new block function
      */
@@ -462,7 +499,7 @@ final class Compiler
     /**
      * Generate Mustache Template section PHP source.
      *
-     * @param list<array<string, mixed>> $nodes   Array of child tokens
+     * @param list<TokenShape> $nodes   Array of child tokens
      * @param string   $id      Section name
      * @param list<string> $filters Array of filters
      * @param int      $start   Section start offset
@@ -487,6 +524,7 @@ final class Compiler
 
         if ($otag !== '{{' || $ctag !== '}}') {
             $delimTag = var_export(sprintf('{{= %s %s =}}', $otag, $ctag), true);
+            /** @see LambdaHelper::withDelimiters() */
             $helper = sprintf('$this->lambdaHelper->withDelimiters(%s)', $delimTag);
             $delims = ', ' . $delimTag;
         } else {
@@ -518,7 +556,7 @@ final class Compiler
     /**
      * Generate Mustache Template inverted section PHP source.
      *
-     * @param list<array<string, mixed>> $nodes   Array of child tokens
+     * @param list<TokenShape> $nodes   Array of child tokens
      * @param string   $id      Section name
      * @param list<string> $filters Array of filters
      *
@@ -591,13 +629,15 @@ final class Compiler
      * @param string $id       Parent tag name
      * @param bool   $dynamic  Tag name is dynamic
      * @param string $indent   Whitespace indent to apply to parent
-     * @param list<array<string, mixed>> $children Child nodes
+     * @param list<TokenShape> $children Child nodes
      *
      * @return string Generated PHP source code
      */
     private function parent(string $id, bool $dynamic, string $indent, array $children, int $level): string
     {
-        $realChildren = array_filter($children, static fn (array $node): bool => self::onlyBlockArgs($node));
+        $realChildren = array_values(
+            array_filter($children, static fn (array $node): bool => self::onlyBlockArgs($node)),
+        );
         $partialName = $this->resolveDynamicName($id, $dynamic);
 
         if ($realChildren === []) {
@@ -614,7 +654,7 @@ final class Compiler
     /**
      * Helper method for filtering out non-block-arg tokens.
      *
-     * @param array<string, mixed> $node
+     * @param TokenShape $node
      *
      * @return bool True if $node is a block arg token
      */
@@ -796,5 +836,23 @@ final class Compiler
         $this->indentNextLine = false;
 
         return self::LINE_INDENT;
+    }
+
+    /**
+     * This method is purely for type inference
+     *
+     * Psalm cannot apply recursive types, so, Token[Nodes] cannot be inferred as list<Token>
+     *
+     * @param array<array-key, mixed> $value
+     *
+     * @return list<TokenShape>
+     */
+    private function assertNodeList(array $value): array
+    {
+        assert(array_is_list($value));
+
+        /** @psalm-var list<TokenShape> $value */
+
+        return $value;
     }
 }

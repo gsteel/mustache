@@ -11,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class TokenizerTest extends TestCase
 {
-    /** @param list<array<string, mixed>> $expected */
+    /**
+     * @param non-empty-string|null $delimiters
+     * @param list<array<string, mixed>> $expected
+     */
     #[DataProvider('getTokens')]
     public function testScan(string $text, string|null $delimiters, array $expected): void
     {
@@ -363,5 +366,19 @@ final class TokenizerTest extends TestCase
             ['{{% name'],
             ['{{% name }'],
         ];
+    }
+
+    public function testDelimiterChangeWithEmptyDelimiter(): void
+    {
+        $tokenizer = new Tokenizer();
+        $this->expectException(SyntaxException::class);
+        $tokenizer->scan('{{= =}}', null);
+    }
+
+    public function testDelimiterChangeWithWhitespace(): void
+    {
+        $tokenizer = new Tokenizer();
+        $this->expectException(SyntaxException::class);
+        $tokenizer->scan('{{=< < > >=}}', null);
     }
 }

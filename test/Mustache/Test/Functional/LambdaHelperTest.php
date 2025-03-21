@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mustache\Test\Functional;
 
 use Mustache\Engine;
+use Mustache\LambdaHelper;
 use Override;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,7 @@ final class LambdaHelperTest extends TestCase
 
         $foo = new stdClass();
         $foo->name = 'Mario';
-        $foo->lambda = static function ($text, $mustache) {
+        $foo->lambda = static function (string $text, LambdaHelper $mustache): string {
             return strtoupper($mustache->render($text));
         };
 
@@ -45,7 +46,7 @@ final class LambdaHelperTest extends TestCase
 
         $data = new stdClass();
         $data->value = 'hello world';
-        $data->bang = static function ($text, $mustache) {
+        $data->bang = static function (string $text, LambdaHelper $mustache): string {
             return $mustache->render($text) . '!';
         };
 
@@ -59,7 +60,7 @@ final class LambdaHelperTest extends TestCase
 
         $foo = new stdClass();
         $foo->name = 'Mario';
-        $foo->lambda = static function ($text, $render) {
+        $foo->lambda = static function (string $text, LambdaHelper $render): string {
             return strtoupper($render($text));
         };
 
