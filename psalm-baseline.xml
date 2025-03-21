@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.9.3@189990791826d8aa2b72c106ea3b07656534dd61">
+<files psalm-version="6.9.4@e052de4275fb6cdbfedfef1d883a7e90732ea609">
   <file src="src/Compiler.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$realChildren]]></code>
@@ -61,11 +61,6 @@
     <NoValue>
       <code><![CDATA[$pragma]]></code>
     </NoValue>
-  </file>
-  <file src="src/HelperCollection.php">
-    <MixedAssignment>
-      <code><![CDATA[$helper]]></code>
-    </MixedAssignment>
   </file>
   <file src="src/LambdaHelper.php">
     <PossiblyUnusedMethod>
@@ -306,16 +301,6 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$bar]]></code>
     </PossiblyUnusedProperty>
-  </file>
-  <file src="test/Mustache/Test/Functional/StrictCallablesTest.php">
-    <MissingClosureReturnType>
-      <code><![CDATA[static function (string $tpl, LambdaHelper $mustache) {]]></code>
-    </MissingClosureReturnType>
-  </file>
-  <file src="test/Mustache/Test/HelperCollectionTest.php">
-    <MixedAssignment>
-      <code><![CDATA[$args]]></code>
-    </MixedAssignment>
   </file>
   <file src="test/Mustache/Test/Loader/FilesystemLoaderTest.php">
     <InvalidArgument>
