@@ -33,7 +33,7 @@ final class StrictCallablesTest extends TestCase
     /** @return list<array{0: bool, 1: mixed, 2: callable, 3: string}> */
     public static function callables(): array
     {
-        $lambda = static function (string $tpl, LambdaHelper $mustache) {
+        $lambda = static function (string $tpl, LambdaHelper $mustache): string {
             return strtoupper($mustache->render($tpl));
         };
 

@@ -14,7 +14,7 @@ use Mustache\Cache\NoopCache;
 use Mustache\Engine;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
-use Mustache\HelperCollection;
+use Mustache\Helper\ImmutableHelperCollection;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\ProductionFilesystemLoader;
 use Mustache\Loader\StringLoader;
@@ -194,30 +194,13 @@ final class EngineTest extends FunctionalTestCase
 
     public function testHelperRegisteredInConstructorWithCollection(): void
     {
-        $helpers = new HelperCollection([
-            'lower' => static function (string $value): string {
-                return strtolower($value);
-            },
+        $helpers = new ImmutableHelperCollection([
+            'lower' => static fn (string $value): string => strtolower($value),
         ]);
 
         $engine = new Engine([
             'helpers' => $helpers,
         ]);
-
-        $result = $engine->render('{{#lower}}FOO{{/lower}}');
-        self::assertSame('foo', $result);
-    }
-
-    public function testHelpersCanBeMutatedViaTheHelperCollection(): void
-    {
-        $helpers = new HelperCollection();
-        $engine = new Engine([
-            'helpers' => $helpers,
-        ]);
-
-        $helpers->add('lower', static function (string $value): string {
-            return strtolower($value);
-        });
 
         $result = $engine->render('{{#lower}}FOO{{/lower}}');
         self::assertSame('foo', $result);
@@ -225,7 +208,7 @@ final class EngineTest extends FunctionalTestCase
 
     public function testHelpers(): void
     {
-        $helpers = new HelperCollection([
+        $helpers = new ImmutableHelperCollection([
             'foo' => static fn (): string => 'foo',
             'bar' => 'BAR',
             'baz' => static fn (string $text): string => '__' . $text . '__',

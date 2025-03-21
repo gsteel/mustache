@@ -10,6 +10,7 @@ use Mustache\Cache\NoopCache;
 use Mustache\Exception\InvalidArgumentException;
 use Mustache\Exception\RuntimeException;
 use Mustache\Exception\UnknownTemplateException;
+use Mustache\Helper\ImmutableHelperCollection;
 use Mustache\Loader\ArrayLoader;
 use Mustache\Loader\MutableLoader;
 use Mustache\Loader\StringLoader;
@@ -49,7 +50,7 @@ use const JSON_THROW_ON_ERROR;
  *     loader?: Loader,
  *     partials_loader?: Loader,
  *     partials?: array<string, string>,
- *     helpers?: iterable<string, mixed>|HelperCollection,
+ *     helpers?: array<string, mixed>|HelperCollection,
  *     escape?: callable(string): string,
  *     entity_flags?: int,
  *     charset?: string,
@@ -135,9 +136,9 @@ class Engine
      *         // An array of 'helpers'. Helpers can be global variables or objects, closures (e.g. for higher order
      *         // sections), or any other valid Mustache context value. They will be prepended to the context stack,
      *         // so they will be available in any template loaded by this Mustache instance.
-     *         'helpers' => array('i18n' => function ($text) {
+     *         'helpers' => ['i18n' => function ($text) {
      *             // do something translatey here...
-     *         }),
+     *         }],
      *
      *         // An 'escape' callback, responsible for escaping double-mustache variables.
      *         'escape' => function ($value) {
@@ -207,7 +208,7 @@ class Engine
         $helpersOption = $options['helpers'] ?? [];
         $this->helpers = $helpersOption instanceof HelperCollection
             ? $helpersOption
-            : new HelperCollection($helpersOption);
+            : new ImmutableHelperCollection($helpersOption);
 
         if (isset($options['escape'])) {
             if (! is_callable($options['escape'])) {

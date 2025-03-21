@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use function realpath;
 use function stream_wrapper_register;
 use function stream_wrapper_unregister;
+use function trim;
 
 final class FilesystemLoaderTest extends TestCase
 {
@@ -85,5 +86,16 @@ final class FilesystemLoaderTest extends TestCase
 
         $this->expectException(UnknownTemplateException::class);
         $loader->load('fake');
+    }
+
+    public function testTemplatesInSubdirectoriesAreLoaded(): void
+    {
+        $loader = new FilesystemLoader(__DIR__ . '/../../../fixtures/templates');
+        $source = $loader->load('nested/template');
+        self::assertIsString($source);
+        self::assertSame(
+            'nested template contents',
+            trim($source),
+        );
     }
 }
