@@ -13,10 +13,11 @@ use PHPUnit\Framework\TestCase;
 use const ENT_COMPAT;
 use const ENT_QUOTES;
 
+/** @psalm-import-type TokenShape from Tokenizer */
 final class CompilerTest extends TestCase
 {
     /**
-     * @param list<array<string, mixed>> $tree
+     * @param list<TokenShape> $tree
      * @param list<string> $expected
      */
     #[DataProvider('getCompileValues')]
@@ -50,7 +51,7 @@ final class CompilerTest extends TestCase
      *
      * @return list<array{
      *     0: string,
-     *     1: list<array<string, mixed>>,
+     *     1: list<TokenShape>,
      *     2: string,
      *     3: bool,
      *     4: int,
@@ -94,6 +95,7 @@ final class CompilerTest extends TestCase
                     [
                         Tokenizer::TYPE => Tokenizer::T_ESCAPED,
                         Tokenizer::NAME => 'name',
+                        Tokenizer::LINE  => 1,
                     ],
                 ],
                 'Monkey',
@@ -114,6 +116,7 @@ final class CompilerTest extends TestCase
                     [
                         Tokenizer::TYPE => Tokenizer::T_ESCAPED,
                         Tokenizer::NAME => 'name',
+                        Tokenizer::LINE  => 1,
                     ],
                 ],
                 'Monkey',
@@ -134,6 +137,7 @@ final class CompilerTest extends TestCase
                     [
                         Tokenizer::TYPE => Tokenizer::T_ESCAPED,
                         Tokenizer::NAME => 'name',
+                        Tokenizer::LINE  => 1,
                     ],
                 ],
                 'Monkey',
@@ -155,10 +159,12 @@ final class CompilerTest extends TestCase
                     [
                         Tokenizer::TYPE => Tokenizer::T_ESCAPED,
                         Tokenizer::NAME => 'name',
+                        Tokenizer::LINE  => 1,
                     ],
                     [
                         Tokenizer::TYPE => Tokenizer::T_ESCAPED,
                         Tokenizer::NAME => '.',
+                        Tokenizer::LINE  => 1,
                     ],
                     self::createTextToken("'bar'"),
                 ],
@@ -183,14 +189,16 @@ final class CompilerTest extends TestCase
     {
         $compiler = new Compiler();
         $this->expectException(SyntaxException::class);
+        /** @psalm-suppress InvalidArgument */
         $compiler->compile('', [[Tokenizer::TYPE => 'invalid']], 'SomeClass');
     }
 
-    /** @return array<string, mixed> */
+    /** @return TokenShape */
     private static function createTextToken(string $value): array
     {
         return [
             Tokenizer::TYPE  => Tokenizer::T_TEXT,
+            Tokenizer::LINE  => 1,
             Tokenizer::VALUE => $value,
         ];
     }

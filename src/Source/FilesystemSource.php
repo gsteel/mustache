@@ -86,4 +86,10 @@ final class FilesystemSource implements Source
 
         return $contents;
     }
+
+    #[Override]
+    public function __toString(): string
+    {
+        return $this->getSource();
+    }
 }

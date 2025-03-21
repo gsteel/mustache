@@ -22,6 +22,8 @@ use function sprintf;
 
 /**
  * Mustache Template rendering Context.
+ *
+ * @psalm-api
  */
 final class Context
 {
@@ -172,6 +174,8 @@ final class Context
      * @return mixed Variable value, or '' if not found
      *
      * @throws InvalidArgumentException if given an invalid anchored dot $id.
+     *
+     * @psalm-suppress MixedAssignment
      */
     public function findAnchoredDot(string $id): mixed
     {

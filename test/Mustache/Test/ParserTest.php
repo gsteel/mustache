@@ -11,11 +11,12 @@ use Mustache\Tokenizer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+/** @psalm-import-type TokenShape from Tokenizer */
 final class ParserTest extends TestCase
 {
     /**
-     * @param list<array<string, mixed>> $tokens
-     * @param list<array<string, mixed>> $expected
+     * @param list<TokenShape> $tokens
+     * @param list<TokenShape> $expected
      */
     #[DataProvider('getTokenSets')]
     public function testParse(array $tokens, array $expected): void
@@ -24,7 +25,7 @@ final class ParserTest extends TestCase
         $this->assertEquals($expected, $parser->parse($tokens));
     }
 
-    /** @return list<array{0: list<array<string, mixed>>, 1: list<array<string, mixed>>}> */
+    /** @return list<array{0: list<TokenShape>, 1: list<TokenShape>}> */
     public static function getTokenSets(): array
     {
         return [
@@ -198,8 +199,8 @@ final class ParserTest extends TestCase
     }
 
     /**
-     * @param list<array<string, mixed>> $tokens
-     * @param list<array<string, mixed>> $expected
+     * @param list<TokenShape> $tokens
+     * @param list<TokenShape> $expected
      */
     #[DataProvider('getInheritanceTokenSets')]
     public function testParseWithInheritance(array $tokens, array $expected): void
@@ -209,7 +210,7 @@ final class ParserTest extends TestCase
         $this->assertEquals($expected, $parser->parse($tokens));
     }
 
-    /** @return list<array{0: list<array<string, mixed>>, 1: list<array<string, mixed>>}> */
+    /** @return list<array{0: list<TokenShape>, 1: list<TokenShape>}> */
     public static function getInheritanceTokenSets(): array
     {
         return [
@@ -328,7 +329,7 @@ final class ParserTest extends TestCase
         ];
     }
 
-    /** @param list<array<string, mixed>> $tokens */
+    /** @param list<TokenShape> $tokens */
     #[DataProvider('getBadParseTrees')]
     public function testParserThrowsExceptions(array $tokens): void
     {
@@ -337,7 +338,7 @@ final class ParserTest extends TestCase
         $parser->parse($tokens);
     }
 
-    /** @return list<array{0: list<array<string, mixed>>}> */
+    /** @return list<array{0: list<TokenShape>}> */
     public static function getBadParseTrees(): array
     {
         return [

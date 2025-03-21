@@ -1,62 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.9.4@e052de4275fb6cdbfedfef1d883a7e90732ea609">
-  <file src="src/Compiler.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$realChildren]]></code>
-    </ArgumentTypeCoercion>
-    <MixedArgument>
-      <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
-      <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
-      <code><![CDATA[$node[Tokenizer::CTAG]]]></code>
-      <code><![CDATA[$node[Tokenizer::DYNAMIC] ?? false]]></code>
-      <code><![CDATA[$node[Tokenizer::DYNAMIC] ?? false]]></code>
-      <code><![CDATA[$node[Tokenizer::END]]]></code>
-      <code><![CDATA[$node[Tokenizer::END]]]></code>
-      <code><![CDATA[$node[Tokenizer::END]]]></code>
-      <code><![CDATA[$node[Tokenizer::FILTERS] ?? []]]></code>
-      <code><![CDATA[$node[Tokenizer::FILTERS] ?? []]]></code>
-      <code><![CDATA[$node[Tokenizer::FILTERS] ?? []]]></code>
-      <code><![CDATA[$node[Tokenizer::INDENT] ?? '']]></code>
-      <code><![CDATA[$node[Tokenizer::INDENT] ?? '']]></code>
-      <code><![CDATA[$node[Tokenizer::INDEX]]]></code>
-      <code><![CDATA[$node[Tokenizer::INDEX]]]></code>
-      <code><![CDATA[$node[Tokenizer::INDEX]]]></code>
-      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$node[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
-      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
-      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
-      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
-      <code><![CDATA[$node[Tokenizer::NODES]]]></code>
-      <code><![CDATA[$node[Tokenizer::OTAG]]]></code>
-      <code><![CDATA[$node[Tokenizer::OTAG]]]></code>
-      <code><![CDATA[$node[Tokenizer::OTAG]]]></code>
-      <code><![CDATA[$node[Tokenizer::TYPE]]]></code>
-      <code><![CDATA[$node[Tokenizer::VALUE]]]></code>
-    </MixedArgument>
-    <MixedArrayOffset>
-      <code><![CDATA[$this->pragmas[$node[Tokenizer::NAME]]]]></code>
-    </MixedArrayOffset>
-    <MixedPropertyTypeCoercion>
-      <code><![CDATA[$this->pragmas]]></code>
-    </MixedPropertyTypeCoercion>
-  </file>
-  <file src="src/Context.php">
-    <MixedAssignment>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MixedAssignment>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[findInBlock]]></code>
-      <code><![CDATA[popBlockContext]]></code>
-      <code><![CDATA[pushBlockContext]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/Engine.php">
     <NoValue>
       <code><![CDATA[$pragma]]></code>
@@ -66,75 +9,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[withDelimiters]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Parser.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$token]]></code>
-      <code><![CDATA[$token]]></code>
-    </ArgumentTypeCoercion>
-    <DocblockTypeContradiction>
-      <code><![CDATA[$parent[Tokenizer::TYPE] === Tokenizer::T_PARENT]]></code>
-      <code><![CDATA[isset($parent) && $parent[Tokenizer::TYPE] === Tokenizer::T_PARENT]]></code>
-    </DocblockTypeContradiction>
-    <InvalidArgument>
-      <code><![CDATA[$nodes]]></code>
-      <code><![CDATA[$nodes]]></code>
-      <code><![CDATA[$nodes]]></code>
-      <code><![CDATA[$nodes]]></code>
-      <code><![CDATA[$nodes]]></code>
-      <code><![CDATA[$nodes]]></code>
-      <code><![CDATA[$parent]]></code>
-      <code><![CDATA[$parent]]></code>
-      <code><![CDATA[$parent]]></code>
-      <code><![CDATA[$parent]]></code>
-      <code><![CDATA[$parent]]></code>
-      <code><![CDATA[$parent[Tokenizer::LINE]]]></code>
-      <code><![CDATA[$parent[Tokenizer::LINE]]]></code>
-      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
-    </InvalidArgument>
-    <InvalidArrayOffset>
-      <code><![CDATA[$parent[Tokenizer::DYNAMIC]]]></code>
-      <code><![CDATA[$parent[Tokenizer::LINE]]]></code>
-      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$parent[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$parent[Tokenizer::TYPE]]]></code>
-    </InvalidArrayOffset>
-    <InvalidReturnStatement>
-      <code><![CDATA[$nodes]]></code>
-    </InvalidReturnStatement>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$parent]]></code>
-      <code><![CDATA[[$name, $isDynamic]]]></code>
-    </LessSpecificReturnStatement>
-    <MixedArgument>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$next[Tokenizer::VALUE]]]></code>
-      <code><![CDATA[$token[Tokenizer::LINE]]]></code>
-      <code><![CDATA[$token[Tokenizer::LINE]]]></code>
-      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
-      <code><![CDATA[$token[Tokenizer::TYPE]]]></code>
-      <code><![CDATA[$token[Tokenizer::VALUE]]]></code>
-    </MixedArgument>
-    <MixedAssignment>
-      <code><![CDATA[$name]]></code>
-      <code><![CDATA[$parent[Tokenizer::END]]]></code>
-      <code><![CDATA[$this->lineNum]]></code>
-      <code><![CDATA[$token[Tokenizer::INDENT]]]></code>
-    </MixedAssignment>
-    <MixedOperand>
-      <code><![CDATA[$token[Tokenizer::NAME]]]></code>
-    </MixedOperand>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array{0: string, 1: bool}]]></code>
-      <code><![CDATA[list<array<string, mixed>>]]></code>
-    </MoreSpecificReturnType>
   </file>
   <file src="src/Source/FilesystemSource.php">
     <PossiblyUnusedReturnValue>
@@ -146,21 +20,6 @@
       <code><![CDATA[isIterable]]></code>
       <code><![CDATA[resolveValue]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Tokenizer.php">
-    <PossiblyFalseOperand>
-      <code><![CDATA[$closeIndex]]></code>
-      <code><![CDATA[$closeIndex]]></code>
-      <code><![CDATA[$end]]></code>
-      <code><![CDATA[$end]]></code>
-      <code><![CDATA[strpos($text, '=', $index)]]></code>
-    </PossiblyFalseOperand>
-    <PossiblyNullArgument>
-      <code><![CDATA[$this->ctag]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullOperand>
-      <code><![CDATA[$this->ctag]]></code>
-    </PossiblyNullOperand>
   </file>
   <file src="test/Mustache/Test/Asset/EngineStub.php">
     <ParamNameMismatch>
@@ -227,35 +86,6 @@
       <code><![CDATA[$title]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="test/Mustache/Test/Functional/LambdaHelperTest.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$mustache]]></code>
-      <code><![CDATA[$mustache]]></code>
-      <code><![CDATA[$render]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-      <code><![CDATA[$text]]></code>
-    </MissingClosureParamType>
-    <MissingClosureReturnType>
-      <code><![CDATA[static function ($text, $mustache) {]]></code>
-      <code><![CDATA[static function ($text, $mustache) {]]></code>
-      <code><![CDATA[static function ($text, $render) {]]></code>
-    </MissingClosureReturnType>
-    <MixedArgument>
-      <code><![CDATA[$mustache->render($text)]]></code>
-      <code><![CDATA[$render($text)]]></code>
-    </MixedArgument>
-    <MixedFunctionCall>
-      <code><![CDATA[$render($text)]]></code>
-    </MixedFunctionCall>
-    <MixedMethodCall>
-      <code><![CDATA[render]]></code>
-      <code><![CDATA[render]]></code>
-    </MixedMethodCall>
-    <MixedOperand>
-      <code><![CDATA[$mustache->render($text)]]></code>
-    </MixedOperand>
-  </file>
   <file src="test/Mustache/Test/Functional/MustacheInjectionTest.php">
     <InvalidReturnStatement>
       <code><![CDATA[[
@@ -280,11 +110,8 @@
     <LessSpecificReturnType>
       <code><![CDATA[array<string, mixed>]]></code>
     </LessSpecificReturnType>
-    <MissingClosureParamType>
-      <code><![CDATA[$text]]></code>
-    </MissingClosureParamType>
     <MissingClosureReturnType>
-      <code><![CDATA[static function ($text = null) use ($func) {]]></code>
+      <code><![CDATA[static function (string|null $text = null) use ($func) {]]></code>
     </MissingClosureReturnType>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$val]]></code>
@@ -302,14 +129,6 @@
       <code><![CDATA[$bar]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="test/Mustache/Test/Loader/FilesystemLoaderTest.php">
-    <InvalidArgument>
-      <code><![CDATA[['extension' => null]]]></code>
-    </InvalidArgument>
-    <UnusedFunctionCall>
-      <code><![CDATA[stream_wrapper_unregister]]></code>
-    </UnusedFunctionCall>
-  </file>
   <file src="test/Mustache/Test/Loader/InlineLoaderTest.php">
     <MixedArgument>
       <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
@@ -321,28 +140,6 @@
       <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
       <code><![CDATA[__COMPILER_HALT_OFFSET__]]></code>
     </UndefinedConstant>
-  </file>
-  <file src="test/Mustache/Test/Loader/ProductionFilesystemLoaderTest.php">
-    <InvalidArgument>
-      <code><![CDATA[['extension' => null]]]></code>
-    </InvalidArgument>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[getKey]]></code>
-      <code><![CDATA[getKey]]></code>
-      <code><![CDATA[getKey]]></code>
-      <code><![CDATA[getKey]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-      <code><![CDATA[getSource]]></code>
-    </PossiblyInvalidMethodCall>
   </file>
   <file src="test/Mustache/Test/SpecTestCase.php">
     <MixedReturnTypeCoercion>

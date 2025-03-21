@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Mustache;
 
+use Mustache\Exception\RuntimeException;
 use Mustache\Exception\SyntaxException;
 
 use function array_map;
 use function array_pop;
 use function array_shift;
+use function assert;
 use function count;
 use function end;
 use function explode;
 use function is_array;
+use function is_string;
 use function preg_match;
 use function preg_replace;
 use function reset;
@@ -23,6 +26,8 @@ use function substr;
  * Mustache Parser class.
  *
  * This class is responsible for turning a set of Mustache tokens into a parse tree.
+ *
+ * @psalm-import-type TokenShape from Tokenizer
  */
 final class Parser
 {
@@ -39,9 +44,9 @@ final class Parser
     /**
      * Process an array of Mustache tokens and convert them into a parse tree.
      *
-     * @param list<array<string, mixed>> $tokens Set of Mustache tokens
+     * @param list<TokenShape> $tokens Set of Mustache tokens
      *
-     * @return list<array<string, mixed>> Mustache token parse tree
+     * @return list<TokenShape> Mustache token parse tree
      */
     public function parse(array $tokens = []): array
     {
@@ -53,6 +58,7 @@ final class Parser
         $this->pragmaBlocks = isset($this->pragmas[Engine::PRAGMA_BLOCKS]);
         $this->pragmaDynamicNames = isset($this->pragmas[Engine::PRAGMA_DYNAMIC_NAMES]);
 
+        /** @psalm-var list<TokenShape> Forcing this because it will never be a single token, always list<token> */
         return $this->buildTree($tokens);
     }
 
@@ -77,18 +83,20 @@ final class Parser
     /**
      * Helper method for recursively building a parse tree.
      *
-     * @param list<array<string, mixed>> &$tokens Set of Mustache tokens
-     * @param list<array<string, mixed>>|null $parent  Parent token (default: null)
+     * @param list<TokenShape> &$tokens Set of Mustache tokens
+     * @param TokenShape|null $parent  Parent token (default: null)
      *
-     * @return list<array<string, mixed>> Mustache Token parse tree
+     * @return list<TokenShape>|TokenShape Mustache Token parse tree
      *
      * @throws SyntaxException when nesting errors or mismatched section tags are encountered.
      */
     private function buildTree(array &$tokens, array|null $parent = null): array
     {
+        /** @var list<TokenShape> $nodes */
         $nodes = [];
 
-        while (! empty($tokens)) {
+        while ($tokens !== []) {
+            /** @psalm-var TokenShape $token */
             $token = array_shift($tokens);
 
             if ($token[Tokenizer::LINE] === $this->lineNum) {
@@ -126,19 +134,21 @@ final class Parser
                 case Tokenizer::T_INVERTED:
                     $this->checkIfTokenIsAllowedInParent($parent, $token);
                     $this->clearStandaloneLines($nodes, $tokens);
-                    $nodes[] = $this->buildTree($tokens, $token);
+                    $nodes[] = $this->assertToken($this->buildTree($tokens, $token));
                     break;
 
                 case Tokenizer::T_END_SECTION:
-                    if (! isset($parent)) {
+                    if ($parent === null) {
                         $msg = sprintf(
                             'Unexpected closing tag: /%s on line %d',
-                            $token[Tokenizer::NAME],
+                            $token[Tokenizer::NAME] ?? 'unknown',
                             $token[Tokenizer::LINE],
                         );
 
                         throw new SyntaxException($msg, $token);
                     }
+
+                    assert(isset($token[Tokenizer::NAME], $parent[Tokenizer::NAME]));
 
                     $sameName = $token[Tokenizer::NAME] !== $parent[Tokenizer::NAME];
                     $tokenDynamic = isset($token[Tokenizer::DYNAMIC]) && $token[Tokenizer::DYNAMIC];
@@ -159,6 +169,7 @@ final class Parser
                     }
 
                     $this->clearStandaloneLines($nodes, $tokens);
+                    assert(isset($token[Tokenizer::INDEX]));
                     $parent[Tokenizer::END] = $token[Tokenizer::INDEX];
                     $parent[Tokenizer::NODES] = $nodes;
 
@@ -169,6 +180,7 @@ final class Parser
                     //store the whitespace prefix for laters!
                     $indent = $this->clearStandaloneLines($nodes, $tokens);
                     if ($indent !== null) {
+                        assert(isset($indent[Tokenizer::VALUE]));
                         $token[Tokenizer::INDENT] = $indent[Tokenizer::VALUE];
                     }
 
@@ -177,7 +189,7 @@ final class Parser
 
                 case Tokenizer::T_PARENT:
                     $this->checkIfTokenIsAllowedInParent($parent, $token);
-                    $nodes[] = $this->buildTree($tokens, $token);
+                    $nodes[] = $this->assertToken($this->buildTree($tokens, $token));
                     break;
 
                 case Tokenizer::T_BLOCK_VAR:
@@ -188,11 +200,12 @@ final class Parser
                         }
 
                         $this->clearStandaloneLines($nodes, $tokens);
-                        $nodes[] = $this->buildTree($tokens, $token);
+                        $nodes[] = $this->assertToken($this->buildTree($tokens, $token));
                     } else {
                         // pretend this was just a normal "escaped" token...
                         $token[Tokenizer::TYPE] = Tokenizer::T_ESCAPED;
                         // TODO: figure out how to figure out if there was a space after this dollar:
+                        assert(isset($token[Tokenizer::NAME]));
                         $token[Tokenizer::NAME] = '$' . $token[Tokenizer::NAME];
                         $nodes[] = $token;
                     }
@@ -200,7 +213,9 @@ final class Parser
                     break;
 
                 case Tokenizer::T_PRAGMA:
-                    $this->enablePragma($token[Tokenizer::NAME]);
+                    $this->enablePragma(
+                        Tokenizer::assertPragma($token[Tokenizer::NAME] ?? null, $token),
+                    );
                 // no break
 
                 case Tokenizer::T_COMMENT:
@@ -217,7 +232,7 @@ final class Parser
         if (isset($parent)) {
             $msg = sprintf(
                 'Missing closing tag: %s opened on line %d',
-                $parent[Tokenizer::NAME],
+                $parent[Tokenizer::NAME] ?? 'unknown parent tag',
                 $parent[Tokenizer::LINE],
             );
 
@@ -228,14 +243,31 @@ final class Parser
     }
 
     /**
+     * Assert the given value is a single token
+     *
+     * @param array<array-key, mixed> $value
+     *
+     * @return TokenShape
+     */
+    private function assertToken(array $value): array
+    {
+        if (isset($value[Tokenizer::TYPE])) {
+            /** @psalm-var TokenShape */
+            return $value;
+        }
+
+        throw new RuntimeException('Expected a single token');
+    }
+
+    /**
      * Clear standalone line tokens.
      *
      * Returns a whitespace token for indenting partials, if applicable.
      *
-     * @param list<array<string, mixed>> &$nodes  Parsed nodes
-     * @param list<array<string, mixed>> &$tokens Tokens to be parsed
+     * @param list<TokenShape> &$nodes  Parsed nodes
+     * @param list<TokenShape> &$tokens Tokens to be parsed
      *
-     * @return array<string, mixed>|null Resulting indent token, if any
+     * @return TokenShape|null Resulting indent token, if any
      */
     private function clearStandaloneLines(array &$nodes, array &$tokens): array|null
     {
@@ -271,7 +303,7 @@ final class Parser
             if (count($tokens) !== 1) {
                 // Unless it's the last token in the template, the next token
                 // must end in newline for this to be standalone.
-                if (substr($next[Tokenizer::VALUE], -1) !== "\n") {
+                if (isset($next[Tokenizer::VALUE]) && substr($next[Tokenizer::VALUE], -1) !== "\n") {
                     return null;
                 }
             }
@@ -293,13 +325,15 @@ final class Parser
      *
      * True if token type is T_TEXT and value is all whitespace characters.
      *
-     * @param array<string, mixed> $token
+     * @param TokenShape $token
      *
      * @return bool True if token is a whitespace token
      */
     private function tokenIsWhitespace(array $token): bool
     {
         if ($token[Tokenizer::TYPE] === Tokenizer::T_TEXT) {
+            assert(isset($token[Tokenizer::VALUE]));
+
             return (bool) preg_match('/^\s*$/', $token[Tokenizer::VALUE]);
         }
 
@@ -309,8 +343,8 @@ final class Parser
     /**
      * Check whether a token is allowed inside a parent tag.
      *
-     * @param array<string, mixed>|null $parent
-     * @param array<string, mixed> $token
+     * @param TokenShape|null $parent
+     * @param TokenShape $token
      *
      * @throws SyntaxException if an invalid token is found inside a parent tag.
      */
@@ -324,7 +358,7 @@ final class Parser
     /**
      * Parse dynamic names.
      *
-     * @param array<string, mixed> $token
+     * @param TokenShape $token
      *
      * @return array{0: string, 1: bool}
      *
@@ -333,12 +367,16 @@ final class Parser
      */
     private function getDynamicName(array $token): array
     {
-        $name = $token[Tokenizer::NAME];
+        $name = $token[Tokenizer::NAME] ?? null;
+        assert(is_string($name));
+
         $isDynamic = false;
 
         if (preg_match('/^\s*\*\s*/', $name)) {
             $this->ensureTagAllowsDynamicNames($token);
             $name = preg_replace('/^\s*\*\s*/', '', $name);
+            assert(is_string($name));
+
             $isDynamic = true;
         }
 
@@ -348,7 +386,7 @@ final class Parser
     /**
      * Check whether the given token supports dynamic tag names.
      *
-     * @param array<string, mixed> $token
+     * @param TokenShape $token
      *
      * @throws SyntaxException when a tag does not allow *.
      */
@@ -363,7 +401,7 @@ final class Parser
 
         $msg = sprintf(
             'Invalid dynamic name: %s in %s tag',
-            $token[Tokenizer::NAME],
+            $token[Tokenizer::NAME] ?? 'unknown',
             Tokenizer::getTagName($token[Tokenizer::TYPE]),
         );
 

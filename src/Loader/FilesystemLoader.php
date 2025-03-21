@@ -58,7 +58,7 @@ class FilesystemLoader implements Loader
      *     );
      *
      * @param string $baseDir Base directory containing Mustache template files
-     * @param array{extension?: string} $options Array of Mustache\Loader options (default: [])
+     * @param array{extension?: string|null} $options Array of Mustache\Loader options (default: [])
      *
      * @throws RuntimeException if $baseDir does not exist.
      */
@@ -81,7 +81,7 @@ class FilesystemLoader implements Loader
             return;
         }
 
-        if (empty($options['extension'])) {
+        if ($options['extension'] === null || $options['extension'] === '') {
             $this->extension = '';
         } else {
             $this->extension = '.' . ltrim($options['extension'], '.');

@@ -21,16 +21,16 @@ final class ProductionFilesystemLoaderTest extends TestCase
         self::assertIsString($baseDir);
         $loader = new ProductionFilesystemLoader($baseDir, ['extension' => '.ms']);
         $this->assertInstanceOf(Source::class, $loader->load('alpha'));
-        $this->assertEquals('alpha contents', $loader->load('alpha')->getSource());
+        $this->assertEquals('alpha contents', (string) $loader->load('alpha'));
         $this->assertInstanceOf(Source::class, $loader->load('beta.ms'));
-        $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
+        $this->assertEquals('beta contents', (string) $loader->load('beta.ms'));
     }
 
     public function testTrailingSlashes(): void
     {
         $baseDir = dirname(__FILE__) . '/../../../fixtures/templates/';
         $loader = new ProductionFilesystemLoader($baseDir);
-        $this->assertEquals('one contents', $loader->load('one')->getSource());
+        $this->assertEquals('one contents', (string) $loader->load('one'));
     }
 
     public function testConstructorWithProtocol(): void
@@ -39,8 +39,8 @@ final class ProductionFilesystemLoaderTest extends TestCase
         self::assertIsString($baseDir);
 
         $loader = new ProductionFilesystemLoader('file://' . $baseDir, ['extension' => '.ms']);
-        $this->assertEquals('alpha contents', $loader->load('alpha')->getSource());
-        $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
+        $this->assertEquals('alpha contents', (string) $loader->load('alpha'));
+        $this->assertEquals('beta contents', (string) $loader->load('beta.ms'));
     }
 
     public function testLoadTemplates(): void
@@ -48,8 +48,8 @@ final class ProductionFilesystemLoaderTest extends TestCase
         $baseDir = realpath(dirname(__FILE__) . '/../../../fixtures/templates');
         self::assertIsString($baseDir);
         $loader = new ProductionFilesystemLoader($baseDir);
-        $this->assertEquals('one contents', $loader->load('one')->getSource());
-        $this->assertEquals('two contents', $loader->load('two.mustache')->getSource());
+        $this->assertEquals('one contents', (string) $loader->load('one'));
+        $this->assertEquals('two contents', (string) $loader->load('two.mustache'));
     }
 
     public function testEmptyExtensionString(): void
@@ -58,12 +58,12 @@ final class ProductionFilesystemLoaderTest extends TestCase
         self::assertIsString($baseDir);
 
         $loader = new ProductionFilesystemLoader($baseDir, ['extension' => '']);
-        $this->assertEquals('one contents', $loader->load('one.mustache')->getSource());
-        $this->assertEquals('alpha contents', $loader->load('alpha.ms')->getSource());
+        $this->assertEquals('one contents', (string) $loader->load('one.mustache'));
+        $this->assertEquals('alpha contents', (string) $loader->load('alpha.ms'));
 
         $loader = new ProductionFilesystemLoader($baseDir, ['extension' => null]);
-        $this->assertEquals('two contents', $loader->load('two.mustache')->getSource());
-        $this->assertEquals('beta contents', $loader->load('beta.ms')->getSource());
+        $this->assertEquals('two contents', (string) $loader->load('two.mustache'));
+        $this->assertEquals('beta contents', (string) $loader->load('beta.ms'));
     }
 
     public function testMissingBaseDirThrowsException(): void
@@ -91,10 +91,20 @@ final class ProductionFilesystemLoaderTest extends TestCase
         $sizeLoader = new ProductionFilesystemLoader($baseDir, ['stat_props' => ['size']]);
         $bothLoader = new ProductionFilesystemLoader($baseDir, ['stat_props' => ['mtime', 'size']]);
 
-        $noStatKey = $noStatLoader->load('one.mustache')->getKey();
-        $mtimeKey = $mtimeLoader->load('one.mustache')->getKey();
-        $sizeKey = $sizeLoader->load('one.mustache')->getKey();
-        $bothKey = $bothLoader->load('one.mustache')->getKey();
+        $noStatSource = $noStatLoader->load('one.mustache');
+        $mtimeSource = $mtimeLoader->load('one.mustache');
+        $sizeSource = $sizeLoader->load('one.mustache');
+        $bothSource = $bothLoader->load('one.mustache');
+
+        self::assertInstanceOf(Source::class, $noStatSource);
+        self::assertInstanceOf(Source::class, $mtimeSource);
+        self::assertInstanceOf(Source::class, $sizeSource);
+        self::assertInstanceOf(Source::class, $bothSource);
+
+        $noStatKey = $noStatSource->getKey();
+        $mtimeKey = $mtimeSource->getKey();
+        $sizeKey = $sizeSource->getKey();
+        $bothKey = $bothSource->getKey();
 
         $this->assertNotEquals($noStatKey, $mtimeKey);
         $this->assertNotEquals($noStatKey, $sizeKey);

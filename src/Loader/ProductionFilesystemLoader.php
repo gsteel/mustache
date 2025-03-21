@@ -50,7 +50,7 @@ final class ProductionFilesystemLoader extends FilesystemLoader
      * process so you don't forget!
      *
      * @param string $baseDir Base directory containing Mustache template files.
-     * @param array{extension?: string, stat_props?: list<string>|null} $options
+     * @param array{extension?: string|null, stat_props?: list<string>|null} $options
      *
      * @throws RuntimeException if $baseDir does not exist.
      */
