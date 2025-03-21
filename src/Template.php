@@ -98,23 +98,11 @@ abstract class Template
      */
     protected function isIterable(mixed $value): bool
     {
-        switch (gettype($value)) {
-            case 'object':
-                return $value instanceof Traversable;
-
-            case 'array':
-                $i = 0;
-                foreach (array_keys($value) as $k) {
-                    if ($k !== $i++) {
-                        return false;
-                    }
-                }
-
-                return true;
-
-            default:
-                return false;
-        }
+        return match (gettype($value)) {
+            'object' => $value instanceof Traversable,
+            'array' => array_is_list($value),
+            default => false,
+        };
     }
 
     /**
