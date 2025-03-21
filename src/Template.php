@@ -6,7 +6,8 @@ namespace Mustache;
 
 use Traversable;
 
-use function array_keys;
+use function array_is_list;
+use function assert;
 use function call_user_func;
 use function gettype;
 use function is_callable;
@@ -78,24 +79,22 @@ abstract class Template
      * Java, Python, etc.
      *
      * PHP, however, treats lists and hashes as one primitive type: array. So Mustache.php needs a way to distinguish
-     * between between a list of things (numeric, normalized array) and a set of variables to be used as section context
+     * between a list of things (numeric, normalized array) and a set of variables to be used as section context
      * (associative array). In other words, this will be iterated over:
      *
-     *     $items = array(
-     *         array('name' => 'foo'),
-     *         array('name' => 'bar'),
-     *         array('name' => 'baz'),
-     *     );
+     *     $items = [
+     *         ['name' => 'foo'],
+     *         ['name' => 'bar'],
+     *         ['name' => 'baz'],
+     *     ];
      *
      * ... but this will be used as a section context block:
      *
-     *     $items = array(
-     *         1        => array('name' => 'foo'),
-     *         'banana' => array('name' => 'bar'),
-     *         42       => array('name' => 'baz'),
-     *     );
-     *
-     * @return bool True if the value is 'iterable'
+     *     $items = [
+     *         1        => ['name' => 'foo'],
+     *         'banana' => ['name' => 'bar'],
+     *         42       => ['name' => 'baz'],
+     *     ];
      */
     protected function isIterable(mixed $value): bool
     {
@@ -147,7 +146,13 @@ abstract class Template
      */
     protected function resolveValue(mixed $value, Context $context): mixed
     {
-        if (($this->strictCallables ? is_object($value) : ! is_string($value)) && is_callable($value)) {
+        $isCallable = $this->strictCallables
+            ? is_object($value) && is_callable($value)
+            : ! is_string($value) && is_callable($value);
+
+        if ($isCallable) {
+            assert(is_callable($value));
+
             return $this->mustache
                 ->loadLambda((string) call_user_func($value))
                 ->renderInternal($context);
