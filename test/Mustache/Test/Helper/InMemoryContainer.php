@@ -14,8 +14,13 @@ final readonly class InMemoryContainer implements ContainerInterface
     {
     }
 
+    /**
+     * PSR Container 1.0 is supported, so no parameter type declarations
+     *
+     * @param string $id
+     */
     #[Override]
-    public function get(string $id): mixed
+    public function get($id): mixed // phpcs:ignore
     {
         if (! isset($this->services[$id])) {
             throw new PsrContainerNotFound();
@@ -24,8 +29,13 @@ final readonly class InMemoryContainer implements ContainerInterface
         return $this->services[$id];
     }
 
+    /**
+     * PSR Container 1.0 is supported, so no parameter type declarations
+     *
+     * @param string $id
+     */
     #[Override]
-    public function has(string $id): bool
+    public function has($id): bool // phpcs:ignore
     {
         return isset($this->services[$id]);
     }
