@@ -30,8 +30,8 @@
         "phpunit/phpunit": "^11.5.15",
         "doctrine/coding-standard": "^13.0.0",
         "monolog/monolog": "^3.9.0",
-        "vimeo/psalm": "^6.9.6",
-        "psalm/plugin-phpunit": "^0.19.3"
+        "vimeo/psalm": "^6.10.0",
+        "psalm/plugin-phpunit": "^0.19.5"
     },
     "autoload": {
         "psr-4": {
