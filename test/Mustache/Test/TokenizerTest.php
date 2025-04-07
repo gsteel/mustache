@@ -11,14 +11,12 @@ use PHPUnit\Framework\TestCase;
 
 final class TokenizerTest extends TestCase
 {
-    /**
-     * @param non-empty-string|null $delimiters
-     * @param list<array<string, mixed>> $expected
-     */
+    /** @param list<array<string, mixed>> $expected */
     #[DataProvider('getTokens')]
     public function testScan(string $text, string|null $delimiters, array $expected): void
     {
         $tokenizer = new Tokenizer();
+        /** @psalm-suppress ArgumentTypeCoercion Empty string is invalid, but tests should still pass when '' is given */
         $this->assertSame($expected, $tokenizer->scan($text, $delimiters));
     }
 
