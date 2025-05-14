@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6685f884154608f0ceaf3b5115d57993",
+    "content-hash": "22b53cfd873204552bf91d41c0e30314",
     "packages": [
         {
             "name": "psr/container",
@@ -1358,16 +1358,16 @@
         },
         {
             "name": "doctrine/coding-standard",
-            "version": "13.0.0",
+            "version": "13.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/coding-standard.git",
-                "reference": "8132673b9075d648c07f7f69cb3f4cc436709b77"
+                "reference": "0affd62169186f32de725ca612e6129e81186a21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/coding-standard/zipball/8132673b9075d648c07f7f69cb3f4cc436709b77",
-                "reference": "8132673b9075d648c07f7f69cb3f4cc436709b77",
+                "url": "https://api.github.com/repos/doctrine/coding-standard/zipball/0affd62169186f32de725ca612e6129e81186a21",
+                "reference": "0affd62169186f32de725ca612e6129e81186a21",
                 "shasum": ""
             },
             "require": {
@@ -1408,9 +1408,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/coding-standard/issues",
-                "source": "https://github.com/doctrine/coding-standard/tree/13.0.0"
+                "source": "https://github.com/doctrine/coding-standard/tree/13.0.1"
             },
-            "time": "2025-03-23T15:38:56+00:00"
+            "time": "2025-05-14T10:54:19+00:00"
         },
         {
             "name": "doctrine/deprecations",
