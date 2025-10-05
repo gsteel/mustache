@@ -22,7 +22,7 @@
     <testsuite name="Mustache">
         <directory>./test</directory>
     </testsuite>
-    <source>
+    <source ignoreIndirectDeprecations="true">
         <include>
             <directory>src</directory>
         </include>
