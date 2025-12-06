@@ -27,7 +27,7 @@
         "psr/container": "^1.0 || ^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^11.5.45",
+        "phpunit/phpunit": "^11.5.46",
         "doctrine/coding-standard": "^14.0.0",
         "monolog/monolog": "^3.9.0",
         "vimeo/psalm": "^6.13.1",
