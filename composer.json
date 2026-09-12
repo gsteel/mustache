@@ -27,11 +27,11 @@
         "psr/container": "^1.0 || ^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^11.5.55",
+        "phpunit/phpunit": "^11.5.56",
         "doctrine/coding-standard": "^14.0.0",
-        "monolog/monolog": "^3.10.0",
-        "vimeo/psalm": "^6.16.0",
-        "psalm/plugin-phpunit": "^0.19.5"
+        "monolog/monolog": "^3.12.0",
+        "vimeo/psalm": "^6.17.1",
+        "psalm/plugin-phpunit": "^0.20.2"
     },
     "autoload": {
         "psr-4": {
