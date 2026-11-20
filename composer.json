@@ -31,7 +31,7 @@
         "doctrine/coding-standard": "^14.0.0",
         "monolog/monolog": "^3.10.0",
         "vimeo/psalm": "^6.16.0",
-        "psalm/plugin-phpunit": "^0.19.5"
+        "psalm/plugin-phpunit": "^1.3.2"
     },
     "autoload": {
         "psr-4": {
